@@ -1,0 +1,268 @@
+(kicad_sch
+  (version 20250114)
+  (generator eeschema)
+  (uuid "e99d8850-2539-5f8f-b244-3f279877df85")
+  (paper "A2")
+  (title_block
+    (title "MC68008 ICE - architecture and sheet index")
+    (date "2026-11-07")
+    (rev "0.3 - POWER / USB-C")
+    (comment 1 "MC68008 ICE | Requirements baseline 2026-11-04")
+    (comment 2 "Proposed power and startup interlock; layout and hardware validation required"))
+  (lib_symbols)
+  (text "MC68008 IN-CIRCUIT EMULATOR / BUS ANALYZER"
+    (at 20.32 17.78 0)
+    (effects
+      (font
+        (size 2.54 2.54))
+      (justify left top))
+    (uuid "4b4095a5-891a-5785-97f0-84b1f6cb0067"))
+  (text "Initial schematic | 48-pin CPU | ECP5-25F | Two independent 5 V bus interfaces"
+    (at 20.32 27.94 0)
+    (effects
+      (font
+        (size 1.5 1.5))
+      (justify left top))
+    (uuid "0c29461e-a85a-5561-adc9-3ec03f00b531"))
+  (sheet
+    (at 25.4 48.26)
+    (size 165.1 25.4)
+    (stroke
+      (width 0.254)
+      (type default))
+    (fill
+      (color 0 0 0 0))
+    (uuid "6e5edd93-d5be-5f2a-b9fb-8f60401208e6")
+    (property "Sheetname" "CPU socket + target plug"
+      (at 25.4 45.72 0)
+      (effects
+        (font
+          (size 1.27 1.27))
+        (justify left)))
+    (property "Sheetfile" "cpu_sockets.kicad_sch"
+      (at 25.4 76.2 0)
+      (effects
+        (font
+          (size 1 1))
+        (justify left)))
+    (instances
+      (project "68008ice"
+        (path "/e99d8850-2539-5f8f-b244-3f279877df85"
+          (page "2")))))
+  (text "48-pin MC68008 socket / plug pin mapping\nIndependent CPU_* and TGT_* 5 V nets"
+    (at 30.48 55.88 0)
+    (effects
+      (font
+        (size 1.27 1.27))
+      (justify left top))
+    (uuid "3838e09f-db6a-5ebc-8d4a-7273c605071c"))
+  (sheet
+    (at 215.9 48.26)
+    (size 165.1 25.4)
+    (stroke
+      (width 0.254)
+      (type default))
+    (fill
+      (color 0 0 0 0))
+    (uuid "a5eb6c84-a028-5166-bfa1-46d4ad1ca933")
+    (property "Sheetname" "CPU receivers + drivers"
+      (at 215.9 45.72 0)
+      (effects
+        (font
+          (size 1.27 1.27))
+        (justify left)))
+    (property "Sheetfile" "cpu_translation.kicad_sch"
+      (at 215.9 76.2 0)
+      (effects
+        (font
+          (size 1 1))
+        (justify left)))
+    (instances
+      (project "68008ice"
+        (path "/e99d8850-2539-5f8f-b244-3f279877df85"
+          (page "3")))))
+  (text "Full CPU pin sensing and selected 5 V drive groups\nRead data, responses and dedicated target clock"
+    (at 220.98 55.88 0)
+    (effects
+      (font
+        (size 1.27 1.27))
+      (justify left top))
+    (uuid "72308d9e-3829-5998-bf49-e7738bbb4982"))
+  (sheet
+    (at 25.4 99.06)
+    (size 165.1 25.4)
+    (stroke
+      (width 0.254)
+      (type default))
+    (fill
+      (color 0 0 0 0))
+    (uuid "8c6fbc83-a10e-523b-ad2c-e41bca974df1")
+    (property "Sheetname" "Target receivers + drivers"
+      (at 25.4 96.52 0)
+      (effects
+        (font
+          (size 1.27 1.27))
+        (justify left)))
+    (property "Sheetfile" "target_translation.kicad_sch"
+      (at 25.4 127 0)
+      (effects
+        (font
+          (size 1 1))
+        (justify left)))
+    (instances
+      (project "68008ice"
+        (path "/e99d8850-2539-5f8f-b244-3f279877df85"
+          (page "4")))))
+  (text "Full target pin sensing, including DMA activity\nSeparate master, data and auxiliary output enables"
+    (at 30.48 106.68 0)
+    (effects
+      (font
+        (size 1.27 1.27))
+      (justify left top))
+    (uuid "5d05960d-668d-5f36-a0f9-edab8701c9d1"))
+  (sheet
+    (at 215.9 99.06)
+    (size 165.1 25.4)
+    (stroke
+      (width 0.254)
+      (type default))
+    (fill
+      (color 0 0 0 0))
+    (uuid "61ba4f1f-2569-5d17-aff4-02386645c91e")
+    (property "Sheetname" "Output disable + open drain"
+      (at 215.9 96.52 0)
+      (effects
+        (font
+          (size 1.27 1.27))
+        (justify left)))
+    (property "Sheetfile" "bus_safety.kicad_sch"
+      (at 215.9 127 0)
+      (effects
+        (font
+          (size 1 1))
+        (justify left)))
+    (instances
+      (project "68008ice"
+        (path "/e99d8850-2539-5f8f-b244-3f279877df85"
+          (page "5")))))
+  (text "Common default-disabled output-enable circuit\nFour independently gated RESET / HALT low drivers"
+    (at 220.98 106.68 0)
+    (effects
+      (font
+        (size 1.27 1.27))
+      (justify left top))
+    (uuid "a328c3cb-0bb6-5da9-8e9a-5fb5d9f4870c"))
+  (sheet
+    (at 25.4 149.86)
+    (size 165.1 25.4)
+    (stroke
+      (width 0.254)
+      (type default))
+    (fill
+      (color 0 0 0 0))
+    (uuid "15a1e92a-b7d6-5eb7-9e81-e0faa704434e")
+    (property "Sheetname" "USB / EEPROM / SPI / JTAG"
+      (at 25.4 147.32 0)
+      (effects
+        (font
+          (size 1.27 1.27))
+        (justify left)))
+    (property "Sheetfile" "usb_flash.kicad_sch"
+      (at 25.4 177.8 0)
+      (effects
+        (font
+          (size 1 1))
+        (justify left)))
+    (instances
+      (project "68008ice"
+        (path "/e99d8850-2539-5f8f-b244-3f279877df85"
+          (page "6")))))
+  (text "FT2232H A = JTAG; B = asynchronous FT245 FIFO\nEEPROM, shared SPI configuration flash, recovery header"
+    (at 30.48 157.48 0)
+    (effects
+      (font
+        (size 1.27 1.27))
+      (justify left top))
+    (uuid "fdf5b512-5fe1-539f-a02f-c6c8f3c8922a"))
+  (sheet
+    (at 215.9 149.86)
+    (size 165.1 25.4)
+    (stroke
+      (width 0.254)
+      (type default))
+    (fill
+      (color 0 0 0 0))
+    (uuid "90050ef9-3999-513e-93b5-ca015ded07a5")
+    (property "Sheetname" "FPGA banks + power intent"
+      (at 215.9 147.32 0)
+      (effects
+        (font
+          (size 1.27 1.27))
+        (justify left)))
+    (property "Sheetfile" "fpga_core.kicad_sch"
+      (at 215.9 177.8 0)
+      (effects
+        (font
+          (size 1 1))
+        (justify left)))
+    (instances
+      (project "68008ice"
+        (path "/e99d8850-2539-5f8f-b244-3f279877df85"
+          (page "7")))))
+  (text "ECP5-25F CABGA-256 bank and supply units\nPerimeter-first I/O; target-powered rails and hardware interlock"
+    (at 220.98 157.48 0)
+    (effects
+      (font
+        (size 1.27 1.27))
+      (justify left top))
+    (uuid "bc2de0a6-5316-5a28-b188-094ea3b03427"))
+  (text "SIGNAL CONVENTIONS\nCPU_* / TGT_* = physical 5 V nets (never shorted together).\nFPGA_CPU_*_IN / FPGA_TGT_*_IN = 3.3 V sensed signals.\nFPGA_*_OUT = 3.3 V drive data; *_OE_N = active-low group enable.\nSignal nets use global labels; supplies use power symbols. _N means active low."
+    (at 25.4 279.4 0)
+    (effects
+      (font
+        (size 1.27 1.27))
+      (justify left top))
+    (uuid "ffc75bfe-ffb1-5acf-a72d-89e9413fc7ac"))
+  (text "DESIGN STILL TO COMPLETE\nValidate assigned FPGA I/O, timing and BGA footprint.\nValidate regulators, decoupling, hardware interlock and target power budget.\nFinish FTDI support and boot straps; review target timing and ERC.\nThis is a schematic starting point; no PCB or fabrication release."
+    (at 215.9 279.4 0)
+    (effects
+      (font
+        (size 1.27 1.27))
+      (justify left top))
+    (uuid "ed9c87e8-1ea4-5717-927c-f7cee7a082e0"))
+  (sheet
+    (at 25.4 200.66)
+    (size 165.1 25.4)
+    (stroke
+      (width 0.254)
+      (type default))
+    (fill
+      (color 0 0 0 0))
+    (uuid "24922cc8-da9c-5a70-a907-8bc45a79b88e")
+    (property "Sheetname" "Target power / FPGA rails"
+      (at 25.4 198.12 0)
+      (effects
+        (font
+          (size 1.27 1.27))
+        (justify left)))
+    (property "Sheetfile" "power_supply.kicad_sch"
+      (at 25.4 228.6 0)
+      (effects
+        (font
+          (size 1 1))
+        (justify left)))
+    (instances
+      (project "68008ice"
+        (path "/e99d8850-2539-5f8f-b244-3f279877df85"
+          (page "8")))))
+  (text "Target +5V -> 3.3V buck / 1.1V buck / 2.5V LDO\nSequencing, independent voltage monitor and FPGA bypassing"
+    (at 30.48 208.28 0)
+    (effects
+      (font
+        (size 1.27 1.27))
+      (justify left top))
+    (uuid "ec1ce6bd-9150-5513-ba31-4594ac8b8851"))
+  (sheet_instances
+    (path "/"
+      (page "1")))
+  (embedded_fonts no))
