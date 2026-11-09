@@ -5,8 +5,9 @@ RP2350B or RP2354B microcontroller will use PIO, DMA and native USB to observe
 the processor bus, generate diagnostic bus cycles and eventually emulate the
 CPU in software.
 
-The project is restarting at the requirements stage. Hardware, firmware and
-host tools for this approach have not yet been implemented. The
+The project now has a [draft pin map, candidate BOM and single-A3 KiCad schematic](kicad/README.md),
+using RP2354B with in-package flash. A PCB placement study, firmware and host
+tools have not yet been implemented. The
 [RP2350 engineering specification](requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md)
 is the design baseline and contains the detailed requirements, acceptance
 criteria and primary references.
@@ -34,14 +35,14 @@ CPU-speed performance remain development goals requiring validation.
   BOM target is under US$10, excluding PCB, connectors, assembly and freight;
   this is an unverified target.
 - Native USB-C for host communication, BOOTSEL recovery and dedicated SWD for
-  MCU debugging. RP2350B requires external QSPI flash; RP2354B is the proposed
-  integrated-flash alternative.
+  MCU debugging. RP2354B is the draft choice to save external-flash space;
+  RP2350B with external QSPI flash remains an alternative.
 - Target-derived 5 V supplies a 3.3 V regulator and the MCU's core-regulator
-  circuit. USB power behavior and protection against back-powering must be
-  resolved for the new design.
-- A provisional GPIO allocation uses 40 five-volt-tolerant GPIOs and five
-  externally protected inputs. The physical pin map, PIO grouping, electrical
-  limits and reset/power-off behavior still require review.
+  circuit. The USB-C starter uses VBUS only for MOSFET-isolated presence sensing.
+  Protection of direct bus GPIOs during supply transitions remains unresolved.
+- The [per-pin allocation](kicad/mc68008_pinmap.csv) uses 40 five-volt-tolerant
+  GPIOs and five 2.2 kΩ/BAT54-protected inputs, keeping address/data/strobes/clock in one PIO
+  window. Cross-PIO timing and electrical acceptance still require validation.
 
 RESET/HALT behavior, bus arbitration, TTL compatibility and supply sequencing
 are explicit design checks. Connector footprints and the proposed input clamps
@@ -70,11 +71,49 @@ Firmware is planned around the Pico C/C++ SDK, separate bus/analyzer/interpreter
 modules and a documented, versioned USB protocol. Host tooling and reproducible
 builds should work across common operating systems.
 
-The first implementation milestone is **mechanical placement and feasibility**.
-No PCB is ready for fabrication.
+The [JLCPCB upload BOM](kicad/BOM_JLCPCB.csv) uses dated C-number selections,
+preferring Basic SMT parts and sharing values. The DIP contacts are fitted manually.
+The prototype assumes shared target-only power and a TTL-compatible bus; its
+BAT54 forward-voltage margin is accepted, with [nominal SPICE evidence](simulations/bat54/README.md).
+Local supply transitions and input timing still need validation.
+
+The next hardware milestone is **mechanical placement and feasibility**, alongside
+resolving independent output inhibition. The mode
+jumper currently provides firmware permission only. No PCB is ready for fabrication.
 
 ## Repository
 
 - [requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md](requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md): current engineering specification and staged implementation prompt.
+- [docs/hardware.md](docs/hardware.md): pin-map rationale, PIO constraints, BOM decisions and open items.
+- [docs/programming.md](docs/programming.md): SWD wiring, automated firmware uploads and debugging workflow.
+- [kicad/README.md](kicad/README.md): editable schematic, PDF, pin tables, BOM and validation commands.
+- [tools/](tools/): reproducible schematic generation and netlist/BOM checks.
 - [AGENTS.md](AGENTS.md): project-specific instructions for contributors and coding agents.
 - [LICENSE](LICENSE): Apache License 2.0.
+
+## Version control
+
+Keep the requirements, documentation, tools, circuit definitions, native KiCad
+schematic/project (and PCB when added), project libraries, library tables, pin
+maps and component catalog in Git. The saved schematic includes manual layout
+edits and must be preserved even though a generator also exists.
+
+Keep the BOMs, selected schematic PDF and validation summary as review
+deliverables. Keep the BAT54 model, simulation inputs and the documented result
+snapshot under `simulations/bat54/`, including its provenance and log. These
+selected outputs support review without requiring every reader to run the tools.
+
+Everything under `build/`, including `build/hardware/`, is disposable working
+output: netlists, ERC reports, preview images, backup snapshots and temporary
+scripts. It is ignored. Reusable tools belong in `tools/`; results worth retaining
+belong in a documented evidence directory or the validation summary. KiCad's
+personal `.kicad_prl` file, locks, automatic backups and footprint-info cache are
+also ignored, together with Python caches/local environments and OS metadata.
+
+`kicad/parts_catalog.json` is a curated, dated selection record rather than a live
+inventory cache. Version it alongside the matching schematic and BOM. Recheck
+stock, prices and Basic/Extended status before ordering. Refresh the recorded
+fields deliberately when they change, keeping part identity, footprint, source,
+verification date and selection reasons consistent across purchasing outputs
+and schematic fields. A checkout or build should not automatically replace
+these reviewed selections with whatever the supplier currently lists.

@@ -1,0 +1,8 @@
+{
+  "engine": "stdout ** ngspice-45.2 shared library",
+  "model": "Diodes Inc / Zetex BAT54 v1.0 (2000-04-25)",
+  "model_source": "https://www.diodes.com/spice/download/510/BAT54.spice.txt",
+  "model_sha256": "a1d142e1f32ea55aca3aa434897a3b648266f58b91745aa79579640b52eccd03",
+  "bom_part": "JSCJ BAT54 C8590; different manufacturer, no qualified JSCJ corner model established",
+  "scope": "nominal DC model, temperature sensitivity; no process spread, rail startup, GPIO internal clamp or self-heating proof"
+}

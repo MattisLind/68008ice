@@ -1,0 +1,10 @@
+BAT54 nominal 5V / 2.2k / 3V3 clamp (nominal proxy model)
+.include BAT54.lib
+Vinput input 0 5
+Vrail rail 0 3.3
+Rseries input node 2.2k
+Dclamp node rail BAT54
+.temp 25
+.options tnom=27
+.op
+.end

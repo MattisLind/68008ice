@@ -1,0 +1,850 @@
+{
+  "description": "Circuit topology and non-purchasing properties; CPU/MCU bus assignments are refreshed from kicad/mc68008_pinmap.csv by the generator.",
+  "components": [
+    {
+      "reference": "C1",
+      "symbol": "C",
+      "properties": {
+        "Value": "15p",
+        "Status": "candidate"
+      },
+      "pins": {
+        "2": "GND",
+        "1": "XIN"
+      },
+      "catalog_key": "C_15p"
+    },
+    {
+      "reference": "C2",
+      "symbol": "C",
+      "properties": {
+        "Value": "15p",
+        "Status": "candidate"
+      },
+      "pins": {
+        "2": "GND",
+        "1": "XOUT_XTAL"
+      },
+      "catalog_key": "C_15p"
+    },
+    {
+      "reference": "C4",
+      "symbol": "C",
+      "properties": {
+        "Value": "10u",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+5V",
+        "2": "GND"
+      },
+      "catalog_key": "C_10u"
+    },
+    {
+      "reference": "C5",
+      "symbol": "C",
+      "properties": {
+        "Value": "10u",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_10u"
+    },
+    {
+      "reference": "C6",
+      "symbol": "C",
+      "properties": {
+        "Value": "4.7u",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+1V1",
+        "2": "GND"
+      },
+      "catalog_key": "C_4.7u"
+    },
+    {
+      "reference": "C7",
+      "symbol": "C",
+      "properties": {
+        "Value": "4.7u",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_4.7u"
+    },
+    {
+      "reference": "C8",
+      "symbol": "C",
+      "properties": {
+        "Value": "4.7u",
+        "Status": "candidate"
+      },
+      "pins": {
+        "2": "GND",
+        "1": "VREG_AVDD"
+      },
+      "catalog_key": "C_4.7u"
+    },
+    {
+      "reference": "C9",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "C10",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "C11",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "C12",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "C13",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "C14",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "C15",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "C16",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "C17",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "C18",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "C19",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "C20",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+1V1",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "C21",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+1V1",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "C22",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+1V1",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "D1",
+      "symbol": "BAT54",
+      "properties": {
+        "Value": "BAT54",
+        "Status": "accepted_BAT54_voltage_margin_risk"
+      },
+      "pins": {
+        "1": "BERR_N_3V3",
+        "3": "+3V3"
+      },
+      "catalog_key": "CLAMP"
+    },
+    {
+      "reference": "D2",
+      "symbol": "BAT54",
+      "properties": {
+        "Value": "BAT54",
+        "Status": "accepted_BAT54_voltage_margin_risk"
+      },
+      "pins": {
+        "1": "BR_N_3V3",
+        "3": "+3V3"
+      },
+      "catalog_key": "CLAMP"
+    },
+    {
+      "reference": "D3",
+      "symbol": "BAT54",
+      "properties": {
+        "Value": "BAT54",
+        "Status": "accepted_BAT54_voltage_margin_risk"
+      },
+      "pins": {
+        "1": "VPA_N_3V3",
+        "3": "+3V3"
+      },
+      "catalog_key": "CLAMP"
+    },
+    {
+      "reference": "D4",
+      "symbol": "BAT54",
+      "properties": {
+        "Value": "BAT54",
+        "Status": "accepted_BAT54_voltage_margin_risk"
+      },
+      "pins": {
+        "1": "IPL1_N_3V3",
+        "3": "+3V3"
+      },
+      "catalog_key": "CLAMP"
+    },
+    {
+      "reference": "D5",
+      "symbol": "BAT54",
+      "properties": {
+        "Value": "BAT54",
+        "Status": "accepted_BAT54_voltage_margin_risk"
+      },
+      "pins": {
+        "1": "IPL20_N_3V3",
+        "3": "+3V3"
+      },
+      "catalog_key": "CLAMP"
+    },
+    {
+      "reference": "J1",
+      "symbol": "MC68008_PassThrough_48",
+      "properties": {
+        "Value": "CPU TOP SOCKET - MECHANICAL TBD",
+        "Footprint": "",
+        "Manufacturer": "TBD",
+        "MPN": "TBD",
+        "Source": "https://www.nxp.com/docs/en/reference-manual/MC68000UM.pdf",
+        "Status": "unresolved_connector_no_footprint",
+        "Assembly": "Manual",
+        "Selection_reason": "Top/bottom DIP contacts assembled manually; excluded from JLCPCB selection."
+      },
+      "pins": {},
+      "catalog_key": null
+    },
+    {
+      "reference": "J2",
+      "symbol": "MC68008_PassThrough_48",
+      "properties": {
+        "Value": "TARGET BOTTOM PLUG - MECHANICAL TBD",
+        "Footprint": "",
+        "Manufacturer": "TBD",
+        "MPN": "TBD",
+        "Source": "https://www.nxp.com/docs/en/reference-manual/MC68000UM.pdf",
+        "Status": "unresolved_connector_no_footprint",
+        "Assembly": "Manual",
+        "Selection_reason": "Top/bottom DIP contacts assembled manually; excluded from JLCPCB selection."
+      },
+      "pins": {},
+      "catalog_key": null
+    },
+    {
+      "reference": "J3",
+      "symbol": "USB_C_Receptacle_USB2.0_16P",
+      "properties": {
+        "Value": "USB4105-GF-A",
+        "Status": "candidate_verify_stake_option"
+      },
+      "pins": {
+        "A1": "GND",
+        "A12": "GND",
+        "B1": "GND",
+        "B12": "GND",
+        "SH": "GND",
+        "A5": "USB_CC1",
+        "B5": "USB_CC2",
+        "A7": "USB_DM",
+        "B7": "USB_DM",
+        "A6": "USB_DP",
+        "B6": "USB_DP",
+        "A4": "USB_VBUS",
+        "A9": "USB_VBUS",
+        "B4": "USB_VBUS",
+        "B9": "USB_VBUS"
+      },
+      "catalog_key": "USB_C"
+    },
+    {
+      "reference": "J4",
+      "symbol": "Conn_01x04",
+      "properties": {
+        "Value": "SWD pads: 3V3/GND/SWCLK/SWDIO",
+        "Footprint": "",
+        "Manufacturer": "TBD",
+        "MPN": "TBD",
+        "Source": "",
+        "Status": "unresolved_debug_pad_geometry",
+        "Assembly": "PCB_feature",
+        "Selection_reason": "PCB copper/pad feature; no purchased component."
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND",
+        "3": "SWCLK",
+        "4": "SWDIO"
+      },
+      "catalog_key": null
+    },
+    {
+      "reference": "JP1",
+      "symbol": "Conn_01x02",
+      "properties": {
+        "Value": "ACTIVE PERMIT - solder bridge open=PASSIVE",
+        "Footprint": "",
+        "Manufacturer": "PCB copper",
+        "MPN": "PCB_FEATURE",
+        "Source": "",
+        "Status": "PCB_solder_bridge_geometry_pending",
+        "Assembly": "PCB_feature",
+        "Selection_reason": "PCB copper/pad feature; no purchased component."
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "MODE_PERMIT"
+      },
+      "catalog_key": null
+    },
+    {
+      "reference": "L1",
+      "symbol": "L",
+      "properties": {
+        "Value": "3.3u AOTA-B201610S3R3-101-T",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+1V1",
+        "2": "VREG_LX"
+      },
+      "catalog_key": "CORE_L"
+    },
+    {
+      "reference": "Q1",
+      "symbol": "2N7002",
+      "properties": {
+        "Value": "2N7002",
+        "Status": "candidate"
+      },
+      "pins": {
+        "2": "GND",
+        "3": "USB_PRESENT_N",
+        "1": "VBUS_GATE"
+      },
+      "catalog_key": "MOSFET"
+    },
+    {
+      "reference": "R1",
+      "symbol": "R",
+      "properties": {
+        "Value": "1k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "XOUT",
+        "2": "XOUT_XTAL"
+      },
+      "catalog_key": "R_1k"
+    },
+    {
+      "reference": "R2",
+      "symbol": "R",
+      "properties": {
+        "Value": "1k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "2": "BOOTSEL_SW",
+        "1": "QSPI_SS_N"
+      },
+      "catalog_key": "R_1k"
+    },
+    {
+      "reference": "R3",
+      "symbol": "R",
+      "properties": {
+        "Value": "10k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "MCU_RUN_N"
+      },
+      "catalog_key": "R_10k"
+    },
+    {
+      "reference": "R4",
+      "symbol": "R",
+      "properties": {
+        "Value": "10k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "2": "GND",
+        "1": "MODE_PERMIT"
+      },
+      "catalog_key": "R_10k"
+    },
+    {
+      "reference": "R5",
+      "symbol": "R",
+      "properties": {
+        "Value": "10k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "BUS_ARM_REQUEST",
+        "2": "GND"
+      },
+      "catalog_key": "R_10k"
+    },
+    {
+      "reference": "R6",
+      "symbol": "R",
+      "properties": {
+        "Value": "33",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "VREG_AVDD"
+      },
+      "catalog_key": "R_33"
+    },
+    {
+      "reference": "R7",
+      "symbol": "R",
+      "properties": {
+        "Value": "5.1k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "2": "GND",
+        "1": "USB_CC1"
+      },
+      "catalog_key": "R_5.1k"
+    },
+    {
+      "reference": "R8",
+      "symbol": "R",
+      "properties": {
+        "Value": "5.1k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "2": "GND",
+        "1": "USB_CC2"
+      },
+      "catalog_key": "R_5.1k"
+    },
+    {
+      "reference": "R9",
+      "symbol": "R",
+      "properties": {
+        "Value": "27",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "USB_DP",
+        "2": "USB_DP_MCU"
+      },
+      "catalog_key": "R_27"
+    },
+    {
+      "reference": "R10",
+      "symbol": "R",
+      "properties": {
+        "Value": "27",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "USB_DM",
+        "2": "USB_DM_MCU"
+      },
+      "catalog_key": "R_27"
+    },
+    {
+      "reference": "R11",
+      "symbol": "R",
+      "properties": {
+        "Value": "10k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "USB_VBUS",
+        "2": "VBUS_GATE"
+      },
+      "catalog_key": "R_10k"
+    },
+    {
+      "reference": "R12",
+      "symbol": "R",
+      "properties": {
+        "Value": "100k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "2": "GND",
+        "1": "VBUS_GATE"
+      },
+      "catalog_key": "R_100k"
+    },
+    {
+      "reference": "R13",
+      "symbol": "R",
+      "properties": {
+        "Value": "10k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "USB_PRESENT_N"
+      },
+      "catalog_key": "R_10k"
+    },
+    {
+      "reference": "R14",
+      "symbol": "R",
+      "properties": {
+        "Value": "2.2k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "BERR_N",
+        "2": "BERR_N_3V3"
+      },
+      "catalog_key": "R_2.2k"
+    },
+    {
+      "reference": "R15",
+      "symbol": "R",
+      "properties": {
+        "Value": "2.2k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "BR_N",
+        "2": "BR_N_3V3"
+      },
+      "catalog_key": "R_2.2k"
+    },
+    {
+      "reference": "R16",
+      "symbol": "R",
+      "properties": {
+        "Value": "2.2k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "VPA_N",
+        "2": "VPA_N_3V3"
+      },
+      "catalog_key": "R_2.2k"
+    },
+    {
+      "reference": "R17",
+      "symbol": "R",
+      "properties": {
+        "Value": "2.2k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "IPL1_N",
+        "2": "IPL1_N_3V3"
+      },
+      "catalog_key": "R_2.2k"
+    },
+    {
+      "reference": "R18",
+      "symbol": "R",
+      "properties": {
+        "Value": "2.2k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "IPL20_N",
+        "2": "IPL20_N_3V3"
+      },
+      "catalog_key": "R_2.2k"
+    },
+    {
+      "reference": "R19",
+      "symbol": "R",
+      "properties": {
+        "Value": "1k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "R_1k"
+    },
+    {
+      "reference": "R20",
+      "symbol": "R",
+      "properties": {
+        "Value": "1k",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "R_1k"
+    },
+    {
+      "reference": "SW1",
+      "symbol": "SW_Push",
+      "properties": {
+        "Value": "BOOTSEL",
+        "Status": "selected_SMT_check_height"
+      },
+      "pins": {
+        "2": "BOOTSEL_SW",
+        "1": "GND"
+      },
+      "catalog_key": "BUTTON"
+    },
+    {
+      "reference": "SW2",
+      "symbol": "SW_Push",
+      "properties": {
+        "Value": "RUN reset",
+        "Status": "selected_SMT_check_height"
+      },
+      "pins": {
+        "1": "GND",
+        "2": "MCU_RUN_N"
+      },
+      "catalog_key": "BUTTON"
+    },
+    {
+      "reference": "U1",
+      "symbol": "RP2354B",
+      "properties": {
+        "Value": "RP2354B (A4 or later)",
+        "Status": "candidate_verify_orderable_stepping"
+      },
+      "pins": {
+        "10": "+1V1",
+        "32": "+1V1",
+        "51": "+1V1",
+        "65": "+1V1",
+        "15": "+3V3",
+        "24": "+3V3",
+        "29": "+3V3",
+        "41": "+3V3",
+        "5": "+3V3",
+        "50": "+3V3",
+        "59": "+3V3",
+        "60": "+3V3",
+        "64": "+3V3",
+        "68": "+3V3",
+        "69": "+3V3",
+        "76": "+3V3",
+        "62": "GND",
+        "81": "GND",
+        "35": "MCU_RUN_N",
+        "75": "QSPI_SS_N",
+        "33": "SWCLK",
+        "34": "SWDIO",
+        "66": "USB_DM_MCU",
+        "67": "USB_DP_MCU",
+        "61": "VREG_AVDD",
+        "63": "VREG_LX",
+        "30": "XIN",
+        "31": "XOUT"
+      },
+      "catalog_key": "MCU"
+    },
+    {
+      "reference": "U2",
+      "symbol": "TLV75533PDBV",
+      "properties": {
+        "Value": "TLV75533PDBVR",
+        "Status": "candidate"
+      },
+      "pins": {
+        "5": "+3V3",
+        "1": "+5V",
+        "3": "+5V",
+        "2": "GND"
+      },
+      "catalog_key": "LDO"
+    },
+    {
+      "reference": "U4",
+      "symbol": "TPD2EUSB30",
+      "properties": {
+        "Value": "TPD2EUSB30ADRTR",
+        "Status": "candidate"
+      },
+      "pins": {
+        "3": "GND",
+        "2": "USB_DM",
+        "1": "USB_DP"
+      },
+      "catalog_key": "USB_ESD"
+    },
+    {
+      "reference": "Y1",
+      "symbol": "Crystal_GND24",
+      "properties": {
+        "Value": "12MHz ABM8-272-T3",
+        "Status": "candidate"
+      },
+      "pins": {
+        "2": "GND",
+        "4": "GND",
+        "1": "XIN",
+        "3": "XOUT_XTAL"
+      },
+      "catalog_key": "XTAL"
+    },
+    {
+      "reference": "C23",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "shared_J1_J2_pass_through_decoupling_fit_once"
+      },
+      "pins": {
+        "1": "+5V",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    }
+  ]
+}

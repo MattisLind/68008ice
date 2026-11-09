@@ -1,0 +1,11 @@
+# Disposable builds, exports, review snapshots and temporary migration scripts.
+/build/
+
+# Python interpreter caches and local environments.
+**/__pycache__/
+*.py[cod]
+.venv/
+
+# Operating-system metadata.
+.DS_Store
+Thumbs.db

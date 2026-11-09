@@ -68,18 +68,18 @@ The RP2350B/RP2354B offers **48 user GPIOs**. The working allocation concept is:
 - **GPIO40–GPIO47:** eight ADC-capable digital GPIOs **not** five-volt tolerant. Assign the remaining **five 68008 input-only signals** here using external protection/level adaptation, leaving three possible spare GPIOs.
 - Proposed slower inputs for the five protected positions include the **two IPL lines, BR, and other motherboard-to-CPU inputs**. **Prefer CLK, DTACK and BERR on directly connected/timing-favorable pins** where feasible. Final assignment must be optimized for PIO pin grouping, sample timing, and the actual Motorola signal directions. Do not allocate a CPU output to a non-5V-tolerant input-only protected position without checking it explicitly.
 - The RP2350B's 5 V tolerant pins require correct supply/power conditions; **3.3 V outputs must also meet the target's TTL input threshold and loading requirements**. Verify each affected signal electrically.
-- **RESET and HALT** require special attention because their electrical behavior is not equivalent to a push-pull output. Implement an appropriate open-drain-style GPIO mode or external circuit, preserving external assertions and preventing contention.
+- **RESET and HALT** use one FT GPIO each for bidirectional open-drain-style operation: keep input sensing enabled and output data LOW; assert by enabling the output and release by disabling it. Disable internal pulls and use the target pull-ups; verify sink-current/LOW-level margins. Track self-assertions separately from externally held LOW signals. Target RESET must remain separate from MCU RUN.
 - CPU address/control pins must be released when the real processor is installed, and when DMA owns the motherboard bus. The exact Motorola 48-pin **two-wire BR/BG arbitration** behavior must be implemented and tested before enabling bus-master operations against a real CPU.
 
 **Important:** 40 direct lines plus five protected lines is a **conceptual count, not a completed PIO-feasible pinout**. Make the pinout a reviewed design deliverable with one row per MC68008 pin, MCU pin/GPIO, direction in each mode, voltage, pull state and PIO function.
 
 ### 3.3 Protection for five non-5V-tolerant inputs
 
-Working prototype concept:
+Prototype selection updated 2026-11-09 (see [hardware review](../docs/hardware.md)):
 
-- Per input: a **2.2 kΩ series resistor** followed by an **external BAT54 Schottky clamp to the 3.3 V supply** (diode anode at the protected node, cathode at 3.3 V).
-- A **1 kΩ permanent 3.3 V-to-GND load** can absorb approximately **3.3 mA at 3.3 V** (~11 mW); five inputs clamped from 5.0 V through 2.2 kΩ may supply ~3.2 mA total at nominal conditions. This is an **estimate**, not an unconditional guarantee of safety.
-- Verify worst-case input voltage, resistor tolerances, diode forward-voltage variation and switching behavior, as well as supply startup/shutdown and the possibility of **back-powering** the 3.3 V rail. A shunt load does not by itself guarantee safe behavior with the regulator off.
+- Per input: a **2.2 kΩ series resistor** followed by a **single BAT54 Schottky clamp to the 3.3 V supply** (anode at the protected MCU node, cathode at 3.3 V). Use five separate JSCJ BAT54 / C8590 SOT-23 parts for easier placement/routing: pin 1 anode, pin 2 NC, pin 3 cathode. D1–D5 protect BERR, BR, VPA, IPL1 and IPL20 respectively.
+- Fit **two 1 kΩ resistors in parallel** from 3.3 V to GND, reusing the existing Basic 1 kΩ part. The 500 Ω load draws 6.6 mA nominal. A conservative five-input injection bound is 4.63 mA at 5.25 V target / 3.234 V rail with 1% series resistors and zero diode drop; the load sinks at least 6.40 mA under that envelope. The LDO need not sink the injected current. A single 1 kΩ load lacks adequate current margin.
+- **Accepted risk, 2026-11-09:** retain BAT54 clamps at the intended sub-mA currents; the user accepts the forward-voltage margin and expects Vf ≤0.3 V. The nominal resistor-only bound is 1.7 V / 2.2 kΩ = 0.773 mA before diode drop. Manufacturer-model SPICE results are recorded in `simulations/bat54/`; they support typical behavior rather than a guaranteed JSCJ production corner. Preserve the accepted decision while retaining startup and input-edge timing checks.
 - The RP2350 GPIO40–47 recommended/absolute input voltage limits must be met. Raspberry Pi does not specify a general allowable sustained injection current through those GPIO's internal ESD structures; **do not use their internal diodes as the primary clamp**.
 - A TTL-compatible 5 V-tolerant buffer remains a fallback if the simple clamp cannot meet margins. Avoid ordinary resistor dividers unless the **TTL HIGH threshold** at their reduced output is verified.
 
@@ -88,9 +88,24 @@ Working prototype concept:
 - Select **RP2350 A4 silicon or later** where possible because of the earlier high-impedance GPIO erratum; confirm actual supplied stepping rather than relying on catalog names.
 - Ensure **all bus-driving GPIOs are inputs / high impedance immediately after reset**, before user code or PIO initializes.
 - Add an unambiguous **hardware mode interlock** (jumper/switch or socket-detection mechanism) so a physical CPU cannot be driven by the emulator accidentally. Mode change must be deliberate; passive mode is the default.
-- Define target-powered vs USB-powered behavior to prevent back-feed, floating supplies and unpowered bus-pin exposure. Prefer a design where safe power sequencing is guaranteed or tested. Check maximum GPIO voltages across all supply states.
+- Use **target-only power**, shared with the TTL-compatible target logic. USB VBUS is used only for MOSFET-isolated presence sensing; SWD supplies no board power. This common-power prototype assumption is accepted without selecting additional bus isolation. Still check the local 3.3 V rise/fall against driven bus signals: sharing 5 V does not imply simultaneous 3.3 V availability. Independent powering and hot insertion are outside that assumption.
 - Bus timing and correct logic levels must be verified with a logic analyzer and the Motorola bus timing diagrams; PIO is deterministic but does **not** by itself make arbitrary software CPU emulation cycle accurate.
 - Layout: **4 layers first**, suggested top signals/components, solid GND plane, power/signal layer, bottom signals/components. Use **6 layers only if beneficial** for fanout/ground/reference integrity. Observe manufacturer's switch-mode regulator layout recommendations. Keep pass-through traces short and minimize input stubs.
+
+### 3.5 Control reservations and shared decoupling (2026-11-09)
+
+- `MODE_PERMIT` / GPIO45 is JP1's physical firmware-permission input, default passive; it does not detect CPU presence or electrically disable pads.
+- `BUS_ARM_REQUEST` / GPIO46 is reserved for a future independent hardware output-enable request. Currently it connects only to a pull-down and inhibits no bus output; it may be reassigned if that function is unnecessary.
+- Retain `USB_PRESENT_N` / GPIO47 for active-low VBUS presence and self-powered USB attach/detach behavior. It detects cable power, not host application activity. USB VBUS remains sense-only.
+- Use **one shared 100 nF capacitor (C23)** for the co-registered top/bottom MC68008 supply contacts, not one per connector. Retain the regulator input/output capacitors and the MCU's own local bypass capacitors.
+
+### 3.6 Assembly sourcing, schematic format and value reuse (2026-11-09)
+
+- Keep all circuit sections on **one landscape A3 schematic sheet**, using readable symbol and text sizes rather than a hierarchical sheet structure. Use local signal labels and real power symbols; global signal labels are unnecessary on this single sheet. Preserve saved schematic layout edits when updating the circuit.
+- Select purchased parts from **JLCPCB SMT assembly**, using **Basic** parts first where suitable and Extended parts where the electrical/mechanical requirements require them.
+- Before adding an Extended SKU, check existing values and parts for a compatible reuse. Share pull-up/pull-down and protection values where practical; preserve explicitly required USB, clock, filtering and timing values.
+- Record **LCSC C-number**, Basic/Extended class, source URL, verification date and the reason for each Extended selection in the BOM and schematic. Recheck class and stock when ordering.
+- J1/J2 top/bottom 48-pin contact assemblies are soldered manually and are exempt from JLCPCB sourcing. SWD pads and solder bridges are PCB features rather than purchased components; exclude these from the grouped JLCPCB upload BOM.
 
 ## 4. Software and validation plan
 
@@ -169,7 +184,7 @@ Develop in **incremental, independently testable phases**. The board must be use
 > **Second task — complete schematic:**
 > 6. Import and adapt the official Raspberry Pi RP2350B Minimal KiCad design (power, 1.1 V regulator, 12 MHz crystal, USB, decoupling, QSPI flash where needed, SWD). Compare RP2350B with RP2354B integrated 2 MB flash and choose the simpler well-supported implementation. Keep dedicated USB/QSPI/SWD pins separate from bus GPIO allocation.
 > 7. Create an authoritative table of all **48 MC68008 pins** from Motorola documentation (45 signals, VCC and two GND). Allocate 40 signals to 5 V-tolerant GPIO0–39 and five input signals to protected GPIO40–47, only if correct after PIO/timing analysis; preserve three spare GPIOs where feasible. Check active-low polarity, bidirectionality, CPU output tri-states, RESET/HALT, E/VPA, DTACK/BERR, IPL encoding and BR/BG.
-> 8. Evaluate the prototype five-input 2.2 kΩ + BAT54-to-3.3 V protection and 1 kΩ rail load. Calculate worst-case clamp current, rail rise, voltage-margin, edge-delay and back-power conditions. If unsafe, select the least-complex verified replacement and document why. Add an active/passive mode hardware safety interlock and power-selection safeguards.
+> 8. Evaluate the prototype five-input 2.2 kΩ + BAT54-to-3.3 V protection and two parallel 1 kΩ rail loads. Calculate worst-case clamp current, rail rise, voltage-margin, edge-delay and back-power conditions. If unsafe, select the least-complex verified replacement and document why. Add an active/passive mode hardware safety interlock and power-selection safeguards.
 > 9. Run schematic ERC and PCB DRC as appropriate. Record any intentionally unresolved connector, assembly or input-clamp items. Do not proceed to fabrication without resolving them.
 >
 > **Third task — staged software, keeping every milestone buildable:**
