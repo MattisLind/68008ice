@@ -1,4 +1,0 @@
-(sym_lib_table
-  (version 7)
-  (lib (name "68008ice")(type "KiCad")(uri "${KIPRJMOD}/68008ice.kicad_sym")(options "")(descr "Project symbols: 48-pin adapters, LVC541 and verified ECP5 pinout"))
-)

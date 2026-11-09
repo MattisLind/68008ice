@@ -1,153 +1,80 @@
-# MC68008 In-Circuit Emulator and Bus Analyzer
+# RP2350 MC68008 Emulator and Bus Analyzer
 
-An open-source FPGA adapter for diagnosing and repairing computers built around
-the **48-pin MC68008**. The board sits between the motherboard's CPU socket and
-an optional real processor. It can observe the machine, debug it using the real
-CPU, or replace the CPU with an FPGA implementation.
+A compact diagnostic adapter for computers using the **48-pin MC68008**. An
+RP2350B or RP2354B microcontroller will use PIO, DMA and native USB to observe
+the processor bus, generate diagnostic bus cycles and eventually emulate the
+CPU in software.
 
-The project is at the requirements and initial schematic stage. FPGA logic,
-firmware, host tools, and a PCB layout have not been implemented. The
-[project specification](requirements/MC68008_ICE_Project_Specification_2026-11-04.md)
-is the design baseline; the [KiCad starter](kicad/README.md) records the current
-hardware work and unresolved decisions.
+The project is restarting at the requirements stage. Hardware, firmware and
+host tools for this approach have not yet been implemented. The
+[RP2350 engineering specification](requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md)
+is the design baseline and contains the detailed requirements, acceptance
+criteria and primary references.
 
-The schematic now connects all bus receivers, drivers, control signals, and the
-FT245 interface to FPGA balls. Pin selection favors the outer BGA rings, with
-matching assignments in [the pin table](kicad/fpga_pins.csv) and
-[LPF constraints](kicad/68008ice.lpf). Power connections use KiCad power symbols.
+## Operating modes
 
-## Operating ideas
-
-| Mode | Execution engine | Intended behavior |
+| Mode | Physical CPU | Intended behavior |
 | --- | --- | --- |
-| Transparent analyzer | Physical MC68008 | Forward the bus combinationally and record activity with programmable triggers. |
-| Active real-CPU debugger | Physical MC68008 | Intercept or inject bus responses, instructions, interrupts, and exceptions; provide virtual debugger memory and register capture. |
-| In-circuit emulator (ICE) | FX68K in the FPGA | Drive the motherboard through an 8-bit bus adapter, with halt, step, inspection, and diagnostic accesses. |
+| Passive analyzer | Installed in the upper socket | CPU pins connect directly to the motherboard; the MCU observes with all bus outputs disabled. Capture bounded traces with triggers, timestamps and overflow reporting. |
+| CPU replacement | Removed | The MCU drives the motherboard bus. Begin with byte reads/writes and memory diagnostics, then add a software MC68008 interpreter and execution controls. |
 
-Correct instruction execution and valid external bus cycles take priority over
-matching the original processor's internal instruction timing. Comparing the
-physical and emulated CPUs in tandem, and building a standalone CPU test
-fixture, are future ideas outside the initial scope.
+Passive mode is the default. A hardware interlock must prevent accidental MCU
+bus driving with a real processor installed. Full CPU emulation and original
+CPU-speed performance remain development goals requiring validation.
 
-## Hardware architecture
+## Hardware concept
 
-```mermaid
-flowchart LR
-    CPU["Optional real MC68008"] <--> C["CPU-side 5 V / 3.3 V interface"]
-    C <--> FPGA["ECP5 FPGA: forwarding, FX68K, NEORV32, protocol and trace"]
-    FPGA <--> T["Motherboard-side 3.3 V / 5 V interface"]
-    T <--> MB["48-pin motherboard CPU socket"]
-    USB["Host USB"] <--> FT["FT2232H: A JTAG / B FT245 FIFO"]
-    FT <--> FPGA
-    FLASH["SPI NOR: configuration and applications"] <--> FPGA
-```
+- Aligned female contacts on top and male contacts underneath: 48-pin DIP,
+  2.54 mm contact pitch and 15.24 mm row spacing, with verified pin-for-pin
+  correspondence through the board.
+- A central 10 × 10 mm QFN-80 RP2350B/RP2354B, targeting a board close to the DIP
+  body footprint. Connector geometry, component clearance and insertion forces
+  must be checked before committing to the arrangement.
+- Four-layer PCB preferred; six layers if justified. The electronic-component
+  BOM target is under US$10, excluding PCB, connectors, assembly and freight;
+  this is an unverified target.
+- Native USB-C for host communication, BOOTSEL recovery and dedicated SWD for
+  MCU debugging. RP2350B requires external QSPI flash; RP2354B is the proposed
+  integrated-flash alternative.
+- Target-derived 5 V supplies a 3.3 V regulator and the MCU's core-regulator
+  circuit. USB power behavior and protection against back-powering must be
+  resolved for the new design.
+- A provisional GPIO allocation uses 40 five-volt-tolerant GPIOs and five
+  externally protected inputs. The physical pin map, PIO grouping, electrical
+  limits and reset/power-off behavior still require review.
 
-The two bus interfaces remain electrically separate. In analyzer mode, forwarding
-passes through input buffers, combinational FPGA logic, and output buffers;
-sampling registers are outside that path. Capture logic samples both sides at
-approximately **50 MHz**, with a circular buffer and configurable pre/post-trigger
-history. Triggers include masked address/data, read/write, function code, bus
-error, and DTACK timeout. Both raw samples and compact transaction/event records
-are planned.
+RESET/HALT behavior, bus arbitration, TTL compatibility and supply sequencing
+are explicit design checks. Connector footprints and the proposed input clamps
+are provisional until verified against original documentation and bench tests.
 
-- **FPGA:** Lattice ECP5-25F, preferably CABGA-256. Its 1,008 Kbit / 126 KiB of
-  embedded RAM is shared by CPU needs, debugger memory, and trace capture. Move
-  to ECP5-45F only if the complete design does not fit.
-- **Bus translation:** 3.3 V-powered 74LVC541A receivers and 5 V-powered
-  74AHCT541 drivers, with separate FPGA input, output, and output-enable nets.
-  The specification's initial eight-receiver/eight-driver estimate needs
-  refinement against sensing coverage and independently enabled groups.
-- **Ownership:** drivers start disabled and must remain safe through
-  configuration, mode changes, and DMA handoff. RESET and HALT need separate
-  sensing and open-drain low drivers on each side. CPU-side DTACK, BERR, VPA,
-  and interrupt inputs must be independently interceptable.
-- **48-pin variant:** A0–A19, D0–D7, one DS strobe, two interrupt inputs
-  (IPL1 and combined IPL2/IPL0), and two-wire BR/BG arbitration. There is no
-  BGACK pin. See the [Motorola user manual](https://www.nxp.com/docs/en/reference-manual/MC68000UM.pdf).
-- **Host connection:** one FT2232H, with channel A for MPSSE/JTAG and channel B
-  for the 8-bit **asynchronous FT245 FIFO**, including RXF#, TXE#, RD#, WR#,
-  and preferably SIWU#. An EEPROM selects the FTDI configuration.
-- **Configuration:** SPI NOR stores the FPGA bitstream, an application
-  directory, and firmware images. FPGA-controlled updates and an independent
-  JTAG recovery header are planned.
-- **Power and USB:** all circuitry, including the FT2232H, runs from the target
-  motherboard's +5 V. Proposed regulators provide 1.1 V / 3 A, 3.3 V / 1 A,
-  and 2.5 V / 500 mA. USB-C VBUS is sensed through MOSFET gates and never feeds
-  a board supply. Independent rail supervision, configuration status and an
-  explicit arm request qualify bus drive; receivers also stay off until FPGA
-  supplies are valid. See the [hardware notes](kicad/README.md) for the circuit
-  and outstanding power-budget and startup validation.
-- **Board:** four-layer KiCad PCB, targeting JLCPCB fabrication and assembly
-  subject to BGA breakout, placement, and manufacturing constraints.
+## Development order
 
-## FPGA, firmware, and host software
+1. **Mechanical feasibility:** create a placement-first KiCad project with
+   aligned top/bottom contacts, board outline, central MCU and provisional
+   support components. Produce placement plots, a dimensions report and
+   connector/clearance findings before detailed routing.
+2. **Circuit design and bring-up:** complete the schematic, reviewed pin map,
+   power/protection and hardware mode interlock. Bring up safe GPIO defaults,
+   USB, recovery and target-clock observation.
+3. **Passive analyzer:** implement synchronized PIO/DMA capture, bounded buffers,
+   triggers and USB trace export to text/CSV. Verify that pass-through operation
+   leaves a known-good target unaffected.
+4. **Active diagnostics:** with the real CPU removed, validate byte transactions,
+   timeouts, bus errors and ordered word/long accesses using a bench fixture.
+   Add memory examination and explicitly enabled RAM writes/tests.
+5. **CPU emulation:** evaluate MCL68+ licensing and portability, isolate the
+   interpreter from the hardware bus engine, and test 68008 addressing,
+   exceptions and interrupts. Benchmark before making speed claims.
 
-**FX68K** supplies the emulated 68000 execution engine while retaining its
-microcode and nanocode. A new adapter converts a logical 16-bit word transfer
-into two MC68008 byte transfers and withholds completion until both finish.
-Prefetch, errors, interrupts, VPA cycles, read-modify-write, and DMA handoff all
-need verification.
+Firmware is planned around the Pico C/C++ SDK, separate bus/analyzer/interpreter
+modules and a documented, versioned USB protocol. Host tooling and reproducible
+builds should work across common operating systems.
 
-**NEORV32** runs the debugger firmware. An FPGA-initialized bootloader loads one
-task-specific application at a time from SPI flash, using a fixed directory of
-application ID, offset, length, and CRC32. Initial memory budgets are 8 KiB boot
-ROM, 16 KiB writable instruction RAM, and 4 KiB data RAM, subject to compiled
-sizes. Direct application upload through FT245 is also planned.
+The first implementation milestone is **mechanical placement and feasibility**.
+No PCB is ready for fabrication.
 
-Application selection uses a hardware mailbox followed by a **NEORV32-only
-reset**. Bus ownership, output safety, operating mode, trace contents, FT245
-protocol state, and the selection mailbox remain in hardware outside that reset
-domain. Flash updates need protection for the FPGA configuration region and a
-JTAG recovery route.
+## Repository
 
-**FPGA RTL owns the host protocol:** FT245 handshaking, FIFOs, framing, escaping,
-CRC32, and command dispatch. Frames carry message type, command ID, sequence
-number, payload length, and CRC32, with an initial payload limit of 256 bytes.
-Length, command, and integrity checks complete before any action executes.
-
-| Escaped bytes | Meaning |
-| --- | --- |
-| `FF 00` | Start frame |
-| `FF 01` | End frame |
-| `FF 02` | Abort / resynchronize |
-| `FF FF` | Literal `FF` within frame contents |
-
-Simple control commands execute in hardware; higher-level commands reach
-NEORV32 through an interrupting mailbox. Trace data streams directly from FPGA
-memory into the framed transmitter. Responses, trace chunks, and events share
-one serialized output so frames cannot interleave. Host tools will use
-**libftdi/libusb** for control, decoding, disassembly, and diagnostics.
-
-Real-CPU debugging will use forward/suppress/inject selection and a small virtual
-instruction/stack window. Register capture is intended to inject an exception
-handler and restore state with `RTE` where safe, accounting for USP/SSP and
-prefetch. Ordinary 68000/68008 bus-error exceptions cannot generally restart an
-interrupted instruction; BERR + HALT bus retry is a separate mechanism with
-restrictions.
-
-## Development path
-
-1. Synthesize FX68K, NEORV32, FT245 framing, bus control, and trace infrastructure
-   together for ECP5-25F; establish logic, I/O, timing, and RAM budgets.
-2. Simulate one logical word read as two correctly timed byte transactions,
-   then extend verification to waits, errors, interrupts, and arbitration.
-3. Complete schematic power, clocking, and output interlocks; validate pin allocation;
-   review electrical rules and target timing before PCB layout.
-4. Bring up transparent forwarding and capture on hardware, then real-CPU
-   interception, followed by ICE operation.
-
-The intended toolchain is **Yosys, nextpnr-ecp5, Project Trellis,
-openFPGALoader, Verilator, and Makefiles** on macOS and Linux. The main risks are
-BGA breakout and power layout, forwarding delay and data/DTACK timing, bus
-contention, exception restoration, and FX68K behavior under extended waits.
-
-## Repository and references
-
-- [`requirements/`](requirements/) — original project specification.
-- [`kicad/`](kicad/) — initial schematic project and hardware notes.
-- [AtomBusMon](https://github.com/hoglet67/AtomBusMon) — starting architectural reference.
-- [FX68K](https://github.com/ijor/fx68k) — proposed CPU core.
-- [NEORV32](https://github.com/stnolting/neorv32) — selected debug processor.
-
-The repository is licensed under [Apache License 2.0](LICENSE). Referenced
-third-party cores and tools retain their own licenses.
+- [requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md](requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md): current engineering specification and staged implementation prompt.
+- [AGENTS.md](AGENTS.md): project-specific instructions for contributors and coding agents.
+- [LICENSE](LICENSE): Apache License 2.0.
