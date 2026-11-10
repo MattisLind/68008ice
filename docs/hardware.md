@@ -1,6 +1,6 @@
 # Pin mapping and candidate BOM review
 
-Revision 0.3, 2026-11-09. This is a schematic starter with reviewed physical pin
+Revision 0.4, 2026-11-10. This is a schematic starter with reviewed physical pin
 numbering and a **proposed** GPIO allocation. It is not an electrically validated
 board. All circuit sections are kept on one landscape A3 schematic. The current iteration establishes mapping, parts and schematic connections;
 mechanical placement remains required before routing.
@@ -11,8 +11,9 @@ Use **RP2354B**, QFN-80, with 2 MB in-package flash, and require A4 or later sil
 It removes the external flash and its routing from the cramped DIP adapter.
 Raspberry Pi's hardware guide permits adapting the RP2350B Minimal design by
 omitting its external flash while retaining BOOTSEL. This starter follows that
-approach; external QSPI data/clock pads are left unconnected, and QSPI_SS retains
-the boot switch. RP2350B with external flash is an alternative requiring a
+approach; the external QSPI clock/data pads now also connect to 8 MiB PSRAM.
+QSPI_SS selects the in-package flash and retains the boot switch; GPIO47 supplies
+the PSRAM's independent CS1. RP2350B with external flash requires a
 separate schematic variant. [Raspberry Pi hardware guide](https://pip-assets.raspberrypi.com/categories/1214-rp2350/documents/RP-008280-DS-2-hardware-design-with-rp2350.pdf)
 
 ## Physical pin map
@@ -44,16 +45,17 @@ no intervening MCU path in the CPU pass-through.
 | 35–37 | DTACK_N, BG_N, E | Direct |
 | 38–39 | HALT_N, RESET_N | Direct; drive low or release only |
 | 40–44 | BERR_N, BR_N, VPA_N, IPL1_N, IPL20_N | 2.2 kΩ series + BAT54 upper clamp |
-| 45 | MODE_PERMIT | JP1 physical permission input; open = passive; 10 kΩ pull-down |
-| 46 | BUS_ARM_REQUEST | Unused hardware-enable reservation; currently only R5 to GND |
-| 47 | USB_PRESENT_N | Active-low MOSFET-isolated VBUS detector, retained for USB attachment |
+| 45 | MODE_PERMIT | JP1 physical permission input; open = passive; R5 10 kΩ pull-down |
+| 46 | USB_PRESENT_N | Active-low MOSFET-isolated VBUS detector, moved from GPIO47 |
+| 47 | PSRAM_CS_N | QMI CS1, active low; R4 1 kΩ pull-up; MCU pad 58 |
 
 Suffix `_N` denotes active low; `RW` is high for read, low for write. `IPL20_N`
 denotes one physical combined IPL2/IPL0 signal, not an extra interrupt pin.
 
 There are **45 target signals**, using 40 direct and five resistor/clamp connections.
-The remaining three GPIOs are allocated to mode, arm and USB presence; there are
-no uncommitted GPIOs in this draft. USB, flash and SWD use their dedicated pads.
+The remaining three GPIOs are allocated to mode, USB presence and PSRAM select;
+there are no uncommitted GPIOs. USB and SWD use dedicated pads; PSRAM shares
+the dedicated flash clock/data pads and consumes GPIO47 for chip select.
 Package-pad numbers and FT/non-FT classification follow the QFN-80 tables in the
 [RP2350 datasheet, sections 14.8–14.9](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf).
 
@@ -89,12 +91,18 @@ RC edge delay and sampling latency in the error-recognition budget.
 
 The target is assumed to use TTL-compatible signals and one common 5 V supply.
 Following the design choice agreed on 2026-11-09, **U3/C3 are removed**. R14–R18
-are five identical **2.2 kΩ** input resistors. **D1–D5 are five single BAT54
-Schottky diodes**, one per input, so each clamp can sit beside its MCU pad during
-routing. Anodes connect to the MCU side of the resistor; cathodes connect to
-3.3 V. The SOT-23 pinout is **1 = anode, 2 = NC, 3 = cathode**. Leave pad 2
-unconnected; BAT54A/C/S are different diode configurations.
-[Selected JSCJ BAT54, C8590](https://jlcpcb.com/partdetail/BAT54/C8590)
+are five identical **2.2 kΩ** input resistors. **D1–D5 are R+O BAT54X
+single Schottky diodes in SOD-523**, replacing the larger SOT-23 selection.
+Their nominal body is 1.2 × 0.8 mm. Each uses a plain two-pin Schottky symbol
+and KiCad's `Diode_SMD:D_SOD-523` footprint: **pad 1 = cathode to 3.3 V,
+pad 2 = anode at the protected MCU node**. There is no unused third terminal.
+The cathode-marked end of the package corresponds to pad 1. All existing diode
+centres, lead positions and clamp connections are preserved in the schematic.
+[User-selected R+O BAT54X, C19627026](https://jlcpcb.com/partdetail/BAT54X/C19627026)
+is **Extended SMT**, checked 2026-11-10. Five identical parts replace the previous
+clamp SKU without adding another Extended type. R+O is the brand shown on the
+Zhuhai Hongjiacheng manufacturer's datasheet.
+[BAT54X datasheet](https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026)
 
 | Input | Series resistor | Single clamp |
 | --- | --- | --- |
@@ -139,12 +147,13 @@ and 0.197 V**. The earlier approximately 0.5 mA estimate is an expectation for
 TTL-driven conditions, not the conservative resistor-only bound. The 4.63 mA
 five-input injection budget above is retained.
 
-For traceability, the selected JSCJ datasheet specifies up to 0.32 V at 1 mA /
+For traceability, the selected R+O datasheet specifies up to 0.32 V at 1 mA /
 25°C; the RP2350 recommended input maximum is IOVDD + 0.3 V. The user has accepted
 that margin without claiming a guaranteed production corner. The available
-simulation uses the Diodes Inc/Zetex BAT54 model, rather than a validated JSCJ
-BAT54 model. Original datasheet references remain below.
-[JSCJ electrical characteristics](https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf),
+simulation uses the Diodes Inc/Zetex BAT54 model, rather than a validated R+O
+BAT54X model. The part change does not turn the existing simulation into
+a guaranteed model of the selected device. Datasheet references remain below.
+[R+O electrical characteristics](https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026),
 [RP2350 electrical limits](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)
 
 For timing planning, 2.2 kΩ and an illustrative 20 pF total node capacitance give
@@ -174,9 +183,10 @@ the removed `TBD_POWER_ISOLATION` BOM row is not a required part selection.
 
 U2 is a candidate **TLV75533PDBVR** 5 V-to-3.3 V LDO. Its 500 mA capability is a
 device rating, not the expected load or permissible dissipation in this PCB.
-Plan initially for a 100 mA continuous/200 mA transient 3.3 V allocation, then
-measure real MCU/USB/GPIO loads and confirm the target can supply them. At nominal
-5 V input, LDO dissipation is 0.17 W at 100 mA and 0.34 W at 200 mA. Temperature,
+Plan initially for a 125 mA continuous/225 mA transient 3.3 V allocation, including
+25 mA added for PSRAM, then measure real MCU/USB/GPIO loads and confirm the target
+can supply them. At nominal 5 V input, LDO dissipation is approximately 0.21 W
+at 125 mA and 0.38 W at 225 mA. Temperature,
 copper area, target tolerance and transient behavior must determine acceptance
 or a switcher alternative. [TI TLV755P datasheet](https://www.ti.com/lit/ds/symlink/tlv755p.pdf)
 
@@ -201,27 +211,87 @@ self-powered connection.
 
 J4 also supports automated SWD firmware uploads and source debugging, without
 pressing BOOTSEL. See [programming.md](programming.md) for wiring and tool commands.
+Use a Raspberry Pi Debug Probe and its supplied three-pin JST cable. J4 is a
+genuine JST-SH **SM03B-SRSS-TB(LF)(SN) / C160403** side-entry SMT connector,
+with **1=SWCLK, 2=GND, 3=SWDIO** and grounded metal hold-down pads. It has no
+power contact. The connector replaces the former four debug pads and 3V3
+reference. Its body is nominally 5 × 4.25 × 2.9 mm; access with a CPU installed
+and cable-bend space must be checked during placement.
 
-## Mode permission and arm reservation
+## 8 MiB PSRAM
+
+U5 is **AP Memory APS6404L-3SQR-ZR**, 64 Mbit / 8,388,608 bytes, powered from
+3.3 V. JLCPCB **C3040877** is an **Extended SMT** part, checked 2026-11-10.
+Its USON body is 3 × 2 mm with 0.5 mm pitch. The installed KiCad AP Memory
+symbol uses the matching standard footprint
+`Package_SON:Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm`.
+The centre paddle is represented as pad 9 and left unconnected; the manufacturer's
+functional pin table assigns only the eight perimeter terminals. The package
+drawing shows its 0.2 × 1.6 mm central metal feature.
+[JLCPCB selection](https://jlcpcb.com/partdetail/APMemory-APS6404L_3SQRZR/C3040877),
+[AP Memory datasheet, package/pinout and electrical requirements](https://www.pjrc.com/store/APS6404L_3SQR.pdf)
+
+There is no separate flash chip on the board. **RP2354B already contains 2 MB
+of QSPI flash**, and those signals are also bonded to its external QSPI pads.
+The PSRAM shares clock/data with this flash; the two chip selects stay separate.
+RP2350 QMI CS1 is available only on GPIO0, 8, 19 and 47. Using GPIO47 preserves
+all 45 bus-signal assignments. USB detection moves to GPIO46, and the unused
+`BUS_ARM_REQUEST` reservation is removed.
+[RP2350 datasheet, sections 12.14 and 14.3](https://datasheets.raspberrypi.com/rp2350/rp2350-datasheet.pdf)
+
+| PSRAM pin | Signal | MCU pin / connection |
+| --- | --- | --- |
+| 1 | CE# | GPIO47 / QFN58 / PSRAM_CS_N |
+| 2 | SIO1 | QSPI_SD1 / QFN74 |
+| 3 | SIO2 | QSPI_SD2 / QFN73 |
+| 4 | VSS | GND |
+| 5 | SIO0 | QSPI_SD0 / QFN72 |
+| 6 | SCLK | QSPI_SCLK / QFN71 |
+| 7 | SIO3 | QSPI_SD3 / QFN70 |
+| 8 | VDD | 3.3 V |
+| 9, footprint paddle | No assigned electrical function | Unconnected |
+
+R4 is repurposed as a **1 kΩ pull-up**, reusing Basic C11702. The PSRAM asks
+CE# to track VDD within 200 mV during startup. A 10 kΩ pull-up against the
+MCU's default pull-down would be too weak. With 1% R4 and the RP2350's specified
+36 kΩ minimum pull-down at 3.3 V, the calculated drop is under 0.10 V even using
+3.6 V supply and 1 µA PSRAM input leakage. Firmware must disable that pull-down
+and select an appropriate drive strength before enabling CS1. The pull-up draws
+3.3 mA nominal while selected; include this in GPIO and power budgets.
+
+C24 **4.7 µF / C23733** and C25 **100 nF / C1525** reuse existing Basic SKUs.
+The datasheet recommends at least 1 µF low-ESR local decoupling, plus optional
+100 nF. Place both at U5 VDD/GND and verify C24 retains at least 1 µF under bias.
+PSRAM read/write supply current is specified as 7 mA excluding output-load
+current. Reserve about 25 mA additional 3.3 V capacity for memory, pull-up and
+I/O activity, and measure actual consumption. Keep the shared QSPI traces short
+and preserve the RP2354B's QSPI_IOVDD decoupling.
+
+Firmware is not implemented yet. Configure the known CS pin and size explicitly:
+`PICO_PSRAM_CS_PIN=47`, `PICO_PSRAM_SIZE_BYTES=8388608`. **Do not scan candidate
+CS GPIOs automatically:** GPIO0/8/19 carry motherboard address signals.
+Allow at least 150 µs after stable PSRAM VDD, issue the specified reset sequence,
+then initialize QMI. Start with QMI clock at or below **84 MHz** for linear
+bursts; 75 MHz is a suitable initial divider from a 150 MHz system clock.
+Respect the 8 µs maximum CE#-LOW time and at least 18 ns between bursts, and
+check shared flash-bus power-up timing on the bench. The QMI CS1 mapping starts
+at `0x11000000`; the 8 MiB device occupies through `0x117fffff`.
+[Pico SDK PSRAM API](https://www.raspberrypi.com/documentation/pico-sdk/hardware.html#hardware_psram),
+[SDK implementation and candidate CS pins](https://github.com/raspberrypi/pico-sdk/blob/master/src/rp2_common/hardware_psram/psram.c)
+
+## Mode permission
 
 `MODE_PERMIT` is the GPIO45 input from solder bridge JP1. Open JP1 gives a LOW
-through R4 and selects passive-only permission. Bridging JP1 gives HIGH and tells
+through R5 and selects passive-only permission. Bridging JP1 gives HIGH and tells
 firmware that the user deliberately permits CPU-replacement operations. It does
 not sense whether a CPU is physically installed. Firmware must still require the
 physical CPU to be removed and an explicit host command before starting active
 cycles. Merely closing JP1 must not start bus driving.
 
-`BUS_ARM_REQUEST` on GPIO46 is a proposed firmware output for a future independent
-output-enable circuit. **At present it connects only to R5's pull-down.** It does
-not gate any GPIO or make the current board electrically incapable of driving
-with a real CPU installed. It is a reservation, and GPIO46 can be reassigned if
-that future circuit does not need it. Keep it LOW during reset/passive operation.
-There is no implemented arm firmware yet.
-
-These signals represent two different intentions: physical mode permission and a
-later software request to enable hardware. JP1 alone provides only firmware-level
-protection. An independently enforced output inhibit remains a separate design
-item.
+The former `BUS_ARM_REQUEST` reservation is removed to accommodate PSRAM and USB
+sensing. JP1 alone provides only firmware-level protection. An independently
+enforced output inhibit remains a separate design item, with no spare GPIO
+currently reserved for it.
 
 ## Bidirectional open-drain RESET and HALT
 
@@ -263,7 +333,7 @@ also remain part of bring-up.
 
 ## USB presence
 
-`USB_PRESENT_N` on GPIO47 means **VBUS present**, active LOW through Q1. It is
+`USB_PRESENT_N` on GPIO46 means **VBUS present**, active LOW through Q1. It is
 retained. Even though useful ICE operation needs USB, the target may stay powered
 while the cable is unplugged, the host is off or a port removes VBUS. The self-
 powered device should enable its USB attachment pull-up only when VBUS is present
@@ -272,7 +342,7 @@ that decision without powering the board from USB. It does not prove successful
 enumeration, a data-capable cable or a running host application.
 [USB self-powered VBUS guidance](https://www.st.com/content/st_com/en/technical-documents/an4879-introduction-to-usb-hardware-and-pcb-guidelines-using-stm32-mcus-stmicroelectronics_asset/chunk-003-topic-an4879-vbus-sensing-detection.html)
 
-No current bus signal needs GPIO47. Keep the detection circuit; its operation in
+The detection circuit remains fitted while GPIO47 selects PSRAM; its operation in
 application firmware and ROM BOOTSEL recovery still needs validation. Disconnecting
 only the host application may leave VBUS present, so this signal is not a host
 command/heartbeat watchdog.
@@ -297,10 +367,10 @@ rationale and verification date. These fields are also embedded in schematic
 symbols. [BOM_JLCPCB.csv](../kicad/BOM_JLCPCB.csv) is the grouped upload BOM, using
 JLCPCB's Comment / Designator / Footprint / LCSC Part # columns.
 
-**56 JLCPCB SMT placements use 20 distinct catalog numbers: 12 Basic and eight
-Extended types.** There are 60 instantiated schematic positions in total. J1/J2
-are manually fitted contact assemblies; J4 SWD pads and JP1's solder bridge are
-PCB features. These four positions have no JLCPCB part number and are excluded
+**60 JLCPCB SMT placements use 22 distinct catalog numbers: 12 Basic and ten
+Extended types.** There are 63 instantiated schematic positions in total. J1/J2
+are manually fitted contact assemblies; JP1's solder bridge is a
+PCB feature. These three positions have no JLCPCB part number and are excluded
 from the upload BOM. Each J1/J2 assembly represents two 24-contact rows.
 
 The [dated catalog manifest](../kicad/parts_catalog.json) records direct JLCPCB
@@ -312,8 +382,10 @@ parts. Recheck BOM matching, inventory and assembly charges before ordering.
 | Function | Selection / LCSC | Library |
 | --- | --- | --- |
 | MCU | RP2354B / C39843328 | Extended |
+| 8 MiB PSRAM | APS6404L-3SQR-ZR / C3040877 | Extended |
 | 3.3 V LDO | TLV75533PDBVR / C404027 | Extended |
-| Input clamps | BAT54 / C8590, five identical single diodes | Extended |
+| Input clamps | R+O BAT54X / C19627026, five identical SOD-523 diodes | Extended |
+| SWD connector | JST SM03B-SRSS-TB(LF)(SN) / C160403, side-entry JST-SH 3-pin | Extended |
 | Core inductor | AOTA-B201610S3R3-101-T / C42411119 | Extended |
 | Crystal | ABM8-272-T3 / C20625731 | Extended |
 | USB-C | USB4105-GF-A / C3020560 | Extended |
@@ -328,10 +400,10 @@ choice are in [JLCPCB_parts.md](../kicad/JLCPCB_parts.md).
 
 Value consolidation:
 
-- RUN pull-up, mode/arm pull-downs, detector pull-up and VBUS gate series resistor
+- RUN pull-up, mode pull-down, detector pull-up and VBUS gate series resistor
   all use the same **10 kΩ** Basic part. VBUS gate pull-down becomes **100 kΩ**,
   retaining the original 10:1 divider ratio and removing the former 1 MΩ SKU.
-- The two permanent-load resistors reuse **1 kΩ**. All five clamp series resistors
+- PSRAM R4 and the two permanent-load resistors reuse **1 kΩ**. All five clamp series resistors
   use one **2.2 kΩ** SKU, and all clamps use one BAT54 SKU.
 - USB-C CC1/CC2 each keep **5.1 kΩ**. USB D+/D− retain the specified **27 Ω**
   Extended part. The investigated 0603 27 Ω part C25190 is also Extended; changing
@@ -340,7 +412,7 @@ Value consolidation:
 - Both crystal capacitors use the same Basic **15 pF C0G** part. Basic crystal
   C9002 has 20 pF load / 80 Ω ESR, unlike the reference crystal's 10 pF / 50 Ω;
   it was not substituted just because it is also 12 MHz.
-- The three 4.7 µF sites and two 10 µF sites each share one Basic part. Check
+- The four 4.7 µF sites and two 10 µF sites each share one Basic part. Check
   effective capacitance under bias, especially the core regulator's capacitors.
 - The two former Wurth switches are replaced by the same **Basic two-pad SMT
   switch** and matching KiCad footprint. The unused four-pad custom footprint is
@@ -373,7 +445,8 @@ an experimental alternative requiring fracture and retention tests.
 | --- | --- |
 | Shared target-power assumption | Measure local 3.3 V startup/decay against bus drive; validate the accepted common-5-V assumption. Separate isolation is not selected in this revision. |
 | BAT54 voltage/timing | Forward-voltage margin accepted by the user, supported by nominal SPICE evidence. Measure edge delay for PIO timing. |
-| Independent output inhibit | JP1 only feeds firmware permission. It does not disable pad drivers. An independent inhibit compatible with passive capture is still required; tying MCU RUN low would disable the analyzer too. BUS_ARM_REQUEST reserves a pin for that circuit. |
+| Independent output inhibit | JP1 only feeds firmware permission. It does not disable pad drivers. An independent inhibit compatible with passive capture is still required; tying MCU RUN low would disable the analyzer too. The previous arm GPIO reservation is now used by USB sensing. |
+| PSRAM | Validate shared QSPI power-up/reset, CS bias, decoupling under bias, routing, QMI timings and repeated full-memory tests; firmware is not implemented yet. |
 | Passive loading | Check reset pull-downs, input leakage, added capacitance, stubs and timing on a fixture and a known-good target. |
 | Target output compatibility | Check each motherboard input threshold, pull-up/loading and aggregate MCU current; 3.3 V is not universally compatible with every 5 V input. |
 | RESET/HALT | Implement the documented input-enabled, latch-LOW/output-enable sequence; check target pull-up current and external reset/error semantics. |

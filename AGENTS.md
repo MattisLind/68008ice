@@ -27,14 +27,26 @@
 - Use local signal labels and real power symbols. Preserve saved GUI placement,
   wiring and field-layout edits during circuit changes; use `--bom-only` when
   refreshing purchasing outputs without replacing the edited schematic.
-- Use five single BAT54 / C8590 clamps, one per protected input, with anodes at
-  the MCU nodes after R14–R18 and cathodes at 3.3 V; leave SOT-23 pad 2 NC.
+- Use five user-selected R+O BAT54X / C19627026 SOD-523 clamps, one per protected input.
+  Use a plain two-pin Schottky symbol: pad 1 cathode at 3.3 V, pad 2 anode at
+  the MCU node after R14–R18. There is no third/NC terminal.
+- J4 is a purchased JST-SH SM03B-SRSS-TB(LF)(SN) / C160403 side-entry SMT
+  connector for the Raspberry Pi Debug Probe: 1 SWCLK, 2 GND, 3 SWDIO; mounting
+  pads MP to GND. There is no power/reference contact. Include J4 in the JLCPCB
+  BOM and verify cable/CPU/socket clearance during placement.
 - Review GPIO allocation for signal direction, voltage tolerance and PIO
   grouping/timing. Keep any pin table, schematic and firmware assignments in sync.
 - The current starter chooses RP2354B with in-package flash. Read
   `docs/hardware.md` for mapping decisions and unresolved safety circuits.
   `kicad/mc68008_pinmap.csv` drives `tools/build_hardware.py`; review GUI edits
   before regeneration and run `tools/check_hardware.py` on the exported netlist.
+- U5 is 8 MiB APS6404L-3SQR-ZR / C3040877, sharing dedicated QSPI clock/data
+  with the in-package flash. Keep PSRAM CS1 on GPIO47 and USB_PRESENT_N on GPIO46;
+  the unused BUS_ARM_REQUEST reservation has been removed. R4 is now a 1 kΩ CS
+  pull-up and R5 is MODE_PERMIT's 10 kΩ pull-down. Preserve C24/C25 local bypass.
+  Firmware must use known CS GPIO47 and size 8388608 explicitly; never scan the
+  other CS-capable pins GPIO0/8/19, which carry target addresses. Disable the CS
+  pad pull-down and obey PSRAM power-up/reset and CE timing before QMI use.
 - Default to passive mode with bus-driving GPIOs high impedance after reset.
   Require a hardware mode interlock for active operation. Preserve RESET/HALT
   electrical behavior and BR/BG bus ownership.

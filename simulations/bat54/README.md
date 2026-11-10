@@ -15,9 +15,9 @@ one-junction circuit and its operating conditions are unchanged.
 - Model: **Diodes Incorporated / Zetex BAT54 v1.0, revised 2000-04-25**.
 - Original download: [manufacturer BAT54 model](https://www.diodes.com/spice/download/510/BAT54.spice.txt), linked from the [BAT54 product page](https://www.diodes.com/part/view/BAT54).
 - [BAT54.lib](BAT54.lib) retains the downloaded model and original notice intact.
-- Selected BOM part: **JSCJ BAT54, C8590**. The simulation model is a different
+- Selected BOM part: **R+O BAT54X, C19627026, SOD-523**. The simulation model is a different
   manufacturer's nominal BAT54 junction model, used as a proxy for the single
-  diode. No qualified JSCJ process-corner model was
+  diode. No qualified R+O BAT54X process-corner model was
   established during this work.
 
 The analysis uses DC operating points and junction temperature sensitivity. It

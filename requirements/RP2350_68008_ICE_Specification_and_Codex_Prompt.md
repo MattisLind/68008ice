@@ -1,7 +1,7 @@
 # RP2350-based MC68008 Emulator and Bus Analyzer
 
 **Engineering specification and Codex implementation prompt**  
-**Revision:** 2026-11-09 · **Status:** Proposed design; electrical, mechanical and timing details require validation
+**Revision:** 2026-11-10 · **Status:** Proposed design; electrical, mechanical and timing details require validation
 
 ## 1. Goal and scope
 
@@ -52,11 +52,12 @@ Do not fabricate until connector selection, mating dimensions, pad design and as
 | Analyzer capture | PIO/DMA bounded transaction records, with triggers and overflow reporting |
 | Host communication | Built-in USB 1.1 device PHY/controller; simple binary protocol |
 | Firmware storage | Dedicated QSPI flash for RP2350B, or in-package flash for RP2354B |
-| Debug/programming | Native USB ROM bootloader / BOOTSEL and dedicated SWD connector |
+| External working memory | **8 MiB (64 Mbit) PSRAM**, APS6404L-3SQR-ZR / JLCPCB C3040877, sharing QSPI clock/data with separate GPIO47 CS1 |
+| Debug/programming | Native USB ROM bootloader / BOOTSEL; Raspberry Pi Debug Probe with a 3-pin JST-SH side-entry SWD connector, SM03B-SRSS-TB(LF)(SN) / C160403 |
 | Power | Target-derived 5 V to a properly designed 3.3 V supply; RP2350's internal core regulator with required external components |
 | Timing reference | Reference 12 MHz crystal for MCU/USB; target CPU clock monitored separately |
 
-Use Raspberry Pi's **official RP2350B Minimal KiCad** schematic and **Hardware Design with RP2350** guide as the baseline for regulator, inductor, oscillator, USB resistor, supply filtering and decoupling values. For RP2354B verify the package/pin-compatible reference and in-package flash requirements. The **QSPI, USB and SWD functions use dedicated interfaces**, preserving general-purpose GPIO for the target bus.
+Use Raspberry Pi's **official RP2350B Minimal KiCad** schematic and **Hardware Design with RP2350** guide as the baseline for regulator, inductor, oscillator, USB resistor, supply filtering and decoupling values. For RP2354B verify the package/pin-compatible reference and in-package flash requirements. **QSPI clock/data, USB and SWD use dedicated pads; PSRAM additionally needs GPIO47 as QMI CS1.** RP2354B's in-package flash already uses QSPI_SS; there is no separate board-level flash IC.
 
 ### 3.2 68008 connections and GPIO allocation
 
@@ -75,9 +76,9 @@ The RP2350B/RP2354B offers **48 user GPIOs**. The working allocation concept is:
 
 ### 3.3 Protection for five non-5V-tolerant inputs
 
-Prototype selection updated 2026-11-09 (see [hardware review](../docs/hardware.md)):
+Prototype selection updated 2026-11-10 (see [hardware review](../docs/hardware.md)):
 
-- Per input: a **2.2 kΩ series resistor** followed by a **single BAT54 Schottky clamp to the 3.3 V supply** (anode at the protected MCU node, cathode at 3.3 V). Use five separate JSCJ BAT54 / C8590 SOT-23 parts for easier placement/routing: pin 1 anode, pin 2 NC, pin 3 cathode. D1–D5 protect BERR, BR, VPA, IPL1 and IPL20 respectively.
+- Per input: a **2.2 kΩ series resistor** followed by a **single BAT54 Schottky clamp to the 3.3 V supply** (anode at the protected MCU node, cathode at 3.3 V). Use five **user-selected R+O BAT54X / C19627026 SOD-523** parts and plain two-pin Schottky symbols: pad 1 cathode, pad 2 anode, no NC terminal. D1–D5 protect BERR, BR, VPA, IPL1 and IPL20 respectively. The compact package replaces the earlier SOT-23 choice without changing the protection topology.
 - Fit **two 1 kΩ resistors in parallel** from 3.3 V to GND, reusing the existing Basic 1 kΩ part. The 500 Ω load draws 6.6 mA nominal. A conservative five-input injection bound is 4.63 mA at 5.25 V target / 3.234 V rail with 1% series resistors and zero diode drop; the load sinks at least 6.40 mA under that envelope. The LDO need not sink the injected current. A single 1 kΩ load lacks adequate current margin.
 - **Accepted risk, 2026-11-09:** retain BAT54 clamps at the intended sub-mA currents; the user accepts the forward-voltage margin and expects Vf ≤0.3 V. The nominal resistor-only bound is 1.7 V / 2.2 kΩ = 0.773 mA before diode drop. Manufacturer-model SPICE results are recorded in `simulations/bat54/`; they support typical behavior rather than a guaranteed JSCJ production corner. Preserve the accepted decision while retaining startup and input-edge timing checks.
 - The RP2350 GPIO40–47 recommended/absolute input voltage limits must be met. Raspberry Pi does not specify a general allowable sustained injection current through those GPIO's internal ESD structures; **do not use their internal diodes as the primary clamp**.
@@ -95,8 +96,8 @@ Prototype selection updated 2026-11-09 (see [hardware review](../docs/hardware.m
 ### 3.5 Control reservations and shared decoupling (2026-11-09)
 
 - `MODE_PERMIT` / GPIO45 is JP1's physical firmware-permission input, default passive; it does not detect CPU presence or electrically disable pads.
-- `BUS_ARM_REQUEST` / GPIO46 is reserved for a future independent hardware output-enable request. Currently it connects only to a pull-down and inhibits no bus output; it may be reassigned if that function is unnecessary.
-- Retain `USB_PRESENT_N` / GPIO47 for active-low VBUS presence and self-powered USB attach/detach behavior. It detects cable power, not host application activity. USB VBUS remains sense-only.
+- PSRAM addition, 2026-11-10: GPIO47 is `PSRAM_CS_N` / QMI CS1. Retain `USB_PRESENT_N` on **GPIO46** for active-low VBUS presence and self-powered USB attach/detach behavior. It detects cable power, not host application activity. USB VBUS remains sense-only.
+- Remove the unused `BUS_ARM_REQUEST` reservation. R5 is MODE_PERMIT's 10 kΩ pull-down; R4 is repurposed as a **1 kΩ PSRAM CS pull-up**, reusing the existing Basic resistor SKU. An independent output inhibit remains unresolved; it has no spare GPIO reservation.
 - Use **one shared 100 nF capacitor (C23)** for the co-registered top/bottom MC68008 supply contacts, not one per connector. Retain the regulator input/output capacitors and the MCU's own local bypass capacitors.
 
 ### 3.6 Assembly sourcing, schematic format and value reuse (2026-11-09)
@@ -105,7 +106,14 @@ Prototype selection updated 2026-11-09 (see [hardware review](../docs/hardware.m
 - Select purchased parts from **JLCPCB SMT assembly**, using **Basic** parts first where suitable and Extended parts where the electrical/mechanical requirements require them.
 - Before adding an Extended SKU, check existing values and parts for a compatible reuse. Share pull-up/pull-down and protection values where practical; preserve explicitly required USB, clock, filtering and timing values.
 - Record **LCSC C-number**, Basic/Extended class, source URL, verification date and the reason for each Extended selection in the BOM and schematic. Recheck class and stock when ordering.
-- J1/J2 top/bottom 48-pin contact assemblies are soldered manually and are exempt from JLCPCB sourcing. SWD pads and solder bridges are PCB features rather than purchased components; exclude these from the grouped JLCPCB upload BOM.
+- J1/J2 top/bottom 48-pin contact assemblies are soldered manually and are exempt from JLCPCB sourcing. JP1 is a PCB solder bridge and is excluded from the grouped upload BOM. **J4 is a purchased SMT connector included in the BOM:** JST SM03B-SRSS-TB(LF)(SN) / C160403, matching the Raspberry Pi three-pin debug cable, 1=SWCLK, 2=GND, 3=SWDIO, mounting tabs to GND. It replaces the former debug pads and has no 3V3/power contact. Confirm plug access at the board end with a CPU fitted.
+
+### 3.7 PSRAM addition (2026-11-10)
+
+- Fit **U5 APS6404L-3SQR-ZR**, 8 MiB, 2.7–3.6 V, in the compact USON-8 3 × 2 mm package. JLCPCB **C3040877** is Extended SMT. Use the reviewed pin/footprint mapping in [hardware.md](../docs/hardware.md); leave the unassigned centre paddle electrically floating.
+- Connect SCLK/SIO0–3 to the dedicated QSPI pads shared with the RP2354B's in-package flash. Keep CE# separate on GPIO47 / QFN58; GPIO0/8/19 are also CS1-capable but carry target address signals.
+- Hold PSRAM deselected through reset with R4 1 kΩ to 3.3 V. Fit C24 4.7 µF and C25 100 nF at U5 VDD/GND, reusing existing Basic capacitor SKUs; verify at least 1 µF effective local capacitance. Add 25 mA to the initial 3.3 V planning allowance for memory, CS pull-up and I/O activity, pending measurement.
+- Firmware must configure **CS pin 47 and size 8,388,608 bytes explicitly**, disable the pin's reset pull-down, wait for PSRAM power-up and perform its reset/QPI initialization. Do not scan candidate CS pins: this could drive the target address bus. Begin at no more than 84 MHz linear-burst clock and obey CE# pulse/recovery limits. Hardware connectivity is supplied; PSRAM firmware and memory tests remain future work.
 
 ## 4. Software and validation plan
 

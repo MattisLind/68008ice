@@ -8,28 +8,44 @@ Pico 2, with RP2350-capable OpenOCD tooling and a CMSIS-DAP probe.
 
 ## Hardware
 
-Connect a Raspberry Pi Debug Probe's **D** port, or a spare Pico/Pico 2 running
-Raspberry Pi's [debugprobe firmware](https://github.com/raspberrypi/debugprobe).
+The recommended debugger is the **Raspberry Pi Debug Probe**, a CMSIS-DAP USB
+probe supported by the RP2350 OpenOCD/GDB workflow. Connect its **D** port to J4
+using the three-pin JST cable supplied with the probe. A spare Pico/Pico 2 running
+Raspberry Pi's [debugprobe firmware](https://github.com/raspberrypi/debugprobe)
+also works with suitable wiring.
 The probe connects to the development computer by USB. The ICE's own USB-C port
 can remain connected for its normal commands and trace traffic.
 
-| ICE J4 pad | Signal | Probe connection |
+J4 is **JST SM03B-SRSS-TB(LF)(SN)**, a keyed **3-pin, 1.0 mm pitch JST-SH,
+side-entry SMT connector**, selected as **JLCPCB C160403 / Extended**. Its pinout
+matches the [Raspberry Pi three-pin debug connector specification](https://datasheets.raspberrypi.com/debug/debug-connector-specification.pdf).
+
+| ICE J4 contact | Signal | Probe connection |
 | --- | --- | --- |
-| 1 | 3V3 reference | VTref sense only if the chosen probe needs it; leave open with the three-wire Raspberry Pi Debug Probe |
+| 1 | SWCLK | SC, orange wire |
 | 2 | GND | GND, black wire on the Raspberry Pi probe cable |
-| 3 | SWCLK | SC, orange wire |
-| 4 | SWDIO | SD, yellow wire |
+| 3 | SWDIO | SD, yellow wire |
 
-J4 is currently four provisional pads, not the standard Raspberry Pi three-pin
-JST connector pinout; use an appropriate adapter or test fixture. The physical
-footprint and access clearance still need selecting during placement. SWCLK and
-SWDIO use dedicated MCU pins, leaving the bus GPIO allocation intact.
+The two metal hold-down pads, identified as MP in KiCad, also connect to GND.
+The standard footprint is
+`Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal`.
+The connector body is nominally 5 mm wide, 4.25 mm deep and 2.9 mm high.
+Place it at an accessible board end, with room for the plug, cable and optional
+upper CPU/socket. Cable insertion/bend clearance remains a placement check.
+Mark the connector **SWD** on the PCB. SWCLK/SWDIO use dedicated MCU pins.
+[JST drawing](https://www.jst-mfg.com/product/pdf/eng/eSH.pdf),
+[JLCPCB selection](https://jlcpcb.com/partdetail/JST-SM03B_SRSS_TB_LF_SN/C160403)
 
-Power the ICE from the motherboard, with a common probe/ICE ground. J4 pad 1 is
-not a power input: do not connect a probe power-output pin to it. The Raspberry
-Pi probe operates at 3.3 V logic levels and uses only clock, data and ground on
-its D connector. A RUN connection is not required for the normal SWD reset/upload
-workflow. BOOTSEL and the local RUN button remain available for recovery.
+Power the ICE from the motherboard, with a common probe/ICE ground. **J4 has no
+power or VTref contact**; the previous four-pad layout and 3V3 reference contact
+are removed. The Raspberry Pi probe uses fixed 3.3 V nominal logic and only
+clock, data and ground on its D connector. A RUN connection is not required for
+normal SWD reset/upload. BOOTSEL and the local RUN button remain for recovery.
+
+If future tools require a conventional Arm connector with VTref/RUN, a keyed
+2 × 5, 1.27 mm Cortex Debug header is the larger alternative; it is not fitted
+in this compact design. A bare three-wire adapter is insufficient for a probe
+that requires VTref sensing.
 
 ## Existing adapter compatibility
 

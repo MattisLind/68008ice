@@ -6,7 +6,7 @@ the processor bus, generate diagnostic bus cycles and eventually emulate the
 CPU in software.
 
 The project now has a [draft pin map, candidate BOM and single-A3 KiCad schematic](kicad/README.md),
-using RP2354B with in-package flash. A PCB placement study, firmware and host
+using RP2354B with in-package flash and **8 MiB QSPI PSRAM**. A PCB placement study, firmware and host
 tools have not yet been implemented. The
 [RP2350 engineering specification](requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md)
 is the design baseline and contains the detailed requirements, acceptance
@@ -37,6 +37,12 @@ CPU-speed performance remain development goals requiring validation.
 - Native USB-C for host communication, BOOTSEL recovery and dedicated SWD for
   MCU debugging. RP2354B is the draft choice to save external-flash space;
   RP2350B with external QSPI flash remains an alternative.
+- Raspberry Pi Debug Probe for SWD uploads and debugging, through J4's keyed
+  3-pin JST-SH connector (C160403), using the probe's supplied cable. The ICE
+  takes no power through this connector. See the [programming guide](docs/programming.md).
+- U5 **APS6404L-3SQR-ZR / C3040877** adds 8 MiB PSRAM on the shared QSPI
+  clock/data lines, with GPIO47 as its separate chip select. USB presence moves
+  to GPIO46; the unused BUS_ARM_REQUEST reservation is removed.
 - Target-derived 5 V supplies a 3.3 V regulator and the MCU's core-regulator
   circuit. The USB-C starter uses VBUS only for MOSFET-isolated presence sensing.
   Protection of direct bus GPIOs during supply transitions remains unresolved.

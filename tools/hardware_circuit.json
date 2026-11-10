@@ -276,66 +276,66 @@
     },
     {
       "reference": "D1",
-      "symbol": "BAT54",
+      "symbol": "BAT54X",
       "properties": {
-        "Value": "BAT54",
+        "Value": "BAT54X",
         "Status": "accepted_BAT54_voltage_margin_risk"
       },
       "pins": {
-        "1": "BERR_N_3V3",
-        "3": "+3V3"
+        "1": "+3V3",
+        "2": "BERR_N_3V3"
       },
       "catalog_key": "CLAMP"
     },
     {
       "reference": "D2",
-      "symbol": "BAT54",
+      "symbol": "BAT54X",
       "properties": {
-        "Value": "BAT54",
+        "Value": "BAT54X",
         "Status": "accepted_BAT54_voltage_margin_risk"
       },
       "pins": {
-        "1": "BR_N_3V3",
-        "3": "+3V3"
+        "1": "+3V3",
+        "2": "BR_N_3V3"
       },
       "catalog_key": "CLAMP"
     },
     {
       "reference": "D3",
-      "symbol": "BAT54",
+      "symbol": "BAT54X",
       "properties": {
-        "Value": "BAT54",
+        "Value": "BAT54X",
         "Status": "accepted_BAT54_voltage_margin_risk"
       },
       "pins": {
-        "1": "VPA_N_3V3",
-        "3": "+3V3"
+        "1": "+3V3",
+        "2": "VPA_N_3V3"
       },
       "catalog_key": "CLAMP"
     },
     {
       "reference": "D4",
-      "symbol": "BAT54",
+      "symbol": "BAT54X",
       "properties": {
-        "Value": "BAT54",
+        "Value": "BAT54X",
         "Status": "accepted_BAT54_voltage_margin_risk"
       },
       "pins": {
-        "1": "IPL1_N_3V3",
-        "3": "+3V3"
+        "1": "+3V3",
+        "2": "IPL1_N_3V3"
       },
       "catalog_key": "CLAMP"
     },
     {
       "reference": "D5",
-      "symbol": "BAT54",
+      "symbol": "BAT54X",
       "properties": {
-        "Value": "BAT54",
+        "Value": "BAT54X",
         "Status": "accepted_BAT54_voltage_margin_risk"
       },
       "pins": {
-        "1": "IPL20_N_3V3",
-        "3": "+3V3"
+        "1": "+3V3",
+        "2": "IPL20_N_3V3"
       },
       "catalog_key": "CLAMP"
     },
@@ -399,24 +399,18 @@
     },
     {
       "reference": "J4",
-      "symbol": "Conn_01x04",
+      "symbol": "SWD_JST_SH",
       "properties": {
-        "Value": "SWD pads: 3V3/GND/SWCLK/SWDIO",
-        "Footprint": "",
-        "Manufacturer": "TBD",
-        "MPN": "TBD",
-        "Source": "",
-        "Status": "unresolved_debug_pad_geometry",
-        "Assembly": "PCB_feature",
-        "Selection_reason": "PCB copper/pad feature; no purchased component."
+        "Value": "SWD JST-SH",
+        "Status": "candidate_verify_connector_access_and_CPU_clearance"
       },
       "pins": {
-        "1": "+3V3",
+        "1": "SWCLK",
         "2": "GND",
-        "3": "SWCLK",
-        "4": "SWDIO"
+        "3": "SWDIO",
+        "MP": "GND"
       },
-      "catalog_key": null
+      "catalog_key": "SWD_JST_SH"
     },
     {
       "reference": "JP1",
@@ -472,8 +466,8 @@
         "Status": "candidate"
       },
       "pins": {
-        "1": "XOUT",
-        "2": "XOUT_XTAL"
+        "1": "XOUT_XTAL",
+        "2": "XOUT"
       },
       "catalog_key": "R_1k"
     },
@@ -485,8 +479,8 @@
         "Status": "candidate"
       },
       "pins": {
-        "2": "BOOTSEL_SW",
-        "1": "QSPI_SS_N"
+        "1": "BOOTSEL_SW",
+        "2": "QSPI_SS_N"
       },
       "catalog_key": "R_1k"
     },
@@ -507,14 +501,14 @@
       "reference": "R4",
       "symbol": "R",
       "properties": {
-        "Value": "10k",
+        "Value": "1k",
         "Status": "candidate"
       },
       "pins": {
-        "2": "GND",
-        "1": "MODE_PERMIT"
+        "1": "+3V3",
+        "2": "PSRAM_CS_N"
       },
-      "catalog_key": "R_10k"
+      "catalog_key": "R_1k"
     },
     {
       "reference": "R5",
@@ -524,7 +518,7 @@
         "Status": "candidate"
       },
       "pins": {
-        "1": "BUS_ARM_REQUEST",
+        "1": "MODE_PERMIT",
         "2": "GND"
       },
       "catalog_key": "R_10k"
@@ -550,8 +544,8 @@
         "Status": "candidate"
       },
       "pins": {
-        "2": "GND",
-        "1": "USB_CC1"
+        "1": "USB_CC2",
+        "2": "GND"
       },
       "catalog_key": "R_5.1k"
     },
@@ -563,8 +557,8 @@
         "Status": "candidate"
       },
       "pins": {
-        "2": "GND",
-        "1": "USB_CC2"
+        "1": "USB_CC1",
+        "2": "GND"
       },
       "catalog_key": "R_5.1k"
     },
@@ -785,7 +779,15 @@
         "61": "VREG_AVDD",
         "63": "VREG_LX",
         "30": "XIN",
-        "31": "XOUT"
+        "31": "XOUT",
+        "56": "MODE_PERMIT",
+        "57": "USB_PRESENT_N",
+        "58": "PSRAM_CS_N",
+        "71": "QSPI_SCLK",
+        "72": "QSPI_SD0",
+        "74": "QSPI_SD1",
+        "73": "QSPI_SD2",
+        "70": "QSPI_SD3"
       },
       "catalog_key": "MCU"
     },
@@ -842,6 +844,51 @@
       },
       "pins": {
         "1": "+5V",
+        "2": "GND"
+      },
+      "catalog_key": "C_100n"
+    },
+    {
+      "reference": "U5",
+      "symbol": "APS6404L-3SQR-ZR",
+      "properties": {
+        "Value": "APS6404L-3SQR-ZR (8 MiB)",
+        "Status": "candidate_verify_PSRAM_startup_timing_and_layout"
+      },
+      "pins": {
+        "1": "PSRAM_CS_N",
+        "2": "QSPI_SD1",
+        "3": "QSPI_SD2",
+        "4": "GND",
+        "5": "QSPI_SD0",
+        "6": "QSPI_SCLK",
+        "7": "QSPI_SD3",
+        "8": "+3V3"
+      },
+      "catalog_key": "PSRAM_8MiB"
+    },
+    {
+      "reference": "C24",
+      "symbol": "C",
+      "properties": {
+        "Value": "4.7u",
+        "Status": "candidate_effective_capacitance_at_least_1uF"
+      },
+      "pins": {
+        "1": "+3V3",
+        "2": "GND"
+      },
+      "catalog_key": "C_4.7u"
+    },
+    {
+      "reference": "C25",
+      "symbol": "C",
+      "properties": {
+        "Value": "100n",
+        "Status": "candidate"
+      },
+      "pins": {
+        "1": "+3V3",
         "2": "GND"
       },
       "catalog_key": "C_100n"

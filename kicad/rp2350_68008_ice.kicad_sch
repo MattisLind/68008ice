@@ -6,8 +6,8 @@
 	(paper "A3")
 	(title_block
 		(title "RP2354B / MC68008 emulator and analyzer")
-		(date "2026-11-09")
-		(rev "0.3 DRAFT")
+		(date "2026-11-10")
+		(rev "0.4 DRAFT")
 		(comment 1 "RP2354B / 48-pin MC68008 | NOT FOR FABRICATION")
 	)
 	(lib_symbols
@@ -743,18 +743,14 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "rp2350_ice:BAT54"
-			(pin_names
-				(offset 1.016)
-				(hide yes)
-			)
+		(symbol "rp2350_ice:APS6404L-3SQR-ZR"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
 			(in_pos_files yes)
 			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "D"
-				(at 0 2.54 0)
+			(property "Reference" "U"
+				(at -6.35 11.43 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
@@ -763,8 +759,8 @@
 					)
 				)
 			)
-			(property "Value" "BAT54"
-				(at 0 -2.54 0)
+			(property "Value" "APS6404L-3SQR-ZR"
+				(at 11.684 11.43 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
@@ -773,8 +769,8 @@
 					)
 				)
 			)
-			(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
-				(at 0 -4.445 0)
+			(property "Footprint" "Package_SON:Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm"
+				(at 0 -15.24 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(hide yes)
@@ -784,7 +780,29 @@
 					)
 				)
 			)
-			(property "Datasheet" "https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf"
+			(property "Datasheet" "https://www.pjrc.com/store/APS6404L_3SQR.pdf"
+				(at 0 -17.78 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "64 Mbit / 8M x 8-bits serial pseudo SRAM MEMORY, up to 133MHz, 2.7-3.6V supply, USON-8 (XSON-8)"
+				(at 0 -20.32 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "qspi qpi spi psram"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -795,7 +813,7 @@
 					)
 				)
 			)
-			(property "Description" "Single BAT54 Schottky diode; SOT-23: 1=A, 2=NC, 3=K"
+			(property "ki_fp_filters" "*SON*3x2mm*P0.5mm*EP0.2x1.6mm*"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -806,71 +824,24 @@
 					)
 				)
 			)
-			(property "ki_keywords" "schottky diode"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_fp_filters" "SOT?323*"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(symbol "BAT54_0_1"
-				(polyline
-					(pts
-						(xy -1.905 0.635) (xy -1.905 1.27) (xy -1.27 1.27) (xy -1.27 -1.27) (xy -0.635 -1.27) (xy -0.635 -0.635)
-					)
+			(symbol "APS6404L-3SQR-ZR_0_1"
+				(rectangle
+					(start -7.62 10.16)
+					(end 7.62 -10.16)
 					(stroke
 						(width 0.254)
 						(type default)
 					)
 					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 1.27) (xy 1.27 -1.27) (xy -1.27 0) (xy 1.27 1.27)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 0) (xy -1.27 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
+						(type background)
 					)
 				)
 			)
-			(symbol "BAT54_1_1"
-				(pin passive line
-					(at 3.81 0 180)
+			(symbol "APS6404L-3SQR-ZR_1_1"
+				(pin input line
+					(at -10.16 7.62 0)
 					(length 2.54)
-					(name "A"
+					(name "~{CE}"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -885,11 +856,10 @@
 						)
 					)
 				)
-				(pin no_connect line
-					(at 0 0 90)
+				(pin bidirectional line
+					(at -10.16 0 0)
 					(length 2.54)
-					(hide yes)
-					(name "NC"
+					(name "SO/SIO1"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -904,10 +874,10 @@
 						)
 					)
 				)
-				(pin passive line
-					(at -3.81 0 0)
+				(pin bidirectional line
+					(at -10.16 -2.54 0)
 					(length 2.54)
-					(name "K"
+					(name "SIO2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -922,9 +892,240 @@
 						)
 					)
 				)
+				(pin power_in line
+					(at 0 -12.7 90)
+					(length 2.54)
+					(name "VSS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -10.16 2.54 0)
+					(length 2.54)
+					(name "SI/SIO0"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -10.16 5.08 0)
+					(length 2.54)
+					(name "SCLK"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -10.16 -5.08 0)
+					(length 2.54)
+					(name "SIO3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 12.7 270)
+					(length 2.54)
+					(name "VDD"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 -12.7 90)
+					(length 2.54)
+					(name "EPAD"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
 			)
 			(embedded_fonts no)
 		)
+		(symbol "rp2350_ice:BAT54X"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 1.016)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "BAT54X"
+				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" "Diode_SMD:D_SOD-523"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "R+O BAT54X single Schottky diode, SOD-523; pad 1 K, pad 2 A"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "diode Schottky"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_fp_filters" "D_SOD-523"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "BAT54X_0_1"
+				(polyline
+					(pts
+						(xy -1.905 0.635)
+						(xy -1.905 1.27)
+						(xy -1.27 1.27)
+						(xy -1.27 -1.27)
+						(xy -0.635 -1.27)
+						(xy -0.635 -0.635))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy 1.27 1.27)
+						(xy 1.27 -1.27)
+						(xy -1.27 0)
+						(xy 1.27 1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy 1.27 0)
+						(xy -1.27 0))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "BAT54X_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no))
 		(symbol "rp2350_ice:C"
 			(pin_numbers
 				(hide yes)
@@ -4623,157 +4824,84 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "rp2350_ice:SWD_Pads"
+		(symbol "rp2350_ice:SWD_JST_SH"
 			(pin_names
-				(offset 0.8)
-			)
-			(exclude_from_sim no)
+				(offset 0.8))
 			(in_bom yes)
 			(on_board yes)
-			(in_pos_files yes)
-			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "J"
 				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
 				(effects
 					(font
-						(size 1 1)
-					)
-				)
-			)
-			(property "Value" "SWD Pads"
+						(size 1 1)) hide))
+			(property "Value" "SWD JST-SH"
 				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
 				(effects
 					(font
-						(size 1 1)
-					)
-				)
-			)
-			(property "Footprint" ""
+						(size 1 1)) hide))
+			(property "Footprint" "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal"
 				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
 				(effects
 					(font
-						(size 1 1)
-					)
-				)
-			)
-			(property "Datasheet" ""
+						(size 1 1)) hide))
+			(property "Datasheet" "https://www.jst-mfg.com/product/pdf/eng/eSH.pdf"
 				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
 				(effects
 					(font
-						(size 1 1)
-					)
-				)
-			)
-			(property "Description" ""
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(symbol "SWD_Pads_1_1"
+						(size 1 1)) hide))
+			(symbol "SWD_JST_SH_1_1"
 				(rectangle
 					(start -7.62 7.62)
 					(end 7.62 -7.62)
 					(stroke
 						(width 0.254)
-						(type default)
-					)
+						(type default))
 					(fill
-						(type background)
-					)
-				)
+						(type background)))
 				(pin passive line
-					(at 0 10.16 270)
+					(at 2.54 -10.16 90)
 					(length 2.54)
-					(name "3V3"
+					(name "MP"
 						(effects
 							(font
-								(size 0.9 0.9)
-							)
-						)
-					)
-					(number "1"
+								(size 0.9 0.9))))
+					(number "MP"
 						(effects
 							(font
-								(size 0.9 0.9)
-							)
-						)
-					)
-				)
+								(size 0.9 0.9)))))
 				(pin passive line
 					(at 0 -10.16 90)
 					(length 2.54)
 					(name "GND"
 						(effects
 							(font
-								(size 0.9 0.9)
-							)
-						)
-					)
+								(size 0.9 0.9))))
 					(number "2"
 						(effects
 							(font
-								(size 0.9 0.9)
-							)
-						)
-					)
-				)
+								(size 0.9 0.9)))))
 				(pin passive line
 					(at -10.16 2.54 0)
 					(length 2.54)
 					(name "SWCLK"
 						(effects
 							(font
-								(size 0.9 0.9)
-							)
-						)
-					)
-					(number "3"
+								(size 0.9 0.9))))
+					(number "1"
 						(effects
 							(font
-								(size 0.9 0.9)
-							)
-						)
-					)
-				)
+								(size 0.9 0.9)))))
 				(pin passive line
 					(at -10.16 -2.54 0)
 					(length 2.54)
 					(name "SWDIO"
 						(effects
 							(font
-								(size 0.9 0.9)
-							)
-						)
-					)
-					(number "4"
+								(size 0.9 0.9))))
+					(number "3"
 						(effects
 							(font
-								(size 0.9 0.9)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
+								(size 0.9 0.9)))))))
 		(symbol "rp2350_ice:SW_Push"
 			(pin_numbers
 				(hide yes)
@@ -6223,17 +6351,25 @@
 		)
 		(uuid "0bf633ac-e65a-5438-9e09-60ff32bc55a3")
 	)
-	(text "BAT54 Vf margin accepted; see simulations/bat54/.\nMODE_PERMIT: physical permission input, default passive.\nBUS_ARM_REQUEST: future gate only; currently R5 pull-down.\nUSB_PRESENT_N: active-low VBUS detection for USB attach."
+	(text "U5 shares QSPI clock/data with the 2 MiB in-package flash.\nGPIO47 = QMI CS1; GPIO46 = USB presence.\nR4 = 1k CS pull-up; C24/C25 at U5 VDD.\nBoot: wait 150us, reset PSRAM, then configure QMI.\nEPAD (pad 9) is left unconnected; see hardware notes."
+		(exclude_from_sim no)
+		(at 299.72 93.98 0)
+		(effects
+			(font
+				(size 0.9 0.9)
+			)
+			(justify left top)
+		)
+		(uuid "1badd85d-fbbb-599e-ad94-3ecf7bdf8647")
+	)
+	(text "BAT54X Vf margin accepted; see simulations/bat54/.\nMODE_PERMIT: GPIO45 permission input, default passive.\nUSB_PRESENT_N: GPIO46 active-low VBUS detection.\nPSRAM_CS_N: GPIO47 QMI CS1; R4 is a 1k pull-up."
 		(exclude_from_sim no)
 		(at 162.56 165.1 0)
 		(effects
 			(font
-				(size 0.85 0.85)
-			)
-			(justify left top)
-		)
-		(uuid "1cbde5bf-57db-5795-a293-1923c339041a")
-	)
+				(size 0.85 0.85))
+			(justify left top))
+		(uuid "1cbde5bf-57db-5795-a293-1923c339041a"))
 	(text "MCU local decoupling: place at supply pads"
 		(exclude_from_sim no)
 		(at 63.5 172.72 0)
@@ -6267,17 +6403,14 @@
 		)
 		(uuid "45acabb3-484b-503d-90a9-a53064f08e6a")
 	)
-	(text "SWD: 3V3 ref / GND / CLK / IO"
+	(text "SWD JST-SH: CLK / GND / IO"
 		(exclude_from_sim no)
 		(at 163.83 92.71 0)
 		(effects
 			(font
-				(size 0.9 0.9)
-			)
-			(justify right top)
-		)
-		(uuid "728104d1-cffa-5b6f-93c9-13c575f381e1")
-	)
+				(size 0.9 0.9))
+			(justify right top))
+		(uuid "728104d1-cffa-5b6f-93c9-13c575f381e1"))
 	(text "TOP CPU SOCKET (manual)"
 		(exclude_from_sim no)
 		(at 36.83 20.32 0)
@@ -6344,6 +6477,17 @@
 		)
 		(uuid "c8021d8c-330f-572f-9a22-5eb2f5d89d81")
 	)
+	(text "8 MiB QSPI PSRAM"
+		(exclude_from_sim no)
+		(at 299.72 22.86 0)
+		(effects
+			(font
+				(size 1.5 1.5)
+			)
+			(justify left top)
+		)
+		(uuid "eb694197-bb91-532b-8a08-ba92d338cbbb")
+	)
 	(junction
 		(at 171.45 111.76)
 		(diameter 0)
@@ -6363,7 +6507,7 @@
 		(uuid "0468848f-b840-4cff-9eda-6fcb30d4ea30")
 	)
 	(junction
-		(at 129.54 204.47)
+		(at 147.32 204.47)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "0a3c7ed7-a3ef-471e-a7be-314d09800be8")
@@ -6415,6 +6559,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "2a1027d3-83e9-4b36-91ef-251653a43303")
+	)
+	(junction
+		(at 322.58 55.88)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2cbe255a-2ff6-495a-baa7-075ec0d994bc")
 	)
 	(junction
 		(at 196.85 134.62)
@@ -6477,10 +6627,22 @@
 		(uuid "493e6f7d-085b-4cc2-9a35-1d73b38d22f4")
 	)
 	(junction
+		(at 119.38 204.47)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "531193c4-3dcf-46d0-88f2-f2b50fa60f67")
+	)
+	(junction
 		(at 27.94 212.09)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "54899965-ea72-4251-87d7-2449c7a806cf")
+	)
+	(junction
+		(at 137.16 204.47)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "5bcca122-38a3-420a-b90e-6f15fe4e510d")
 	)
 	(junction
 		(at 247.65 22.86)
@@ -6501,7 +6663,7 @@
 		(uuid "7a01e452-1f91-48a4-b00c-6c4b5e86e3ad")
 	)
 	(junction
-		(at 138.43 213.36)
+		(at 156.21 213.36)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "7a40a78f-831b-4116-8223-dbd1f1c15fa0")
@@ -6511,6 +6673,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "7c1b1522-0f03-48f9-b6ae-172c2b7ac028")
+	)
+	(junction
+		(at 119.38 212.09)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "8108cae5-a3b2-476a-8d74-e8c5b97ef318")
 	)
 	(junction
 		(at 195.58 104.14)
@@ -6529,12 +6697,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "8e7c4ba1-46dd-5420-be46-3183fa96b420")
-	)
-	(junction
-		(at 201.93 137.16)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "933a3f71-e76a-4df3-ade0-931b76cc0afd")
 	)
 	(junction
 		(at 19.05 212.09)
@@ -6583,6 +6745,18 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "ae3fe3e0-742d-4ce6-a2e9-597a7f660b56")
+	)
+	(junction
+		(at 128.27 212.09)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "af33b41f-0d2a-4bbe-bc08-38e6b4f426a2")
+	)
+	(junction
+		(at 128.27 204.47)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b2750ba8-5e02-41e4-a237-4d9e56f8c06b")
 	)
 	(junction
 		(at 26.67 234.95)
@@ -6681,12 +6855,6 @@
 		(uuid "d85384d4-aaac-4e95-9b23-ac76c45537e5")
 	)
 	(junction
-		(at 119.38 204.47)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "db3ee905-31a3-4caf-8119-3c21d1918f0c")
-	)
-	(junction
 		(at 208.28 55.88)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6723,12 +6891,6 @@
 		(uuid "ed6a58e1-de14-43a7-9adc-09172cd6d87a")
 	)
 	(junction
-		(at 201.93 153.67)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "f3c7fb6f-f28c-41ab-86fa-720a09708837")
-	)
-	(junction
 		(at 189.23 259.08)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6745,18 +6907,6 @@
 		(uuid "2580ffa9-bf75-519a-b697-c56054c26fb9")
 	)
 	(no_connect
-		(at 214.63 81.28)
-		(uuid "6f5ccfa9-8e5f-5f87-9fc5-3cbb9bfbfa3a")
-	)
-	(no_connect
-		(at 214.63 76.2)
-		(uuid "7588d664-2251-56d8-a641-f06eac4bfaa5")
-	)
-	(no_connect
-		(at 214.63 78.74)
-		(uuid "75b22c49-5e80-567c-b8ad-31da9f072e90")
-	)
-	(no_connect
 		(at 212.09 246.38)
 		(uuid "8b63576d-bcb4-58a2-b462-b9f56fea14ec")
 	)
@@ -6765,12 +6915,8 @@
 		(uuid "a7e2fe2b-b543-5167-8265-831d67381189")
 	)
 	(no_connect
-		(at 214.63 83.82)
-		(uuid "aae09acc-1fd4-5301-9157-bf7e15d5a9b1")
-	)
-	(no_connect
-		(at 214.63 86.36)
-		(uuid "f78f7b20-1484-5119-963a-a8504ac5b740")
+		(at 337.82 76.2)
+		(uuid "ad6ab880-194e-5e63-8ed4-2f99917a1198")
 	)
 	(wire
 		(pts
@@ -6814,6 +6960,16 @@
 	)
 	(wire
 		(pts
+			(xy 322.58 50.8) (xy 322.58 55.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "05468ba7-2088-535f-a58a-0506312b24fa")
+	)
+	(wire
+		(pts
 			(xy 165.1 113.03) (xy 165.1 111.76)
 		)
 		(stroke
@@ -6844,7 +7000,7 @@
 	)
 	(wire
 		(pts
-			(xy 129.54 204.47) (xy 138.43 204.47)
+			(xy 147.32 204.47) (xy 156.21 204.47)
 		)
 		(stroke
 			(width 0)
@@ -6951,6 +7107,16 @@
 			(type default)
 		)
 		(uuid "0e69cdd4-c518-50d6-be51-33e2703ea600")
+	)
+	(wire
+		(pts
+			(xy 214.63 86.36) (xy 209.55 86.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0eb014b6-a01b-59d7-8e8a-8d613a84ea83")
 	)
 	(wire
 		(pts
@@ -7154,16 +7320,6 @@
 	)
 	(wire
 		(pts
-			(xy 193.04 148.59) (xy 190.5 148.59)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "297a7de1-a14b-4c0c-ab64-ecde11ce96c3")
-	)
-	(wire
-		(pts
 			(xy 227.33 33.02) (xy 227.33 27.94)
 		)
 		(stroke
@@ -7204,6 +7360,16 @@
 	)
 	(wire
 		(pts
+			(xy 214.63 78.74) (xy 209.55 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2fa57052-3c2c-50d2-9029-1edbe2af694f")
+	)
+	(wire
+		(pts
 			(xy 265.43 88.9) (xy 270.51 88.9)
 		)
 		(stroke
@@ -7211,16 +7377,6 @@
 			(type default)
 		)
 		(uuid "30dbb0e7-2025-5b31-b5b0-4028557aef84")
-	)
-	(wire
-		(pts
-			(xy 201.93 152.4) (xy 201.93 153.67)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "31406218-cdb5-40b9-aa0c-b47878fdc982")
 	)
 	(wire
 		(pts
@@ -7234,13 +7390,13 @@
 	)
 	(wire
 		(pts
-			(xy 179.07 85.09) (xy 210.82 85.09)
+			(xy 128.27 204.47) (xy 137.16 204.47)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "321589d1-432b-52bd-9998-370f2f68f179")
+		(uuid "3274edbb-89d5-43ce-a25a-79dcbfa24979")
 	)
 	(wire
 		(pts
@@ -7271,16 +7427,6 @@
 			(type default)
 		)
 		(uuid "352a51b2-c22d-55b4-9369-99a9fbf968fb")
-	)
-	(wire
-		(pts
-			(xy 201.93 137.16) (xy 214.63 137.16)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "358590a4-e554-4a95-aa80-fc68730cc958")
 	)
 	(wire
 		(pts
@@ -7434,16 +7580,6 @@
 	)
 	(wire
 		(pts
-			(xy 201.93 137.16) (xy 193.04 137.16)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "46152e9d-995a-4aee-a592-5bb20275e06f")
-	)
-	(wire
-		(pts
 			(xy 265.43 99.06) (xy 270.51 99.06)
 		)
 		(stroke
@@ -7514,7 +7650,7 @@
 	)
 	(wire
 		(pts
-			(xy 138.43 205.74) (xy 138.43 204.47)
+			(xy 156.21 205.74) (xy 156.21 204.47)
 		)
 		(stroke
 			(width 0)
@@ -7681,6 +7817,16 @@
 			(type default)
 		)
 		(uuid "5a0b897e-764d-5bd5-aa0b-3c1c05a5f82a")
+	)
+	(wire
+		(pts
+			(xy 322.58 43.18) (xy 322.58 38.1)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5b5d3eb2-9c66-51ce-bd12-d0bb512a97ea")
 	)
 	(wire
 		(pts
@@ -7964,7 +8110,7 @@
 	)
 	(wire
 		(pts
-			(xy 119.38 204.47) (xy 129.54 204.47)
+			(xy 119.38 204.47) (xy 128.27 204.47)
 		)
 		(stroke
 			(width 0)
@@ -8034,6 +8180,16 @@
 	)
 	(wire
 		(pts
+			(xy 214.63 76.2) (xy 209.55 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "742d2ca0-0e63-5421-bd5f-2a87a445fa81")
+	)
+	(wire
+		(pts
 			(xy 195.58 104.14) (xy 195.58 106.68)
 		)
 		(stroke
@@ -8054,7 +8210,7 @@
 	)
 	(wire
 		(pts
-			(xy 210.82 114.3) (xy 210.82 85.09)
+			(xy 210.82 114.3) (xy 210.82 90.17)
 		)
 		(stroke
 			(width 0)
@@ -8094,7 +8250,7 @@
 	)
 	(wire
 		(pts
-			(xy 129.54 204.47) (xy 129.54 205.74)
+			(xy 147.32 204.47) (xy 147.32 205.74)
 		)
 		(stroke
 			(width 0)
@@ -8114,7 +8270,7 @@
 	)
 	(wire
 		(pts
-			(xy 179.07 80.01) (xy 212.09 80.01)
+			(xy 181.61 88.9) (xy 212.09 88.9)
 		)
 		(stroke
 			(width 0)
@@ -8131,16 +8287,6 @@
 			(type default)
 		)
 		(uuid "7a5bfd0c-a5d4-501a-b02f-d8d22ee3b48c")
-	)
-	(wire
-		(pts
-			(xy 193.04 137.16) (xy 193.04 148.59)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7e6fb903-6bec-4bb0-aa33-9304aff9f8de")
 	)
 	(wire
 		(pts
@@ -8244,7 +8390,7 @@
 	)
 	(wire
 		(pts
-			(xy 212.09 111.76) (xy 212.09 80.01)
+			(xy 212.09 111.76) (xy 212.09 88.9)
 		)
 		(stroke
 			(width 0)
@@ -8414,6 +8560,16 @@
 	)
 	(wire
 		(pts
+			(xy 179.07 90.17) (xy 179.07 85.09)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8da9d46b-2064-4ebe-959a-a5980d8b414b")
+	)
+	(wire
+		(pts
 			(xy 125.73 48.26) (xy 130.81 48.26)
 		)
 		(stroke
@@ -8421,6 +8577,16 @@
 			(type default)
 		)
 		(uuid "8f722d75-9926-5555-960e-aa364d62a688")
+	)
+	(wire
+		(pts
+			(xy 325.12 63.5) (xy 320.04 63.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8f75d9ce-9db9-56b2-b283-fc2b4ff81af7")
 	)
 	(wire
 		(pts
@@ -8504,6 +8670,16 @@
 	)
 	(wire
 		(pts
+			(xy 322.58 55.88) (xy 320.04 55.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "993c124c-9014-42f4-b8fa-db3b4ed069ad")
+	)
+	(wire
+		(pts
 			(xy 265.43 119.38) (xy 270.51 119.38)
 		)
 		(stroke
@@ -8584,6 +8760,16 @@
 	)
 	(wire
 		(pts
+			(xy 214.63 137.16) (xy 209.55 137.16)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9e15f028-bcf3-5f03-b238-5b3624c87249")
+	)
+	(wire
+		(pts
 			(xy 201.93 153.67) (xy 196.85 153.67)
 		)
 		(stroke
@@ -8631,16 +8817,6 @@
 			(type default)
 		)
 		(uuid "a0e2a8f4-7904-4175-a165-d2c2aaf69dba")
-	)
-	(wire
-		(pts
-			(xy 201.93 144.78) (xy 201.93 137.16)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a22f598f-ef88-4327-b294-cbca903090ea")
 	)
 	(wire
 		(pts
@@ -8724,6 +8900,16 @@
 	)
 	(wire
 		(pts
+			(xy 214.63 81.28) (xy 209.55 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a9d4e002-96ff-5038-be9f-af312db528a7")
+	)
+	(wire
+		(pts
 			(xy 29.21 109.22) (xy 24.13 109.22)
 		)
 		(stroke
@@ -8741,6 +8927,16 @@
 			(type default)
 		)
 		(uuid "ab7de828-69ac-48f5-b3d6-f5cc8f2beeeb")
+	)
+	(wire
+		(pts
+			(xy 214.63 83.82) (xy 209.55 83.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "abaaec77-1d5a-5db0-a0c9-85ef2cf219d9")
 	)
 	(wire
 		(pts
@@ -8781,16 +8977,6 @@
 			(type default)
 		)
 		(uuid "ad9e0e59-9af4-4bc3-84bf-72fffa920e29")
-	)
-	(wire
-		(pts
-			(xy 168.91 66.04) (xy 168.91 72.39)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "aed2801f-0e4b-58c6-809e-8c8eb1707cd4")
 	)
 	(wire
 		(pts
@@ -8854,6 +9040,16 @@
 	)
 	(wire
 		(pts
+			(xy 181.61 88.9) (xy 181.61 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b2ad88b1-443e-44cd-ab28-3a734c9d0653")
+	)
+	(wire
+		(pts
 			(xy 125.73 106.68) (xy 130.81 106.68)
 		)
 		(stroke
@@ -8871,6 +9067,16 @@
 			(type default)
 		)
 		(uuid "b4450fdd-dfa1-505e-8667-5e7b63405a3c")
+	)
+	(wire
+		(pts
+			(xy 181.61 80.01) (xy 179.07 80.01)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b50f8fb0-4e48-4b82-95a9-c6c669152156")
 	)
 	(wire
 		(pts
@@ -8914,6 +9120,16 @@
 	)
 	(wire
 		(pts
+			(xy 325.12 55.88) (xy 322.58 55.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b59605b0-c116-59e3-9403-6cc9b71c4405")
+	)
+	(wire
+		(pts
 			(xy 36.83 204.47) (xy 45.72 204.47)
 		)
 		(stroke
@@ -8941,6 +9157,16 @@
 			(type default)
 		)
 		(uuid "b7e8ec97-f41c-438a-a8c7-3c68cf5761cf")
+	)
+	(wire
+		(pts
+			(xy 325.12 60.96) (xy 320.04 60.96)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b866ce5c-9598-5b19-aeca-ff5fef2dc086")
 	)
 	(wire
 		(pts
@@ -8974,7 +9200,7 @@
 	)
 	(wire
 		(pts
-			(xy 129.54 213.36) (xy 138.43 213.36)
+			(xy 147.32 213.36) (xy 156.21 213.36)
 		)
 		(stroke
 			(width 0)
@@ -9074,6 +9300,16 @@
 	)
 	(wire
 		(pts
+			(xy 137.16 204.47) (xy 147.32 204.47)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c37c90f4-6a7d-4abb-89cd-217d88a5f438")
+	)
+	(wire
+		(pts
 			(xy 157.48 132.08) (xy 165.1 132.08)
 		)
 		(stroke
@@ -9134,6 +9370,16 @@
 	)
 	(wire
 		(pts
+			(xy 335.28 76.2) (xy 335.28 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c5cb2828-5a98-5e8b-970c-886c4361053f")
+	)
+	(wire
+		(pts
 			(xy 201.93 104.14) (xy 195.58 104.14)
 		)
 		(stroke
@@ -9161,6 +9407,16 @@
 			(type default)
 		)
 		(uuid "cae0fcc6-2b6f-5323-83d3-12bb9587fffe")
+	)
+	(wire
+		(pts
+			(xy 325.12 58.42) (xy 320.04 58.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cc22c37e-f431-589f-a11b-47b8bdf26c5c")
 	)
 	(wire
 		(pts
@@ -9344,6 +9600,16 @@
 	)
 	(wire
 		(pts
+			(xy 119.38 212.09) (xy 128.27 212.09)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d6ebf0ac-7bb4-4c52-97e0-72056732a9a2")
+	)
+	(wire
+		(pts
 			(xy 59.69 78.74) (xy 64.77 78.74)
 		)
 		(stroke
@@ -9444,7 +9710,7 @@
 	)
 	(wire
 		(pts
-			(xy 214.63 111.76) (xy 212.09 111.76)
+			(xy 212.09 111.76) (xy 214.63 111.76)
 		)
 		(stroke
 			(width 0)
@@ -9524,7 +9790,7 @@
 	)
 	(wire
 		(pts
-			(xy 138.43 213.36) (xy 138.43 217.17)
+			(xy 156.21 213.36) (xy 156.21 217.17)
 		)
 		(stroke
 			(width 0)
@@ -9594,6 +9860,16 @@
 	)
 	(wire
 		(pts
+			(xy 128.27 212.09) (xy 137.16 212.09)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e7a5ab2f-7f09-4602-8d16-158c8cee00d0")
+	)
+	(wire
+		(pts
 			(xy 265.43 83.82) (xy 270.51 83.82)
 		)
 		(stroke
@@ -9624,6 +9900,16 @@
 	)
 	(wire
 		(pts
+			(xy 325.12 66.04) (xy 320.04 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ea12c079-9939-5261-8674-5aeabdbdf675")
+	)
+	(wire
+		(pts
 			(xy 125.73 101.6) (xy 130.81 101.6)
 		)
 		(stroke
@@ -9651,6 +9937,16 @@
 			(type default)
 		)
 		(uuid "ebfaf31e-f98e-4b29-8e3a-66944cfc9a9d")
+	)
+	(wire
+		(pts
+			(xy 335.28 50.8) (xy 335.28 45.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ec54ff87-43fb-5629-81fd-ac7305280f07")
 	)
 	(wire
 		(pts
@@ -9751,6 +10047,16 @@
 			(type default)
 		)
 		(uuid "f1879a47-933e-50de-bb53-1cfb19062aa8")
+	)
+	(wire
+		(pts
+			(xy 179.07 90.17) (xy 210.82 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f22d3588-cbbc-4437-b787-21b590d434ae")
 	)
 	(wire
 		(pts
@@ -9954,6 +10260,16 @@
 	)
 	(wire
 		(pts
+			(xy 325.12 68.58) (xy 320.04 68.58)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fe1084ee-da60-5714-b05c-5aef47e9c571")
+	)
+	(wire
+		(pts
 			(xy 19.05 234.95) (xy 26.67 234.95)
 		)
 		(stroke
@@ -10152,6 +10468,16 @@
 		)
 		(uuid "141ad5e0-e8af-5a79-afb1-c94966da4c20")
 	)
+	(label "QSPI_SD2"
+		(at 209.55 83.82 180)
+		(effects
+			(font
+				(size 0.85 0.85)
+			)
+			(justify right)
+		)
+		(uuid "1585e929-7e63-5286-a124-119ca7f52292")
+	)
 	(label "A4"
 		(at 130.81 48.26 0)
 		(effects
@@ -10182,6 +10508,16 @@
 		)
 		(uuid "1d5f8e1f-8b83-55a9-a6c3-078a3eb32058")
 	)
+	(label "USB_PRESENT_N"
+		(at 209.55 137.16 180)
+		(effects
+			(font
+				(size 0.85 0.85)
+			)
+			(justify right)
+		)
+		(uuid "1d641e45-acce-54e8-ba68-7ebf25e3de85")
+	)
 	(label "USB_DM_MCU"
 		(at 209.55 63.5 180)
 		(effects
@@ -10202,7 +10538,7 @@
 		)
 		(uuid "20fa020a-a648-5b55-a4b4-ec2cfedd204f")
 	)
-	(label "USB_PRESENT_N"
+	(label "PSRAM_CS_N"
 		(at 213.36 139.7 180)
 		(effects
 			(font
@@ -10221,6 +10557,16 @@
 			(justify left)
 		)
 		(uuid "23293fe1-b92a-55d4-9405-3f79758a8097")
+	)
+	(label "PSRAM_CS_N"
+		(at 320.04 55.88 180)
+		(effects
+			(font
+				(size 0.85 0.85)
+			)
+			(justify right)
+		)
+		(uuid "26c93b9a-3937-51f4-b454-6f599516db5e")
 	)
 	(label "A3"
 		(at 130.81 45.72 0)
@@ -10642,6 +10988,16 @@
 		)
 		(uuid "6a8de6e1-8300-56b4-bcea-fd83cd24f5fb")
 	)
+	(label "QSPI_SD0"
+		(at 320.04 60.96 180)
+		(effects
+			(font
+				(size 0.85 0.85)
+			)
+			(justify right)
+		)
+		(uuid "6b2d721e-9a7a-5078-a25f-0d6c093cfd4f")
+	)
 	(label "USB_PRESENT_N"
 		(at 254 209.55 0)
 		(effects
@@ -10691,6 +11047,16 @@
 			(justify left)
 		)
 		(uuid "75dca81c-b70c-53e2-8317-4ddddc3e0c5b")
+	)
+	(label "QSPI_SD1"
+		(at 209.55 81.28 180)
+		(effects
+			(font
+				(size 0.85 0.85)
+			)
+			(justify right)
+		)
+		(uuid "772b5247-2326-5c5e-960a-ad572b82cb8f")
 	)
 	(label "A7"
 		(at 270.51 58.42 0)
@@ -10852,6 +11218,16 @@
 		)
 		(uuid "8cd2052a-9c53-591f-94cf-b0cb3e9e1b1f")
 	)
+	(label "QSPI_SCLK"
+		(at 209.55 76.2 180)
+		(effects
+			(font
+				(size 0.85 0.85)
+			)
+			(justify right)
+		)
+		(uuid "8d78f586-59f9-5fa4-a7f8-4d349ae2592e")
+	)
 	(label "USB_DM"
 		(at 217.17 228.6 0)
 		(effects
@@ -10861,16 +11237,6 @@
 			(justify left)
 		)
 		(uuid "8ef6fa8e-1740-5e1f-ad45-6ba90c7b97de")
-	)
-	(label "BUS_ARM_REQUEST"
-		(at 190.5 148.59 180)
-		(effects
-			(font
-				(size 0.85 0.85)
-			)
-			(justify right)
-		)
-		(uuid "9003dbe1-2455-52dc-a8fd-88db93c75b24")
 	)
 	(label "RW"
 		(at 24.13 48.26 180)
@@ -10912,6 +11278,16 @@
 		)
 		(uuid "9665df29-8333-5944-9704-0d4721ffb111")
 	)
+	(label "QSPI_SD1"
+		(at 320.04 63.5 180)
+		(effects
+			(font
+				(size 0.85 0.85)
+			)
+			(justify right)
+		)
+		(uuid "96d5f8e0-c4ff-5b53-9982-e946003a3f0c")
+	)
 	(label "FC2"
 		(at 24.13 88.9 180)
 		(effects
@@ -10951,6 +11327,16 @@
 			(justify left)
 		)
 		(uuid "9cc86049-9986-52ca-bdcf-1dde914542be")
+	)
+	(label "QSPI_SD3"
+		(at 320.04 68.58 180)
+		(effects
+			(font
+				(size 0.85 0.85)
+			)
+			(justify right)
+		)
+		(uuid "9fdd7a5a-01bb-5860-b648-5b5507e64041")
 	)
 	(label "USB_DP_MCU"
 		(at 276.86 250.19 0)
@@ -11002,6 +11388,16 @@
 		)
 		(uuid "a4dde75d-ed91-5d17-80ca-c80c8dd0151a")
 	)
+	(label "QSPI_SCLK"
+		(at 320.04 58.42 180)
+		(effects
+			(font
+				(size 0.85 0.85)
+			)
+			(justify right)
+		)
+		(uuid "a678e192-b4dd-55c1-9dd7-70dec8d576ae")
+	)
 	(label "A9"
 		(at 64.77 60.96 0)
 		(effects
@@ -11021,6 +11417,16 @@
 			(justify left)
 		)
 		(uuid "a93937a8-d5a2-5086-9ecd-58f8df3d1a72")
+	)
+	(label "QSPI_SD2"
+		(at 320.04 66.04 180)
+		(effects
+			(font
+				(size 0.85 0.85)
+			)
+			(justify right)
+		)
+		(uuid "ab0838de-1022-5800-810d-706d03f8dae4")
 	)
 	(label "A13"
 		(at 64.77 71.12 0)
@@ -11362,6 +11768,16 @@
 		)
 		(uuid "ef58406e-29ef-5f0e-a117-3977c7eb0d99")
 	)
+	(label "QSPI_SD3"
+		(at 209.55 86.36 180)
+		(effects
+			(font
+				(size 0.85 0.85)
+			)
+			(justify right)
+		)
+		(uuid "f1396130-4b7a-59f2-9db8-c14941469df5")
+	)
 	(label "AS_N"
 		(at 24.13 45.72 180)
 		(effects
@@ -11391,6 +11807,16 @@
 			(justify left)
 		)
 		(uuid "f8364110-9f5b-54ea-ae28-270ea16c7ed1")
+	)
+	(label "QSPI_SD0"
+		(at 209.55 78.74 180)
+		(effects
+			(font
+				(size 0.85 0.85)
+			)
+			(justify right)
+		)
+		(uuid "f9780da9-fade-53ce-b65b-ce3c31a758fd")
 	)
 	(label "A16"
 		(at 64.77 78.74 0)
@@ -11669,7 +12095,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 101.6 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -11857,7 +12283,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 110.49 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -11973,7 +12399,7 @@
 	)
 	(symbol
 		(lib_id "rp2350_ice:R")
-		(at 201.93 148.59 0)
+		(at 322.58 46.99 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -11983,7 +12409,7 @@
 		(dnp no)
 		(uuid "08d392c2-2e0b-5261-a350-815b05b0f2e1")
 		(property "Reference" "R4"
-			(at 203.2 144.78 0)
+			(at 323.85 43.18 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -11992,8 +12418,8 @@
 				)
 			)
 		)
-		(property "Value" "10k"
-			(at 201.93 148.59 90)
+		(property "Value" "1k"
+			(at 322.58 46.99 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -12003,7 +12429,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 201.93 148.59 0)
+			(at 322.58 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12013,8 +12439,8 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/C25744.pdf"
-			(at 201.93 148.59 0)
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C11702.pdf"
+			(at 322.58 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12025,7 +12451,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 201.93 148.59 0)
+			(at 322.58 46.99 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -12035,7 +12461,7 @@
 			)
 		)
 		(property "Status" "candidate"
-			(at 201.93 148.59 0)
+			(at 322.58 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12046,7 +12472,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 201.93 148.59 0)
+			(at 322.58 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12056,8 +12482,8 @@
 				)
 			)
 		)
-		(property "MPN" "0402WGF1002TCE"
-			(at 201.93 148.59 0)
+		(property "MPN" "0402WGF1001TCE"
+			(at 322.58 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12067,8 +12493,8 @@
 				)
 			)
 		)
-		(property "LCSC" "C25744"
-			(at 201.93 148.59 0)
+		(property "LCSC" "C11702"
+			(at 322.58 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12079,7 +12505,7 @@
 			)
 		)
 		(property "JLCPCB_library" "Basic"
-			(at 201.93 148.59 0)
+			(at 322.58 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12090,7 +12516,7 @@
 			)
 		)
 		(property "Assembly" "JLCPCB_SMT"
-			(at 201.93 148.59 0)
+			(at 322.58 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12100,8 +12526,8 @@
 				)
 			)
 		)
-		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/0402WGF1002TCE/C25744"
-			(at 201.93 148.59 0)
+		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/0402WGF1001TCE/C11702"
+			(at 322.58 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12112,7 +12538,7 @@
 			)
 		)
 		(property "Verified_date" "2026-11-09"
-			(at 201.93 148.59 0)
+			(at 322.58 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12122,8 +12548,8 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Share RUN pull-up, mode/arm pull-downs, VBUS gate series and detector pull-up."
-			(at 201.93 148.59 0)
+		(property "Selection_reason" "Basic: share crystal/BOOTSEL series, two rail loads and strong PSRAM CS1 pull-up."
+			(at 322.58 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12133,8 +12559,8 @@
 				)
 			)
 		)
-		(property "Source" "https://www.lcsc.com/datasheet/C25744.pdf"
-			(at 201.93 148.59 0)
+		(property "Source" "https://www.lcsc.com/datasheet/C11702.pdf"
+			(at 322.58 46.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12310,7 +12736,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Share RUN pull-up, mode/arm pull-downs, VBUS gate series and detector pull-up."
+		(property "Selection_reason" "Share RUN pull-up, MODE_PERMIT pull-down, VBUS gate series and detector pull-up."
 			(at 196.85 148.59 0)
 			(hide yes)
 			(show_name no)
@@ -12348,7 +12774,7 @@
 		)
 	)
 	(symbol
-		(lib_id "rp2350_ice:BAT54")
+		(lib_id "rp2350_ice:BAT54X")
 		(at 171.45 116.84 270)
 		(unit 1)
 		(body_style 1)
@@ -12364,24 +12790,161 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 0.85 0.85)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "BAT54"
+					(size 0.85 0.85))
+				(justify left)))
+		(property "Value" "BAT54X"
 			(at 176.53 119.38 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 0.85 0.85)
+					(size 0.85 0.85))
+				(justify left)))
+		(property "Footprint" "Diode_SMD:D_SOD-523"
+			(at 171.45 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1))))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026"
+			(at 171.45 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1))))
+		(property "Description" ""
+			(at 171.45 116.84 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "R+O"
+			(at 171.45 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1))))
+		(property "MPN" "BAT54X"
+			(at 171.45 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1))))
+		(property "LCSC" "C19627026"
+			(at 171.45 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1))))
+		(property "JLCPCB_library" "Extended"
+			(at 171.45 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1))))
+		(property "Assembly" "JLCPCB_SMT"
+			(at 171.45 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1))))
+		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/BAT54X/C19627026"
+			(at 171.45 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1))))
+		(property "Verified_date" "2026-11-10"
+			(at 171.45 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1))))
+		(property "Selection_reason" "User-selected Extended SMT R+O BAT54X / C19627026, SOD-523, 30V/200mA. Five identical upper clamps; pad 1 cathode to 3V3, pad 2 anode at the protected MCU node. Retain the accepted sub-mA forward-voltage margin and nominal proxy-model SPICE evidence."
+			(at 171.45 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1))))
+		(property "Source" "https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026"
+			(at 171.45 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1))))
+		(property "Status" "accepted_BAT54_voltage_margin_risk"
+			(at 171.45 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1))))
+		(pin "2"
+			(uuid "9ce5da76-b9a7-55e0-97c0-1c0bd99c67d4"))
+		(pin "1"
+			(uuid "69e0eed6-4973-5e70-8e78-f8873ee7436f"))
+		(instances
+			(project "rp2350_68008_ice"
+				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
+					(reference "D4")
+					(unit 1)))))
+	(symbol
+		(lib_id "rp2350_ice:C")
+		(at 128.27 208.28 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "0f6eb12d-56a7-516f-b06b-b36e999c923d")
+		(property "Reference" "C25"
+			(at 132.08 207.01 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
-			(at 171.45 116.84 0)
+		(property "Value" "100n"
+			(at 132.08 209.55 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 128.27 208.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12391,8 +12954,8 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf"
-			(at 171.45 116.84 0)
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C1525.pdf"
+			(at 128.27 208.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12403,7 +12966,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 171.45 116.84 0)
+			(at 128.27 208.28 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -12412,8 +12975,8 @@
 				)
 			)
 		)
-		(property "Manufacturer" "Jiangsu Changjing Electronics Technology Co., Ltd."
-			(at 171.45 116.84 0)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 128.27 208.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12423,8 +12986,8 @@
 				)
 			)
 		)
-		(property "MPN" "BAT54"
-			(at 171.45 116.84 0)
+		(property "MPN" "CL05B104KO5NNNC"
+			(at 128.27 208.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12434,8 +12997,8 @@
 				)
 			)
 		)
-		(property "LCSC" "C8590"
-			(at 171.45 116.84 0)
+		(property "LCSC" "C1525"
+			(at 128.27 208.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12445,8 +13008,8 @@
 				)
 			)
 		)
-		(property "JLCPCB_library" "Extended"
-			(at 171.45 116.84 0)
+		(property "JLCPCB_library" "Basic"
+			(at 128.27 208.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12457,7 +13020,7 @@
 			)
 		)
 		(property "Assembly" "JLCPCB_SMT"
-			(at 171.45 116.84 0)
+			(at 128.27 208.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12467,8 +13030,8 @@
 				)
 			)
 		)
-		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/BAT54/C8590"
-			(at 171.45 116.84 0)
+		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/CL05B104KO5NNNC/C1525"
+			(at 128.27 208.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12479,7 +13042,7 @@
 			)
 		)
 		(property "Verified_date" "2026-11-09"
-			(at 171.45 116.84 0)
+			(at 128.27 208.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12489,8 +13052,8 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Extended: five identical single BAT54 upper clamps, one per protected input, selected for independent placement and easier routing. JLCPCB C8590 is Extended / SMT; no qualified Basic BAT54 was identified. User accepts the sub-mA forward-voltage margin; nominal BAT54 SPICE evidence is in simulations/bat54."
-			(at 171.45 116.84 0)
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
+			(at 128.27 208.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12500,8 +13063,8 @@
 				)
 			)
 		)
-		(property "Source" "https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf"
-			(at 171.45 116.84 0)
+		(property "Source" "https://www.lcsc.com/datasheet/C1525.pdf"
+			(at 128.27 208.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12511,8 +13074,8 @@
 				)
 			)
 		)
-		(property "Status" "accepted_BAT54_voltage_margin_risk"
-			(at 171.45 116.84 0)
+		(property "Status" "candidate"
+			(at 128.27 208.28 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -12523,18 +13086,15 @@
 			)
 		)
 		(pin "1"
-			(uuid "9ce5da76-b9a7-55e0-97c0-1c0bd99c67d4")
+			(uuid "16c43292-97d0-55cc-8e7f-b9d36f15800a")
 		)
 		(pin "2"
-			(uuid "ff526737-3d23-5475-88a7-f5371e83d0c1")
-		)
-		(pin "3"
-			(uuid "69e0eed6-4973-5e70-8e78-f8873ee7436f")
+			(uuid "0f8515c8-bda8-5d1e-a149-fb619c4628b4")
 		)
 		(instances
 			(project "rp2350_68008_ice"
 				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
-					(reference "D4")
+					(reference "C25")
 					(unit 1)
 				)
 			)
@@ -13258,7 +13818,7 @@
 		)
 	)
 	(symbol
-		(lib_id "rp2350_ice:SWD_Pads")
+		(lib_id "rp2350_ice:SWD_JST_SH")
 		(at 168.91 82.55 0)
 		(mirror y)
 		(unit 1)
@@ -13275,184 +13835,131 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Value" "SWD pads: 3V3/GND/SWCLK/SWDIO"
+					(size 1 1))))
+		(property "Value" "SWD JST-SH"
 			(at 168.91 59.69 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Footprint" ""
+					(size 1 1))))
+		(property "Footprint" "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal"
 			(at 168.91 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Datasheet" ""
+					(size 1 1))))
+		(property "Datasheet" "https://www.jst-mfg.com/product/pdf/eng/eSH.pdf"
 			(at 168.91 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "Description" ""
 			(at 168.91 82.55 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "TBD"
+					(size 1.27 1.27))))
+		(property "Manufacturer" "JST"
 			(at 168.91 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "MPN" "TBD"
+					(size 1 1))))
+		(property "MPN" "SM03B-SRSS-TB(LF)(SN)"
 			(at 168.91 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Source" ""
+					(size 1 1))))
+		(property "Source" "https://www.jst-mfg.com/product/pdf/eng/eSH.pdf"
 			(at 168.91 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Status" "unresolved_debug_pad_geometry"
+					(size 1 1))))
+		(property "Status" "candidate_verify_connector_access_and_CPU_clearance"
 			(at 168.91 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Assembly" "PCB_feature"
+					(size 1 1))))
+		(property "Assembly" "JLCPCB_SMT"
 			(at 168.91 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Selection_reason" "PCB copper/pad feature; no purchased component."
+					(size 1 1))))
+		(property "Selection_reason" "Extended SMT genuine JST-SH 3-pin 1.0mm-pitch side-entry header, matching the Raspberry Pi Debug Probe supplied cable. Pins 1 SWCLK, 2 GND, 3 SWDIO; metal mounting pads to GND. Selected instead of probe pads; no qualified Basic mating-equivalent was established. Verify board-end cable access and CPU/socket clearance during placement."
 			(at 168.91 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "LCSC" ""
+					(size 1 1))))
+		(property "LCSC" "C160403"
 			(at 168.91 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "JLCPCB_library" ""
+					(size 1 1))))
+		(property "JLCPCB_library" "Extended"
 			(at 168.91 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "JLCPCB_URL" ""
+					(size 1 1))))
+		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/JST-SM03B_SRSS_TB_LF_SN/C160403"
 			(at 168.91 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Verified_date" ""
+					(size 1 1))))
+		(property "Verified_date" "2026-11-10"
 			(at 168.91 82.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "4ae38685-2654-5264-b258-285d36dda02a")
-		)
+					(size 1 1))))
+		(pin "MP"
+			(uuid "4ae38685-2654-5264-b258-285d36dda02a"))
 		(pin "2"
-			(uuid "b24c7ef2-5b86-5cee-b97c-f29fa92187a9")
-		)
+			(uuid "b24c7ef2-5b86-5cee-b97c-f29fa92187a9"))
+		(pin "1"
+			(uuid "20a0dea6-8789-523d-94f1-468a8242d8c6"))
 		(pin "3"
-			(uuid "20a0dea6-8789-523d-94f1-468a8242d8c6")
-		)
-		(pin "4"
-			(uuid "674fa7d5-1d40-52f7-91bc-234ac0bcad20")
-		)
+			(uuid "674fa7d5-1d40-52f7-91bc-234ac0bcad20"))
 		(instances
 			(project "rp2350_68008_ice"
 				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
 					(reference "J4")
-					(unit 1)
-				)
-			)
-		)
-	)
+					(unit 1)))))
 	(symbol
 		(lib_id "rp2350_ice:GND")
 		(at 201.93 154.94 0)
@@ -13933,7 +14440,7 @@
 		)
 	)
 	(symbol
-		(lib_id "rp2350_ice:BAT54")
+		(lib_id "rp2350_ice:BAT54X")
 		(at 165.1 116.84 270)
 		(unit 1)
 		(body_style 1)
@@ -13949,87 +14456,63 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 0.85 0.85)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "BAT54"
+					(size 0.85 0.85))
+				(justify left)))
+		(property "Value" "BAT54X"
 			(at 170.18 119.38 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 0.85 0.85)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+					(size 0.85 0.85))
+				(justify left)))
+		(property "Footprint" "Diode_SMD:D_SOD-523"
 			(at 165.1 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Datasheet" "https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf"
+					(size 1 1))))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026"
 			(at 165.1 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "Description" ""
 			(at 165.1 116.84 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Jiangsu Changjing Electronics Technology Co., Ltd."
+					(size 1.27 1.27))))
+		(property "Manufacturer" "R+O"
 			(at 165.1 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "MPN" "BAT54"
+					(size 1 1))))
+		(property "MPN" "BAT54X"
 			(at 165.1 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "LCSC" "C8590"
+					(size 1 1))))
+		(property "LCSC" "C19627026"
 			(at 165.1 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "JLCPCB_library" "Extended"
 			(at 165.1 116.84 0)
 			(hide yes)
@@ -14037,10 +14520,7 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "Assembly" "JLCPCB_SMT"
 			(at 165.1 116.84 0)
 			(hide yes)
@@ -14048,54 +14528,39 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/BAT54/C8590"
+					(size 1 1))))
+		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/BAT54X/C19627026"
 			(at 165.1 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Verified_date" "2026-11-09"
+					(size 1 1))))
+		(property "Verified_date" "2026-11-10"
 			(at 165.1 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Selection_reason" "Extended: five identical single BAT54 upper clamps, one per protected input, selected for independent placement and easier routing. JLCPCB C8590 is Extended / SMT; no qualified Basic BAT54 was identified. User accepts the sub-mA forward-voltage margin; nominal BAT54 SPICE evidence is in simulations/bat54."
+					(size 1 1))))
+		(property "Selection_reason" "User-selected Extended SMT R+O BAT54X / C19627026, SOD-523, 30V/200mA. Five identical upper clamps; pad 1 cathode to 3V3, pad 2 anode at the protected MCU node. Retain the accepted sub-mA forward-voltage margin and nominal proxy-model SPICE evidence."
 			(at 165.1 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Source" "https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf"
+					(size 1 1))))
+		(property "Source" "https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026"
 			(at 165.1 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "Status" "accepted_BAT54_voltage_margin_risk"
 			(at 165.1 116.84 0)
 			(hide yes)
@@ -14103,28 +14568,16 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "612c8fdd-9a86-5549-9f34-884d4a55961a")
-		)
+					(size 1 1))))
 		(pin "2"
-			(uuid "facaf008-4923-53df-b23b-ddeb06c2d5fc")
-		)
-		(pin "3"
-			(uuid "733910cb-5fd9-5c84-afaf-862b3ed98bf9")
-		)
+			(uuid "612c8fdd-9a86-5549-9f34-884d4a55961a"))
+		(pin "1"
+			(uuid "733910cb-5fd9-5c84-afaf-862b3ed98bf9"))
 		(instances
 			(project "rp2350_68008_ice"
 				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
 					(reference "D5")
-					(unit 1)
-				)
-			)
-		)
-	)
+					(unit 1)))))
 	(symbol
 		(lib_id "rp2350_ice:+3V3")
 		(at 177.8 111.76 0)
@@ -14391,6 +14844,82 @@
 	)
 	(symbol
 		(lib_id "rp2350_ice:+3V3")
+		(at 322.58 38.1 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "2d3b8e72-fc7f-5c80-86a9-4794b9ed1aa6")
+		(property "Reference" "#PWR10013"
+			(at 322.58 22.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 322.58 34.29 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 322.58 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 322.58 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 322.58 38.1 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "e435e74b-9161-593e-abb1-6da30eeda92c")
+		)
+		(instances
+			(project "rp2350_68008_ice"
+				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
+					(reference "#PWR10013")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "rp2350_ice:+3V3")
 		(at 227.33 27.94 0)
 		(unit 1)
 		(body_style 1)
@@ -14618,7 +15147,7 @@
 		)
 	)
 	(symbol
-		(lib_id "rp2350_ice:BAT54")
+		(lib_id "rp2350_ice:BAT54X")
 		(at 177.8 116.84 270)
 		(unit 1)
 		(body_style 1)
@@ -14634,87 +15163,63 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 0.85 0.85)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "BAT54"
+					(size 0.85 0.85))
+				(justify left)))
+		(property "Value" "BAT54X"
 			(at 182.88 119.38 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 0.85 0.85)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+					(size 0.85 0.85))
+				(justify left)))
+		(property "Footprint" "Diode_SMD:D_SOD-523"
 			(at 177.8 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Datasheet" "https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf"
+					(size 1 1))))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026"
 			(at 177.8 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "Description" ""
 			(at 177.8 116.84 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Jiangsu Changjing Electronics Technology Co., Ltd."
+					(size 1.27 1.27))))
+		(property "Manufacturer" "R+O"
 			(at 177.8 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "MPN" "BAT54"
+					(size 1 1))))
+		(property "MPN" "BAT54X"
 			(at 177.8 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "LCSC" "C8590"
+					(size 1 1))))
+		(property "LCSC" "C19627026"
 			(at 177.8 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "JLCPCB_library" "Extended"
 			(at 177.8 116.84 0)
 			(hide yes)
@@ -14722,10 +15227,7 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "Assembly" "JLCPCB_SMT"
 			(at 177.8 116.84 0)
 			(hide yes)
@@ -14733,54 +15235,39 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/BAT54/C8590"
+					(size 1 1))))
+		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/BAT54X/C19627026"
 			(at 177.8 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Verified_date" "2026-11-09"
+					(size 1 1))))
+		(property "Verified_date" "2026-11-10"
 			(at 177.8 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Selection_reason" "Extended: five identical single BAT54 upper clamps, one per protected input, selected for independent placement and easier routing. JLCPCB C8590 is Extended / SMT; no qualified Basic BAT54 was identified. User accepts the sub-mA forward-voltage margin; nominal BAT54 SPICE evidence is in simulations/bat54."
+					(size 1 1))))
+		(property "Selection_reason" "User-selected Extended SMT R+O BAT54X / C19627026, SOD-523, 30V/200mA. Five identical upper clamps; pad 1 cathode to 3V3, pad 2 anode at the protected MCU node. Retain the accepted sub-mA forward-voltage margin and nominal proxy-model SPICE evidence."
 			(at 177.8 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Source" "https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf"
+					(size 1 1))))
+		(property "Source" "https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026"
 			(at 177.8 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "Status" "accepted_BAT54_voltage_margin_risk"
 			(at 177.8 116.84 0)
 			(hide yes)
@@ -14788,28 +15275,16 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "09ea13ff-8a05-503c-b08f-6175d15d8e3e")
-		)
+					(size 1 1))))
 		(pin "2"
-			(uuid "095b40ad-6539-5279-bbad-06aba9d1bf54")
-		)
-		(pin "3"
-			(uuid "cdf5ce4c-175c-5503-ae98-43b504a21268")
-		)
+			(uuid "09ea13ff-8a05-503c-b08f-6175d15d8e3e"))
+		(pin "1"
+			(uuid "cdf5ce4c-175c-5503-ae98-43b504a21268"))
 		(instances
 			(project "rp2350_68008_ice"
 				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
 					(reference "D3")
-					(unit 1)
-				)
-			)
-		)
-	)
+					(unit 1)))))
 	(symbol
 		(lib_id "rp2350_ice:+3V3")
 		(at 208.28 45.72 0)
@@ -15189,7 +15664,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 45.72 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -15227,7 +15702,83 @@
 		)
 	)
 	(symbol
-		(lib_id "rp2350_ice:BAT54")
+		(lib_id "rp2350_ice:+3V3")
+		(at 335.28 45.72 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "3d47ddb3-0b40-5756-9c0f-3529e8fdadb2")
+		(property "Reference" "#PWR10043"
+			(at 335.28 30.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 335.28 41.91 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 335.28 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 335.28 45.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 335.28 45.72 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "42945e5a-ee39-5ee0-bea9-73de55f2728f")
+		)
+		(instances
+			(project "rp2350_68008_ice"
+				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
+					(reference "#PWR10043")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "rp2350_ice:BAT54X")
 		(at 184.15 116.84 270)
 		(unit 1)
 		(body_style 1)
@@ -15243,87 +15794,63 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 0.85 0.85)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "BAT54"
+					(size 0.85 0.85))
+				(justify left)))
+		(property "Value" "BAT54X"
 			(at 189.23 119.38 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 0.85 0.85)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+					(size 0.85 0.85))
+				(justify left)))
+		(property "Footprint" "Diode_SMD:D_SOD-523"
 			(at 184.15 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Datasheet" "https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf"
+					(size 1 1))))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026"
 			(at 184.15 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "Description" ""
 			(at 184.15 116.84 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Jiangsu Changjing Electronics Technology Co., Ltd."
+					(size 1.27 1.27))))
+		(property "Manufacturer" "R+O"
 			(at 184.15 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "MPN" "BAT54"
+					(size 1 1))))
+		(property "MPN" "BAT54X"
 			(at 184.15 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "LCSC" "C8590"
+					(size 1 1))))
+		(property "LCSC" "C19627026"
 			(at 184.15 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "JLCPCB_library" "Extended"
 			(at 184.15 116.84 0)
 			(hide yes)
@@ -15331,10 +15858,7 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "Assembly" "JLCPCB_SMT"
 			(at 184.15 116.84 0)
 			(hide yes)
@@ -15342,54 +15866,39 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/BAT54/C8590"
+					(size 1 1))))
+		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/BAT54X/C19627026"
 			(at 184.15 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Verified_date" "2026-11-09"
+					(size 1 1))))
+		(property "Verified_date" "2026-11-10"
 			(at 184.15 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Selection_reason" "Extended: five identical single BAT54 upper clamps, one per protected input, selected for independent placement and easier routing. JLCPCB C8590 is Extended / SMT; no qualified Basic BAT54 was identified. User accepts the sub-mA forward-voltage margin; nominal BAT54 SPICE evidence is in simulations/bat54."
+					(size 1 1))))
+		(property "Selection_reason" "User-selected Extended SMT R+O BAT54X / C19627026, SOD-523, 30V/200mA. Five identical upper clamps; pad 1 cathode to 3V3, pad 2 anode at the protected MCU node. Retain the accepted sub-mA forward-voltage margin and nominal proxy-model SPICE evidence."
 			(at 184.15 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Source" "https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf"
+					(size 1 1))))
+		(property "Source" "https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026"
 			(at 184.15 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "Status" "accepted_BAT54_voltage_margin_risk"
 			(at 184.15 116.84 0)
 			(hide yes)
@@ -15397,28 +15906,16 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "efcc629a-6a9e-51e6-85e5-81483ab48ce4")
-		)
+					(size 1 1))))
 		(pin "2"
-			(uuid "5c80c5ab-40ef-51c6-9692-19b6d4891e78")
-		)
-		(pin "3"
-			(uuid "48567246-b0b0-576c-80f8-2f6a2b5d1db2")
-		)
+			(uuid "efcc629a-6a9e-51e6-85e5-81483ab48ce4"))
+		(pin "1"
+			(uuid "48567246-b0b0-576c-80f8-2f6a2b5d1db2"))
 		(instances
 			(project "rp2350_68008_ice"
 				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
 					(reference "D2")
-					(unit 1)
-				)
-			)
-		)
-	)
+					(unit 1)))))
 	(symbol
 		(lib_id "rp2350_ice:R")
 		(at 153.67 132.08 90)
@@ -15873,6 +16370,194 @@
 		)
 	)
 	(symbol
+		(lib_id "rp2350_ice:C")
+		(at 137.16 208.28 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "4212ebdb-9860-520c-b2e6-ea77c37084d9")
+		(property "Reference" "C24"
+			(at 140.97 207.01 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Value" "4.7u"
+			(at 140.97 209.55 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 137.16 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C23733.pdf"
+			(at 137.16 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 137.16 208.28 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 137.16 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "MPN" "CL05A475MP5NRNC"
+			(at 137.16 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "LCSC" "C23733"
+			(at 137.16 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "JLCPCB_library" "Basic"
+			(at 137.16 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Assembly" "JLCPCB_SMT"
+			(at 137.16 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/CL05A475MP5NRNC/C23733"
+			(at 137.16 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Verified_date" "2026-11-09"
+			(at 137.16 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Selection_reason" "Basic 10V X5R; share core/filter and PSRAM local bypass value; verify effective capacitance, including at least 1uF at PSRAM VDD."
+			(at 137.16 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Source" "https://www.lcsc.com/datasheet/C23733.pdf"
+			(at 137.16 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Status" "candidate_effective_capacitance_at_least_1uF"
+			(at 137.16 208.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "11512db9-b028-5170-a995-1bbc6dc12904")
+		)
+		(pin "2"
+			(uuid "f90764b8-c13a-5e65-9112-07a863190afc")
+		)
+		(instances
+			(project "rp2350_68008_ice"
+				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
+					(reference "C24")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "rp2350_ice:PWR_FLAG")
 		(at 31.75 234.95 0)
 		(unit 1)
@@ -15951,7 +16636,7 @@
 	)
 	(symbol
 		(lib_id "rp2350_ice:R")
-		(at 138.43 209.55 0)
+		(at 156.21 209.55 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -15961,7 +16646,7 @@
 		(dnp no)
 		(uuid "48ce024a-8ba6-55a2-a8a6-19faf546978c")
 		(property "Reference" "R20"
-			(at 142.24 208.28 0)
+			(at 160.02 208.28 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15971,7 +16656,7 @@
 			)
 		)
 		(property "Value" "1k"
-			(at 142.24 210.82 0)
+			(at 160.02 210.82 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -15981,7 +16666,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 138.43 209.55 0)
+			(at 156.21 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -15992,7 +16677,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.lcsc.com/datasheet/C11702.pdf"
-			(at 138.43 209.55 0)
+			(at 156.21 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16003,7 +16688,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 138.43 209.55 0)
+			(at 156.21 209.55 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16013,7 +16698,7 @@
 			)
 		)
 		(property "Status" "candidate"
-			(at 138.43 209.55 0)
+			(at 156.21 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16024,7 +16709,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 138.43 209.55 0)
+			(at 156.21 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16035,7 +16720,7 @@
 			)
 		)
 		(property "MPN" "0402WGF1001TCE"
-			(at 138.43 209.55 0)
+			(at 156.21 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16046,7 +16731,7 @@
 			)
 		)
 		(property "LCSC" "C11702"
-			(at 138.43 209.55 0)
+			(at 156.21 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16057,7 +16742,7 @@
 			)
 		)
 		(property "JLCPCB_library" "Basic"
-			(at 138.43 209.55 0)
+			(at 156.21 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16068,7 +16753,7 @@
 			)
 		)
 		(property "Assembly" "JLCPCB_SMT"
-			(at 138.43 209.55 0)
+			(at 156.21 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16079,7 +16764,7 @@
 			)
 		)
 		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/0402WGF1001TCE/C11702"
-			(at 138.43 209.55 0)
+			(at 156.21 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16090,7 +16775,7 @@
 			)
 		)
 		(property "Verified_date" "2026-11-09"
-			(at 138.43 209.55 0)
+			(at 156.21 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16100,8 +16785,8 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Reuse for crystal damping, BOOTSEL and both rail-bleed resistors."
-			(at 138.43 209.55 0)
+		(property "Selection_reason" "Basic: share crystal/BOOTSEL series, two rail loads and strong PSRAM CS1 pull-up."
+			(at 156.21 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16112,7 +16797,7 @@
 			)
 		)
 		(property "Source" "https://www.lcsc.com/datasheet/C11702.pdf"
-			(at 138.43 209.55 0)
+			(at 156.21 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17084,7 +17769,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Reuse for crystal damping, BOOTSEL and both rail-bleed resistors."
+		(property "Selection_reason" "Basic: share crystal/BOOTSEL series, two rail loads and strong PSRAM CS1 pull-up."
 			(at 205.74 104.14 0)
 			(hide yes)
 			(show_name no)
@@ -17960,7 +18645,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 92.71 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -18148,7 +18833,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 54.61 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -18336,7 +19021,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 36.83 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -18901,7 +19586,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Reuse for crystal damping, BOOTSEL and both rail-bleed resistors."
+		(property "Selection_reason" "Basic: share crystal/BOOTSEL series, two rail loads and strong PSRAM CS1 pull-up."
 			(at 205.74 73.66 0)
 			(hide yes)
 			(show_name no)
@@ -19089,7 +19774,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 19.05 238.76 0)
 			(hide yes)
 			(show_name no)
@@ -19877,7 +20562,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Share RUN pull-up, mode/arm pull-downs, VBUS gate series and detector pull-up."
+		(property "Selection_reason" "Share RUN pull-up, MODE_PERMIT pull-down, VBUS gate series and detector pull-up."
 			(at 245.11 205.74 0)
 			(hide yes)
 			(show_name no)
@@ -20065,7 +20750,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 26.67 238.76 0)
 			(hide yes)
 			(show_name no)
@@ -20103,7 +20788,7 @@
 		)
 	)
 	(symbol
-		(lib_id "rp2350_ice:BAT54")
+		(lib_id "rp2350_ice:BAT54X")
 		(at 190.5 116.84 270)
 		(unit 1)
 		(body_style 1)
@@ -20119,87 +20804,63 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 0.85 0.85)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "BAT54"
+					(size 0.85 0.85))
+				(justify left)))
+		(property "Value" "BAT54X"
 			(at 195.58 119.38 270)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 0.85 0.85)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+					(size 0.85 0.85))
+				(justify left)))
+		(property "Footprint" "Diode_SMD:D_SOD-523"
 			(at 190.5 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Datasheet" "https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf"
+					(size 1 1))))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026"
 			(at 190.5 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "Description" ""
 			(at 190.5 116.84 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Manufacturer" "Jiangsu Changjing Electronics Technology Co., Ltd."
+					(size 1.27 1.27))))
+		(property "Manufacturer" "R+O"
 			(at 190.5 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "MPN" "BAT54"
+					(size 1 1))))
+		(property "MPN" "BAT54X"
 			(at 190.5 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "LCSC" "C8590"
+					(size 1 1))))
+		(property "LCSC" "C19627026"
 			(at 190.5 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "JLCPCB_library" "Extended"
 			(at 190.5 116.84 0)
 			(hide yes)
@@ -20207,10 +20868,7 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "Assembly" "JLCPCB_SMT"
 			(at 190.5 116.84 0)
 			(hide yes)
@@ -20218,54 +20876,39 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/BAT54/C8590"
+					(size 1 1))))
+		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/BAT54X/C19627026"
 			(at 190.5 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Verified_date" "2026-11-09"
+					(size 1 1))))
+		(property "Verified_date" "2026-11-10"
 			(at 190.5 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Selection_reason" "Extended: five identical single BAT54 upper clamps, one per protected input, selected for independent placement and easier routing. JLCPCB C8590 is Extended / SMT; no qualified Basic BAT54 was identified. User accepts the sub-mA forward-voltage margin; nominal BAT54 SPICE evidence is in simulations/bat54."
+					(size 1 1))))
+		(property "Selection_reason" "User-selected Extended SMT R+O BAT54X / C19627026, SOD-523, 30V/200mA. Five identical upper clamps; pad 1 cathode to 3V3, pad 2 anode at the protected MCU node. Retain the accepted sub-mA forward-voltage margin and nominal proxy-model SPICE evidence."
 			(at 190.5 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Source" "https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf"
+					(size 1 1))))
+		(property "Source" "https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026"
 			(at 190.5 116.84 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
+					(size 1 1))))
 		(property "Status" "accepted_BAT54_voltage_margin_risk"
 			(at 190.5 116.84 0)
 			(hide yes)
@@ -20273,28 +20916,16 @@
 			(do_not_autoplace no)
 			(effects
 				(font
-					(size 1 1)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "32e128fb-95bc-56ea-b21a-ce281a54cfa9")
-		)
+					(size 1 1))))
 		(pin "2"
-			(uuid "ba0f5c6c-a8f5-5e96-b201-8e3deef39670")
-		)
-		(pin "3"
-			(uuid "46b57726-10ba-5e00-84b7-24154de96270")
-		)
+			(uuid "32e128fb-95bc-56ea-b21a-ce281a54cfa9"))
+		(pin "1"
+			(uuid "46b57726-10ba-5e00-84b7-24154de96270"))
 		(instances
 			(project "rp2350_68008_ice"
 				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
 					(reference "D1")
-					(unit 1)
-				)
-			)
-		)
-	)
+					(unit 1)))))
 	(symbol
 		(lib_id "rp2350_ice:C")
 		(at 19.05 208.28 0)
@@ -20446,7 +21077,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 19.05 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -20898,7 +21529,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 130.81 30.48 0)
 			(hide yes)
 			(show_name no)
@@ -20937,7 +21568,7 @@
 	)
 	(symbol
 		(lib_id "rp2350_ice:GND")
-		(at 138.43 217.17 0)
+		(at 156.21 217.17 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -20947,7 +21578,7 @@
 		(dnp no)
 		(uuid "a032ebb9-9871-5469-90f8-9df6ba2311b0")
 		(property "Reference" "#PWR10732"
-			(at 138.43 201.93 0)
+			(at 156.21 201.93 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20958,7 +21589,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 138.43 220.98 0)
+			(at 156.21 220.98 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -20968,7 +21599,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 138.43 217.17 0)
+			(at 156.21 217.17 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20979,7 +21610,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 138.43 217.17 0)
+			(at 156.21 217.17 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -20990,7 +21621,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 138.43 217.17 0)
+			(at 156.21 217.17 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21314,7 +21945,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic 10V X5R; share core output, input and AVDD filter value; verify effective capacitance."
+		(property "Selection_reason" "Basic 10V X5R; share core/filter and PSRAM local bypass value; verify effective capacitance, including at least 1uF at PSRAM VDD."
 			(at 212.09 34.29 0)
 			(hide yes)
 			(show_name no)
@@ -21654,7 +22285,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 27.94 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -22106,7 +22737,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Share RUN pull-up, mode/arm pull-downs, VBUS gate series and detector pull-up."
+		(property "Selection_reason" "Share RUN pull-up, MODE_PERMIT pull-down, VBUS gate series and detector pull-up."
 			(at 208.28 50.8 0)
 			(hide yes)
 			(show_name no)
@@ -22214,6 +22845,291 @@
 			(project "rp2350_68008_ice"
 				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
 					(reference "#PWR010533")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "rp2350_ice:GND")
+		(at 335.28 81.28 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "baf5e823-a0b2-5bea-b630-0fc7d1714773")
+		(property "Reference" "#PWR10034"
+			(at 335.28 66.04 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Value" "GND"
+			(at 335.28 85.09 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 335.28 81.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 335.28 81.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 335.28 81.28 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "e29849dc-980d-54c1-a404-4dd35cdb484d")
+		)
+		(instances
+			(project "rp2350_68008_ice"
+				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
+					(reference "#PWR10034")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "rp2350_ice:APS6404L-3SQR-ZR")
+		(at 335.28 63.5 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "be8d743a-e384-555b-ba89-463f8b4b7e28")
+		(property "Reference" "U5"
+			(at 328.93 52.07 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Value" "APS6404L-3SQR-ZR (8 MiB)"
+			(at 347.98 52.07 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Footprint" "Package_SON:Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm"
+			(at 335.28 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Datasheet" "https://www.pjrc.com/store/APS6404L_3SQR.pdf"
+			(at 335.28 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Description" ""
+			(at 335.28 63.5 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "AP Memory"
+			(at 335.28 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "MPN" "APS6404L-3SQR-ZR"
+			(at 335.28 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "LCSC" "C3040877"
+			(at 335.28 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "JLCPCB_library" "Extended"
+			(at 335.28 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Assembly" "JLCPCB_SMT"
+			(at 335.28 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/APMemory-APS6404L_3SQRZR/C3040877"
+			(at 335.28 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Verified_date" "2026-11-10"
+			(at 335.28 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Selection_reason" "Extended SMT: 64 Mbit / 8 MiB, 2.7-3.6 V SPI/QPI PSRAM; compact 3x2 mm USON package for the DIP adapter. No suitable Basic 8 MiB PSRAM was identified. Shared QSPI data/clock and separate GPIO47 QMI CS1; reuse existing capacitor and pull-up resistor SKUs. Stock/prices require order-time verification."
+			(at 335.28 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Source" "https://www.pjrc.com/store/APS6404L_3SQR.pdf"
+			(at 335.28 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(property "Status" "candidate_verify_PSRAM_startup_timing_and_layout"
+			(at 335.28 63.5 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1 1)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "fd94fa33-de6e-5051-a57a-df0c4de12f25")
+		)
+		(pin "2"
+			(uuid "32ee70e1-a452-5c79-acd7-4071d213cc14")
+		)
+		(pin "3"
+			(uuid "7cc52ec5-e3b1-5d67-ae43-0088dae51612")
+		)
+		(pin "4"
+			(uuid "1c032b5a-7dd2-5541-8a0e-b3325aca8c7e")
+		)
+		(pin "5"
+			(uuid "7b8e8cfe-7c08-5566-91a2-f40bf4738c88")
+		)
+		(pin "6"
+			(uuid "ca905dc1-2648-585d-b466-42e67db4140a")
+		)
+		(pin "7"
+			(uuid "e29b44d8-a474-5d98-b1f0-7bec769a81d8")
+		)
+		(pin "8"
+			(uuid "cf21d498-79e6-5e6a-8b34-8192619eb093")
+		)
+		(pin "9"
+			(uuid "1bc48507-ac16-5301-a732-852a4b1e835a")
+		)
+		(instances
+			(project "rp2350_68008_ice"
+				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
+					(reference "U5")
 					(unit 1)
 				)
 			)
@@ -22370,7 +23286,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Share RUN pull-up, mode/arm pull-downs, VBUS gate series and detector pull-up."
+		(property "Selection_reason" "Share RUN pull-up, MODE_PERMIT pull-down, VBUS gate series and detector pull-up."
 			(at 228.6 215.9 0)
 			(hide yes)
 			(show_name no)
@@ -22558,7 +23474,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 63.5 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -23356,7 +24272,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic 10V X5R; share core output, input and AVDD filter value; verify effective capacitance."
+		(property "Selection_reason" "Basic 10V X5R; share core/filter and PSRAM local bypass value; verify effective capacitance, including at least 1uF at PSRAM VDD."
 			(at 43.18 238.76 0)
 			(hide yes)
 			(show_name no)
@@ -23621,7 +24537,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic 10V X5R; share core output, input and AVDD filter value; verify effective capacitance."
+		(property "Selection_reason" "Basic 10V X5R; share core/filter and PSRAM local bypass value; verify effective capacitance, including at least 1uF at PSRAM VDD."
 			(at 119.38 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -24565,7 +25481,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 72.39 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -24597,83 +25513,6 @@
 			(project "rp2350_68008_ice"
 				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
 					(reference "C15")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "rp2350_ice:+3V3")
-		(at 168.91 66.04 0)
-		(mirror y)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board no)
-		(in_pos_files yes)
-		(dnp no)
-		(uuid "e5f7ea2f-02ca-54f2-b1c3-3d481100a8cb")
-		(property "Reference" "#PWR10555"
-			(at 168.91 50.8 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 168.91 62.23 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 168.91 66.04 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 168.91 66.04 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1 1)
-				)
-			)
-		)
-		(property "Description" ""
-			(at 168.91 66.04 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "1"
-			(uuid "a982e1fe-4599-5f89-bf19-9e9472fb58bd")
-		)
-		(instances
-			(project "rp2350_68008_ice"
-				(path "/ecb60f9d-cf74-5b45-a1b0-a6a17879248a"
-					(reference "#PWR10555")
 					(unit 1)
 				)
 			)
@@ -25707,7 +26546,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 34.29 238.76 0)
 			(hide yes)
 			(show_name no)
@@ -26083,7 +26922,7 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Basic common MCU bypass part."
+		(property "Selection_reason" "Basic common MCU, PSRAM and connector high-frequency bypass part."
 			(at 82.55 208.28 0)
 			(hide yes)
 			(show_name no)
@@ -26274,7 +27113,7 @@
 	)
 	(symbol
 		(lib_id "rp2350_ice:R")
-		(at 129.54 209.55 0)
+		(at 147.32 209.55 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -26284,7 +27123,7 @@
 		(dnp no)
 		(uuid "fa2ebb0f-c131-5770-8e6d-b88ab6353cf6")
 		(property "Reference" "R19"
-			(at 133.35 208.28 0)
+			(at 151.13 208.28 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -26294,7 +27133,7 @@
 			)
 		)
 		(property "Value" "1k"
-			(at 133.35 210.82 0)
+			(at 151.13 210.82 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -26304,7 +27143,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 129.54 209.55 0)
+			(at 147.32 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26315,7 +27154,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.lcsc.com/datasheet/C11702.pdf"
-			(at 129.54 209.55 0)
+			(at 147.32 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26326,7 +27165,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 129.54 209.55 0)
+			(at 147.32 209.55 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -26336,7 +27175,7 @@
 			)
 		)
 		(property "Status" "candidate"
-			(at 129.54 209.55 0)
+			(at 147.32 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26347,7 +27186,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 129.54 209.55 0)
+			(at 147.32 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26358,7 +27197,7 @@
 			)
 		)
 		(property "MPN" "0402WGF1001TCE"
-			(at 129.54 209.55 0)
+			(at 147.32 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26369,7 +27208,7 @@
 			)
 		)
 		(property "LCSC" "C11702"
-			(at 129.54 209.55 0)
+			(at 147.32 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26380,7 +27219,7 @@
 			)
 		)
 		(property "JLCPCB_library" "Basic"
-			(at 129.54 209.55 0)
+			(at 147.32 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26391,7 +27230,7 @@
 			)
 		)
 		(property "Assembly" "JLCPCB_SMT"
-			(at 129.54 209.55 0)
+			(at 147.32 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26402,7 +27241,7 @@
 			)
 		)
 		(property "JLCPCB_URL" "https://jlcpcb.com/partdetail/0402WGF1001TCE/C11702"
-			(at 129.54 209.55 0)
+			(at 147.32 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26413,7 +27252,7 @@
 			)
 		)
 		(property "Verified_date" "2026-11-09"
-			(at 129.54 209.55 0)
+			(at 147.32 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26423,8 +27262,8 @@
 				)
 			)
 		)
-		(property "Selection_reason" "Reuse for crystal damping, BOOTSEL and both rail-bleed resistors."
-			(at 129.54 209.55 0)
+		(property "Selection_reason" "Basic: share crystal/BOOTSEL series, two rail loads and strong PSRAM CS1 pull-up."
+			(at 147.32 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26435,7 +27274,7 @@
 			)
 		)
 		(property "Source" "https://www.lcsc.com/datasheet/C11702.pdf"
-			(at 129.54 209.55 0)
+			(at 147.32 209.55 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26542,4 +27381,17 @@
 		)
 	)
 	(embedded_fonts no)
+	(wire
+		(pts
+			(xy 166.37 92.71)
+			(xy 168.91 92.71))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid "409fe15a-2817-5ec6-a799-2203f700f1eb"))
+	(junction
+		(at 168.91 92.71)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "115fb661-83ad-59eb-8840-27706fe65293"))
 )

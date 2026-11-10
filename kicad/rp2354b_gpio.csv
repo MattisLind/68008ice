@@ -45,5 +45,5 @@ gpio,qfn_pin,net,dip_pin,purpose,notes
 43,54,IPL1_N_3V3,41,input_only,
 44,55,IPL20_N_3V3,42,input_only,
 45,56,MODE_PERMIT,,input,JP1 physical active-mode permission; open means passive. Firmware must enforce it; it does not detect CPU presence or gate the pads.
-46,57,BUS_ARM_REQUEST,,reserved_output_low,"Reserved firmware request for a future hardware output-enable circuit; currently connected only to pull-down R5, so it inhibits no bus outputs."
-47,58,USB_PRESENT_N,,input,Active-low Q1 VBUS detector for self-powered USB attachment/removal; VBUS is sense-only and does not power the ICE.
+46,57,USB_PRESENT_N,,input,"Active-low Q1 VBUS detector, moved from GPIO47 for PSRAM. VBUS remains sense-only; the former BUS_ARM_REQUEST reservation is removed."
+47,58,PSRAM_CS_N,,QMI_CS1_output_active_low,PSRAM CS1 active-low chip select for 8 MiB APS6404L; dedicated QSPI clock/data shared with in-package flash. R4 1k pull-up holds deselected at reset; disable the pad pull-down before enabling QMI CS1.

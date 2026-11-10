@@ -11,7 +11,7 @@ import csv
 import json
 from pathlib import Path
 
-from kicad_sexpr import Libraries, Q, Sheet, child, children, parse, dump, effects
+from kicad_sexpr import Libraries, Sheet, child, children, parse
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'kicad'
@@ -40,6 +40,7 @@ PLACEMENT = {
     'R11':(205.74,215.9), 'R12':(205.74,248.92),
     'Q1':(241.3,231.14), 'R13':(256.54,205.74),
     'R4':(256.54,245.11), 'R5':(284.48,245.11), 'JP1':(256.54,278.13),
+    'U5':(335.28,63.5), 'C24':(360.68,66.04), 'C25':(382.27,66.04),
 }
 for i in range(14):
     PLACEMENT['C'+str(9+i)] = (15.24+(i%7)*27.94,228.6+(i//7)*30.48)
@@ -51,21 +52,6 @@ def build(bom_only=False):
     # passive CPU contact symbol and pin-compatible RP2354B symbol.
     library = parse((OUT/'rp2350_ice.kicad_sym').read_text())
     libs.used = {str(n[1]):n for n in children(library,'symbol')}
-    if 'SWD_Pads' not in libs.used:
-        swd=['symbol',Q('SWD_Pads'),['pin_names',['offset',0.8]],['in_bom','yes'],['on_board','yes']]
-        for key,value in [('Reference','J'),('Value','SWD Pads'),('Footprint',''),('Datasheet','')]:
-            swd.append(['property',Q(key),Q(value),['at',0,0,0],effects(hide=True)])
-        body=['symbol',Q('SWD_Pads_1_1'),
-              ['rectangle',['start',-7.62,7.62],['end',7.62,-7.62],
-               ['stroke',['width',0.254],['type','default']],['fill',['type','background']]]]
-        for number,name,x,y,angle in [('1','3V3',0,10.16,270),('2','GND',0,-10.16,90),
-                                       ('3','SWCLK',-10.16,2.54,0),('4','SWDIO',-10.16,-2.54,0)]:
-            body.append(['pin','passive','line',['at',x,y,angle],['length',2.54],
-                         ['name',Q(name),effects(0.9)],['number',Q(number),effects(0.9)]])
-        swd.append(body)
-        libs.used['SWD_Pads']=swd
-        library.append(swd)
-        (OUT/'rp2350_ice.kicad_sym').write_text(dump(library)+'\n')
     catalog = json.loads((OUT/'parts_catalog.json').read_text())['parts']
     circuit = json.loads((ROOT/'tools/hardware_circuit.json').read_text())['components']
     rows = list(csv.DictReader((OUT/'mc68008_pinmap.csv').open()))
@@ -92,8 +78,8 @@ def build(bom_only=False):
             pins = {r['dip_pin']:r['target_net'] for r in rows}
         if ref=='U1':
             pins.update({r['mcu_qfn_pin']:r['mcu_net'] for r in rows if r['mcu_gpio']})
-            pins.update({'56':'MODE_PERMIT','57':'BUS_ARM_REQUEST','58':'USB_PRESENT_N'})
-        symbol = 'SWD_Pads' if ref=='J4' else definition['symbol']
+            pins.update({'56':'MODE_PERMIT','57':'USB_PRESENT_N','58':'PSRAM_CS_N'})
+        symbol = definition['symbol']
         part = diagram.symbol(libs.used[symbol],ref,*PLACEMENT[ref],value,footprint,**props)
         diagram.connect(part,pins)
     flags = [(30.48,'+5V'),(58.42,'GND'),(86.36,'+1V1'),(114.3,'VREG_AVDD')]
@@ -103,7 +89,7 @@ def build(bom_only=False):
 
     # Short display text leaves full engineering values and metadata in the BOM.
     compact = {'J1':'TOP CPU SOCKET (manual)', 'J2':'MOTHERBOARD PLUG (manual)',
-               'J4':'SWD: 3V3 ref / GND / CLK / IO', 'JP1':'ACTIVE PERMIT',
+               'J4':'SWD JST-SH: CLK / GND / IO', 'JP1':'ACTIVE PERMIT',
                'L1':'3.3uH'}
     for instance in [n for n in diagram.parts if n[0]=='symbol']:
         properties = {str(p[1]):p for p in children(instance,'property')}
@@ -132,7 +118,7 @@ def build(bom_only=False):
     diagram.text('VBUS presence',198.12,194.31,0.9)
     diagram.text('PIO0: GPIO0-31; PIO1: GPIO16-47. Synchronization pending.\nJ1 pin n = J2 pin n. RESET/HALT: LOW or release only.\nTarget-only power / TTL bus. Mode interlock remains to be completed.',130.81,273.05,0.85)
     # Circuit notes occupy the open area below the MCU, above the supplies.
-    diagram.text('BAT54 Vf margin accepted; see simulations/bat54/.\nMODE_PERMIT: physical permission input, default passive.\nBUS_ARM_REQUEST: future gate only; currently R5 pull-down.\nUSB_PRESENT_N: active-low VBUS detection for USB attach.',130.81,148.59,0.85)
+    diagram.text('BAT54X Vf margin accepted; see simulations/bat54/.\nMODE_PERMIT: GPIO45 permission input, default passive.\nUSB_PRESENT_N: GPIO46 active-low VBUS detection.\nPSRAM_CS_N: GPIO47 QMI CS1; R4 is a 1k pull-up.',130.81,148.59,0.85)
     if not bom_only:
         diagram.save(OUT)
         for old in ['cpu_bus.kicad_sch','mcu.kicad_sch','protected_inputs.kicad_sch','power_usb.kicad_sch']:
@@ -151,19 +137,19 @@ def build(bom_only=False):
                       ('TBD_OUTPUT_INTERLOCK','Independent hardware prevention of active drive in passive mode'),
                   ]]
     with (OUT/'BOM.csv').open('w',newline='') as f:
-        w=csv.DictWriter(f,fieldnames=fields,extrasaction='ignore');w.writeheader();w.writerows(parts+unresolved)
+        w=csv.DictWriter(f,fieldnames=fields,extrasaction='ignore',lineterminator='\n');w.writeheader();w.writerows(parts+unresolved)
     groups={}
     for p in parts:
         if p['Assembly']=='JLCPCB_SMT':
             assert p['LCSC'].startswith('C') and p['JLCPCB_library'] in ('Basic','Extended')
             groups.setdefault(p['LCSC'],[]).append(p)
     with (OUT/'BOM_JLCPCB.csv').open('w',newline='') as f:
-        w=csv.writer(f);w.writerow(['Comment','Designator','Footprint','LCSC Part #'])
+        w=csv.writer(f,lineterminator='\n');w.writerow(['Comment','Designator','Footprint','LCSC Part #'])
         for code,instances in sorted(groups.items()):
             w.writerow([instances[0]['MPN'],','.join(p['Reference'] for p in instances),instances[0]['Footprint'],code])
-    report=['# JLCPCB selections — 2026-11-09','',
-            'Basic/Extended and SMT assembly were checked on JLCPCB product pages. Stock and prices must be checked when ordering.',
-            'J1/J2 are manual assemblies; J4/JP1 are PCB features. They are excluded from the JLCPCB upload BOM.',
+    report=['# JLCPCB selections — through 2026-11-10','',
+            'Basic/Extended and SMT assembly were checked on JLCPCB product pages; each catalog entry carries its verification date. Stock and prices must be checked when ordering.',
+            'J1/J2 are manual assemblies and JP1 is a PCB feature, excluded from the JLCPCB upload BOM. J4 is a purchased JST-SH SMT connector included in the BOM.',
             'The independent output interlock remains unimplemented and uncosted.','',
             '| LCSC | Library | MPN | Qty | References | Selection rationale |',
             '| --- | --- | --- | --- | --- | --- |']
@@ -172,10 +158,10 @@ def build(bom_only=False):
         report.append(f"| [{code}]({p['JLCPCB_URL']}) | {p['JLCPCB_library']} | {p['MPN']} | {len(instances)} | {', '.join(i['Reference'] for i in instances)} | {p['Selection_reason']} |")
     (OUT/'JLCPCB_parts.md').write_text('\n'.join(report)+'\n')
     gpios=[]
-    aux={45:('MODE_PERMIT','input'),46:('BUS_ARM_REQUEST','reserved_output_low'),47:('USB_PRESENT_N','input')}
+    aux={45:('MODE_PERMIT','input'),46:('USB_PRESENT_N','input'),47:('PSRAM_CS_N','QMI_CS1_output_active_low')}
     auxiliary_notes={45:'JP1 physical active-mode permission; open means passive. Firmware must enforce it; it does not detect CPU presence or gate the pads.',
-                     46:'Reserved firmware request for a future hardware output-enable circuit; currently connected only to pull-down R5, so it inhibits no bus outputs.',
-                     47:'Active-low Q1 VBUS detector for self-powered USB attachment/removal; VBUS is sense-only and does not power the ICE.'}
+                     46:'Active-low Q1 VBUS detector, moved from GPIO47 for PSRAM. VBUS remains sense-only; the former BUS_ARM_REQUEST reservation is removed.',
+                     47:'PSRAM CS1 active-low chip select for 8 MiB APS6404L; dedicated QSPI clock/data shared with in-package flash. R4 1k pull-up holds deselected at reset; disable the pad pull-down before enabling QMI CS1.'}
     for gpio in range(48):
         r=by_gpio.get(gpio)
         qfn = r['mcu_qfn_pin'] if r else {45:56,46:57,47:58}[gpio]
@@ -184,7 +170,7 @@ def build(bom_only=False):
                       'purpose':r['replacement_mcu'] if r else aux[gpio][1],
                       'notes':r.get('notes','') if r else auxiliary_notes[gpio]})
     with (OUT/'rp2354b_gpio.csv').open('w',newline='') as f:
-        w=csv.DictWriter(f,fieldnames=list(gpios[0]));w.writeheader();w.writerows(gpios)
+        w=csv.DictWriter(f,fieldnames=list(gpios[0]),lineterminator='\n');w.writeheader();w.writerows(gpios)
     print(f'Wrote BOMs for {len(parts)} candidate parts and 48 GPIO assignments.' if bom_only
           else f'Wrote one A3 schematic sheet, {len(parts)} candidate parts and 48 GPIO assignments.')
 

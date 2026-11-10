@@ -109,7 +109,7 @@ Dclamp node rail BAT54
     metadata = {'engine':version,'model':'Diodes Inc / Zetex BAT54 v1.0 (2000-04-25)',
                 'model_source':'https://www.diodes.com/spice/download/510/BAT54.spice.txt',
                 'model_sha256':hashlib.sha256(MODEL.read_bytes()).hexdigest(),
-                'bom_part':'JSCJ BAT54 C8590; different manufacturer, no qualified JSCJ corner model established',
+                'bom_part':'R+O BAT54X C19627026 SOD-523; different manufacturer, no qualified R+O corner model established',
                 'scope':'nominal DC model, temperature sensitivity; no process spread, rail startup, GPIO internal clamp or self-heating proof'}
     (out/'metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')
     for row in rows:

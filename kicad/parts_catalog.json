@@ -1,5 +1,4 @@
 {
-  "verified_date": "2026-11-09",
   "classification_source": "JLCPCB live product page: componentLibraryType base/expand, assemblyMode smtWeld",
   "stock_and_prices": "Not guaranteed; verify in order-time BOM match. LCSC stock is not JLCPCB stock.",
   "parts": {
@@ -14,7 +13,7 @@
       "LCSC_URL": "https://www.lcsc.com/product-detail/C11702.html",
       "Verified_date": "2026-11-09",
       "Evidence_SHA256": "60509dd5cfe46423258d5ba53792cd61d20cdabccb964f98ec5a2ca6cc4a7181",
-      "Selection_reason": "Reuse for crystal damping, BOOTSEL and both rail-bleed resistors.",
+      "Selection_reason": "Basic: share crystal/BOOTSEL series, two rail loads and strong PSRAM CS1 pull-up.",
       "Datasheet_URL": "https://www.lcsc.com/datasheet/C11702.pdf"
     },
     "R_2.2k": {
@@ -42,7 +41,7 @@
       "LCSC_URL": "https://www.lcsc.com/product-detail/C25744.html",
       "Verified_date": "2026-11-09",
       "Evidence_SHA256": "e05ebea957844b114dc0bf24bb5f59a998387af921d89d4545f16a183e6fc1fd",
-      "Selection_reason": "Share RUN pull-up, mode/arm pull-downs, VBUS gate series and detector pull-up.",
+      "Selection_reason": "Share RUN pull-up, MODE_PERMIT pull-down, VBUS gate series and detector pull-up.",
       "Datasheet_URL": "https://www.lcsc.com/datasheet/C25744.pdf"
     },
     "R_100k": {
@@ -126,7 +125,7 @@
       "LCSC_URL": "https://www.lcsc.com/product-detail/C1525.html",
       "Verified_date": "2026-11-09",
       "Evidence_SHA256": "f8850d39c1348deebbe9bad93108d1edf86c884f407201e5bd393ab4a9dd8345",
-      "Selection_reason": "Basic common MCU bypass part.",
+      "Selection_reason": "Basic common MCU, PSRAM and connector high-frequency bypass part.",
       "Datasheet_URL": "https://www.lcsc.com/datasheet/C1525.pdf"
     },
     "C_4.7u": {
@@ -140,7 +139,7 @@
       "LCSC_URL": "https://www.lcsc.com/product-detail/C23733.html",
       "Verified_date": "2026-11-09",
       "Evidence_SHA256": "c8615cc1e7918fce68b7672f40fd3b470e63b9e554d1ab0c062fe30812d16758",
-      "Selection_reason": "Basic 10V X5R; share core output, input and AVDD filter value; verify effective capacitance.",
+      "Selection_reason": "Basic 10V X5R; share core/filter and PSRAM local bypass value; verify effective capacitance, including at least 1uF at PSRAM VDD.",
       "Datasheet_URL": "https://www.lcsc.com/datasheet/C23733.pdf"
     },
     "C_10u": {
@@ -158,18 +157,18 @@
       "Datasheet_URL": "https://www.lcsc.com/datasheet/C15850.pdf"
     },
     "CLAMP": {
-      "LCSC": "C8590",
-      "MPN": "BAT54",
-      "Manufacturer": "Jiangsu Changjing Electronics Technology Co., Ltd.",
-      "Footprint": "Package_TO_SOT_SMD:SOT-23",
+      "LCSC": "C19627026",
+      "MPN": "BAT54X",
+      "Manufacturer": "R+O",
+      "Footprint": "Diode_SMD:D_SOD-523",
       "JLCPCB_library": "Extended",
       "Assembly": "JLCPCB_SMT",
-      "JLCPCB_URL": "https://jlcpcb.com/partdetail/BAT54/C8590",
-      "LCSC_URL": "https://www.lcsc.com/product-detail/C8590.html",
-      "Verified_date": "2026-11-09",
-      "Evidence_SHA256": "80987c265ada0cfe7653ba1411dbef60ce4496a3ed945407842fdd839d1905d5",
-      "Selection_reason": "Extended: five identical single BAT54 upper clamps, one per protected input, selected for independent placement and easier routing. JLCPCB C8590 is Extended / SMT; no qualified Basic BAT54 was identified. User accepts the sub-mA forward-voltage margin; nominal BAT54 SPICE evidence is in simulations/bat54.",
-      "Datasheet_URL": "https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf"
+      "JLCPCB_URL": "https://jlcpcb.com/partdetail/BAT54X/C19627026",
+      "LCSC_URL": "https://www.lcsc.com/product-detail/C19627026.html",
+      "Verified_date": "2026-11-10",
+      "Evidence_SHA256": "05052096fce81176c487e8a99b31869187dff15d8e460a7f7cda6e62b2869611",
+      "Selection_reason": "User-selected Extended SMT R+O BAT54X / C19627026, SOD-523, 30V/200mA. Five identical upper clamps; pad 1 cathode to 3V3, pad 2 anode at the protected MCU node. Retain the accepted sub-mA forward-voltage margin and nominal proxy-model SPICE evidence.",
+      "Datasheet_URL": "https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026"
     },
     "MOSFET": {
       "LCSC": "C8545",
@@ -282,6 +281,36 @@
       "Evidence_SHA256": "afe9c70a394ea07237afe7dff545816b59600d6a45e44fe4471d29e4d768e4bc",
       "Selection_reason": "Basic: replace both Wurth buttons with the same two-pad SMT switch.",
       "Datasheet_URL": "https://www.lcsc.com/datasheet/C720477.pdf"
+    },
+    "PSRAM_8MiB": {
+      "LCSC": "C3040877",
+      "MPN": "APS6404L-3SQR-ZR",
+      "Manufacturer": "AP Memory",
+      "Footprint": "Package_SON:Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm",
+      "JLCPCB_library": "Extended",
+      "Assembly": "JLCPCB_SMT",
+      "JLCPCB_URL": "https://jlcpcb.com/partdetail/APMemory-APS6404L_3SQRZR/C3040877",
+      "LCSC_URL": "https://www.lcsc.com/product-detail/C3040877.html",
+      "Verified_date": "2026-11-10",
+      "Evidence_SHA256": "4229942805b0f1045af9a2d6f8de8832822068ffe6b865b6efcc165e23a1360e",
+      "Selection_reason": "Extended SMT: 64 Mbit / 8 MiB, 2.7-3.6 V SPI/QPI PSRAM; compact 3x2 mm USON package for the DIP adapter. No suitable Basic 8 MiB PSRAM was identified. Shared QSPI data/clock and separate GPIO47 QMI CS1; reuse existing capacitor and pull-up resistor SKUs. Stock/prices require order-time verification.",
+      "Datasheet_URL": "https://www.pjrc.com/store/APS6404L_3SQR.pdf"
+    },
+    "SWD_JST_SH": {
+      "LCSC": "C160403",
+      "MPN": "SM03B-SRSS-TB(LF)(SN)",
+      "Manufacturer": "JST",
+      "Footprint": "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal",
+      "JLCPCB_library": "Extended",
+      "Assembly": "JLCPCB_SMT",
+      "JLCPCB_URL": "https://jlcpcb.com/partdetail/JST-SM03B_SRSS_TB_LF_SN/C160403",
+      "LCSC_URL": "https://www.lcsc.com/product-detail/C160403.html",
+      "Datasheet_URL": "https://www.jst-mfg.com/product/pdf/eng/eSH.pdf",
+      "Verified_date": "2026-11-10",
+      "Evidence_SHA256": "3ea534a45310ae6c0976bb3c23fa4e9c5f7f47a167ab31ed797241f8ee0c5963",
+      "Selection_reason": "Extended SMT genuine JST-SH 3-pin 1.0mm-pitch side-entry header, matching the Raspberry Pi Debug Probe supplied cable. Pins 1 SWCLK, 2 GND, 3 SWDIO; metal mounting pads to GND. Selected instead of probe pads; no qualified Basic mating-equivalent was established. Verify board-end cable access and CPU/socket clearance during placement."
     }
-  }
+  },
+  "initial_review_date": "2026-11-09",
+  "last_updated_date": "2026-11-10"
 }

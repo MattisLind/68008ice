@@ -4107,7 +4107,7 @@
         (font
           (size 1.27 1.27))))
     (embedded_fonts no))
-  (symbol "SWD_Pads"
+  (symbol "SWD_JST_SH"
     (pin_names
       (offset 0.8))
     (in_bom yes)
@@ -4117,22 +4117,22 @@
       (effects
         (font
           (size 1 1)) hide))
-    (property "Value" "SWD Pads"
+    (property "Value" "SWD JST-SH"
       (at 0 0 0)
       (effects
         (font
           (size 1 1)) hide))
-    (property "Footprint" ""
+    (property "Footprint" "Connector_JST:JST_SH_SM03B-SRSS-TB_1x03-1MP_P1.00mm_Horizontal"
       (at 0 0 0)
       (effects
         (font
           (size 1 1)) hide))
-    (property "Datasheet" ""
+    (property "Datasheet" "https://www.jst-mfg.com/product/pdf/eng/eSH.pdf"
       (at 0 0 0)
       (effects
         (font
           (size 1 1)) hide))
-    (symbol "SWD_Pads_1_1"
+    (symbol "SWD_JST_SH_1_1"
       (rectangle
         (start -7.62 7.62)
         (end 7.62 -7.62)
@@ -4142,13 +4142,13 @@
         (fill
           (type background)))
       (pin passive line
-        (at 0 10.16 270)
+        (at 2.54 -10.16 90)
         (length 2.54)
-        (name "3V3"
+        (name "MP"
           (effects
             (font
               (size 0.9 0.9))))
-        (number "1"
+        (number "MP"
           (effects
             (font
               (size 0.9 0.9)))))
@@ -4170,7 +4170,7 @@
           (effects
             (font
               (size 0.9 0.9))))
-        (number "3"
+        (number "1"
           (effects
             (font
               (size 0.9 0.9)))))
@@ -4181,11 +4181,13 @@
           (effects
             (font
               (size 0.9 0.9))))
-        (number "4"
+        (number "3"
           (effects
             (font
               (size 0.9 0.9)))))))
-  (symbol "BAT54"
+  (symbol "BAT54X"
+    (pin_numbers
+      (hide yes))
     (pin_names
       (offset 1.016)
       (hide yes))
@@ -4201,22 +4203,14 @@
       (effects
         (font
           (size 1.27 1.27))))
-    (property "Value" "BAT54"
+    (property "Value" "BAT54X"
       (at 0 -2.54 0)
       (show_name no)
       (do_not_autoplace no)
       (effects
         (font
           (size 1.27 1.27))))
-    (property "Footprint" "Package_TO_SOT_SMD:SOT-23"
-      (at 0 -4.445 0)
-      (show_name no)
-      (do_not_autoplace no)
-      (hide yes)
-      (effects
-        (font
-          (size 1.27 1.27))))
-    (property "Datasheet" "https://datasheet.lcsc.com/lcsc/2304140030_Jiangsu-Changjing-Electronics-Technology-Co---Ltd--BAT54_C8590.pdf"
+    (property "Footprint" "Diode_SMD:D_SOD-523"
       (at 0 0 0)
       (show_name no)
       (do_not_autoplace no)
@@ -4224,7 +4218,7 @@
       (effects
         (font
           (size 1.27 1.27))))
-    (property "Description" "Single BAT54 Schottky diode; SOT-23: 1=A, 2=NC, 3=K"
+    (property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/cb06a61a226c47be2923522f1be7f66a.pdf?productCode=C19627026"
       (at 0 0 0)
       (show_name no)
       (do_not_autoplace no)
@@ -4232,7 +4226,7 @@
       (effects
         (font
           (size 1.27 1.27))))
-    (property "ki_keywords" "schottky diode"
+    (property "Description" "R+O BAT54X single Schottky diode, SOD-523; pad 1 K, pad 2 A"
       (at 0 0 0)
       (show_name no)
       (do_not_autoplace no)
@@ -4240,7 +4234,7 @@
       (effects
         (font
           (size 1.27 1.27))))
-    (property "ki_fp_filters" "SOT?323*"
+    (property "ki_keywords" "diode Schottky"
       (at 0 0 0)
       (show_name no)
       (do_not_autoplace no)
@@ -4248,7 +4242,15 @@
       (effects
         (font
           (size 1.27 1.27))))
-    (symbol "BAT54_0_1"
+    (property "ki_fp_filters" "D_SOD-523"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27))))
+    (symbol "BAT54X_0_1"
       (polyline
         (pts
           (xy -1.905 0.635)
@@ -4282,30 +4284,7 @@
           (type default))
         (fill
           (type none))))
-    (symbol "BAT54_1_1"
-      (pin passive line
-        (at 3.81 0 180)
-        (length 2.54)
-        (name "A"
-          (effects
-            (font
-              (size 1.27 1.27))))
-        (number "1"
-          (effects
-            (font
-              (size 1.27 1.27)))))
-      (pin no_connect line
-        (at 0 0 90)
-        (length 2.54)
-        (hide yes)
-        (name "NC"
-          (effects
-            (font
-              (size 1.27 1.27))))
-        (number "2"
-          (effects
-            (font
-              (size 1.27 1.27)))))
+    (symbol "BAT54X_1_1"
       (pin passive line
         (at -3.81 0 0)
         (length 2.54)
@@ -4313,8 +4292,191 @@
           (effects
             (font
               (size 1.27 1.27))))
-        (number "3"
+        (number "1"
+          (effects
+            (font
+              (size 1.27 1.27)))))
+      (pin passive line
+        (at 3.81 0 180)
+        (length 2.54)
+        (name "A"
+          (effects
+            (font
+              (size 1.27 1.27))))
+        (number "2"
           (effects
             (font
               (size 1.27 1.27))))))
+    (embedded_fonts no))
+  (symbol "APS6404L-3SQR-ZR"
+    (exclude_from_sim no)
+    (in_bom yes)
+    (on_board yes)
+    (in_pos_files yes)
+    (duplicate_pin_numbers_are_jumpers no)
+    (symbol "APS6404L-3SQR-ZR_0_1"
+      (rectangle
+        (start -7.62 10.16)
+        (end 7.62 -10.16)
+        (stroke
+          (width 0.254)
+          (type default))
+        (fill
+          (type background))))
+    (symbol "APS6404L-3SQR-ZR_1_1"
+      (pin input line
+        (at -10.16 7.62 0)
+        (length 2.54)
+        (name "~{CE}"
+          (effects
+            (font
+              (size 1.27 1.27))))
+        (number "1"
+          (effects
+            (font
+              (size 1.27 1.27)))))
+      (pin bidirectional line
+        (at -10.16 0 0)
+        (length 2.54)
+        (name "SO/SIO1"
+          (effects
+            (font
+              (size 1.27 1.27))))
+        (number "2"
+          (effects
+            (font
+              (size 1.27 1.27)))))
+      (pin bidirectional line
+        (at -10.16 -2.54 0)
+        (length 2.54)
+        (name "SIO2"
+          (effects
+            (font
+              (size 1.27 1.27))))
+        (number "3"
+          (effects
+            (font
+              (size 1.27 1.27)))))
+      (pin power_in line
+        (at 0 -12.7 90)
+        (length 2.54)
+        (name "VSS"
+          (effects
+            (font
+              (size 1.27 1.27))))
+        (number "4"
+          (effects
+            (font
+              (size 1.27 1.27)))))
+      (pin bidirectional line
+        (at -10.16 2.54 0)
+        (length 2.54)
+        (name "SI/SIO0"
+          (effects
+            (font
+              (size 1.27 1.27))))
+        (number "5"
+          (effects
+            (font
+              (size 1.27 1.27)))))
+      (pin input line
+        (at -10.16 5.08 0)
+        (length 2.54)
+        (name "SCLK"
+          (effects
+            (font
+              (size 1.27 1.27))))
+        (number "6"
+          (effects
+            (font
+              (size 1.27 1.27)))))
+      (pin bidirectional line
+        (at -10.16 -5.08 0)
+        (length 2.54)
+        (name "SIO3"
+          (effects
+            (font
+              (size 1.27 1.27))))
+        (number "7"
+          (effects
+            (font
+              (size 1.27 1.27)))))
+      (pin power_in line
+        (at 0 12.7 270)
+        (length 2.54)
+        (name "VDD"
+          (effects
+            (font
+              (size 1.27 1.27))))
+        (number "8"
+          (effects
+            (font
+              (size 1.27 1.27)))))
+      (pin passive line
+        (at 2.54 -12.7 90)
+        (length 2.54)
+        (name "EPAD"
+          (effects
+            (font
+              (size 1.27 1.27))))
+        (number "9"
+          (effects
+            (font
+              (size 1.27 1.27))))))
+    (embedded_fonts no)
+    (embedded_fonts no)
+    (property "Reference" "U"
+      (at -6.35 11.43 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects
+        (font
+          (size 1.27 1.27))))
+    (property "Value" "APS6404L-3SQR-ZR"
+      (at 11.684 11.43 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (effects
+        (font
+          (size 1.27 1.27))))
+    (property "Footprint" "Package_SON:Winbond_USON-8-1EP_3x2mm_P0.5mm_EP0.2x1.6mm"
+      (at 0 -15.24 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27))))
+    (property "Datasheet" "https://www.pjrc.com/store/APS6404L_3SQR.pdf"
+      (at 0 -17.78 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27))))
+    (property "Description" "64 Mbit / 8M x 8-bits serial pseudo SRAM MEMORY, up to 133MHz, 2.7-3.6V supply, USON-8 (XSON-8)"
+      (at 0 -20.32 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27))))
+    (property "ki_keywords" "qspi qpi spi psram"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27))))
+    (property "ki_fp_filters" "*SON*3x2mm*P0.5mm*EP0.2x1.6mm*"
+      (at 0 0 0)
+      (show_name no)
+      (do_not_autoplace no)
+      (hide yes)
+      (effects
+        (font
+          (size 1.27 1.27))))
     (embedded_fonts no)))
