@@ -29,6 +29,18 @@ Prioritize an affordable, manufacturable **four-layer PCB**, with six layers all
 
 ### 2.2 First mechanical deliverable
 
+**Placement decision, 2026-11-10:** use provisional outward-bent hand-solder
+tails for normal DIP-48 socket/adapter assemblies on both PCB faces. The likely
+bottom assembly uses a socket with male-to-male contacts; the exact construction
+remains open. Start from a documented 60.96 × 17.72 mm body and adapt to the
+actual parts. Keep solder lands outward to preserve the interior. The first
+outline is 70.96 mm long, with a 21 mm CPU section and a 27 mm-wide access tab:
+9.50 mm past the socket at the access end and 0.50 mm at the other end. USB,
+SWD, BOOTSEL, RUN and the mode solder bridge shall remain accessible there.
+Use **top signals / GND plane / 3.3 V plane / bottom signals**, with a provisional
+1.6 mm stack. See [mechanical notes](../docs/mechanical.md) for measured CAD
+geometry and the physical fit checks still required.
+
 Before routing or final circuit complexity, create a **real KiCad PCB project** with:
 
 - DIP-48 reference geometry, pin-1 orientation and a realistic PCB Edge.Cuts outline.

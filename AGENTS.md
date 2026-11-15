@@ -27,6 +27,16 @@
 - Use local signal labels and real power symbols. Preserve saved GUI placement,
   wiring and field-layout edits during circuit changes; use `--bom-only` when
   refreshing purchasing outputs without replacing the edited schematic.
+- Preserve the saved PCB as well. `tools/start_pcb.py` is a placement-starter
+  generator, not a synchronizer: its `--overwrite` discards manual board edits.
+  Use `tools/check_pcb.py` with KiCad's Python to check net/pad/UUID correspondence
+  and top/bottom alignment. Read `docs/mechanical.md` before changing the outline.
+- Current PCB: 70.96 mm long, 21 mm main section and 27 mm access tab; top signal,
+  GND, 3V3, bottom signal stack. Keep the two internal layers as planes. J1/J2
+  have provisional outward-bent SMT solder lands, no holes/paste, with co-registered
+  numbering despite the bottom flip. Mating row pitch is 15.24 mm; solder-land
+  pitch is 17.24 mm. The user approved provisional dimensions pending actual parts;
+  do not treat socket forming or vertical fit as established.
 - Use five user-selected R+O BAT54X / C19627026 SOD-523 clamps, one per protected input.
   Use a plain two-pin Schottky symbol: pad 1 cathode at 3.3 V, pad 2 anode at
   the MCU node after R14–R18. There is no third/NC terminal.

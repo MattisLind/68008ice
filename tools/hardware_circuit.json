@@ -343,14 +343,14 @@
       "reference": "J1",
       "symbol": "MC68008_PassThrough_48",
       "properties": {
-        "Value": "CPU TOP SOCKET - MECHANICAL TBD",
-        "Footprint": "",
+        "Value": "CPU TOP SOCKET - bent tails (provisional)",
+        "Footprint": "rp2350_ice:DIP48_BentTail_Top",
         "Manufacturer": "TBD",
         "MPN": "TBD",
         "Source": "https://www.nxp.com/docs/en/reference-manual/MC68000UM.pdf",
-        "Status": "unresolved_connector_no_footprint",
+        "Status": "provisional_bent_socket_verify_part_and_height",
         "Assembly": "Manual",
-        "Selection_reason": "Top/bottom DIP contacts assembled manually; excluded from JLCPCB selection."
+        "Selection_reason": "Manual DIP48 socket with outward-formed solder tails; provisional lands from 2.54mm pitch / 15.24mm mating rows. Reference body 60.96x17.72mm; verify actual socket, webs, standoff and formed leads."
       },
       "pins": {},
       "catalog_key": null
@@ -359,14 +359,14 @@
       "reference": "J2",
       "symbol": "MC68008_PassThrough_48",
       "properties": {
-        "Value": "TARGET BOTTOM PLUG - MECHANICAL TBD",
-        "Footprint": "",
+        "Value": "TARGET BOTTOM ADAPTER - bent tails (provisional)",
+        "Footprint": "rp2350_ice:DIP48_BentTail_Bottom_Mirrored",
         "Manufacturer": "TBD",
         "MPN": "TBD",
         "Source": "https://www.nxp.com/docs/en/reference-manual/MC68000UM.pdf",
-        "Status": "unresolved_connector_no_footprint",
+        "Status": "provisional_bent_socket_adapter_verify_male_contacts",
         "Assembly": "Manual",
-        "Selection_reason": "Top/bottom DIP contacts assembled manually; excluded from JLCPCB selection."
+        "Selection_reason": "Manual outward-formed underside adapter, likely DIP48 socket plus male-male contacts. Mirror-compensated footprint must be placed on B.Cu with pin numbers co-registered to J1. Exact contact construction and height remain provisional."
       },
       "pins": {},
       "catalog_key": null
@@ -417,13 +417,13 @@
       "symbol": "Conn_01x02",
       "properties": {
         "Value": "ACTIVE PERMIT - solder bridge open=PASSIVE",
-        "Footprint": "",
+        "Footprint": "rp2350_ice:SolderBridge_2_Open_HandSolder",
         "Manufacturer": "PCB copper",
         "MPN": "PCB_FEATURE",
         "Source": "",
-        "Status": "PCB_solder_bridge_geometry_pending",
+        "Status": "PCB_open_solder_bridge_1mm_pads_0p3mm_gap",
         "Assembly": "PCB_feature",
-        "Selection_reason": "PCB copper/pad feature; no purchased component."
+        "Selection_reason": "PCB-only open hand-solder bridge at the accessible end; open=PASSIVE, closed=firmware permission only. No purchased component or paste."
       },
       "pins": {
         "1": "+3V3",

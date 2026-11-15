@@ -6,7 +6,9 @@ the processor bus, generate diagnostic bus cycles and eventually emulate the
 CPU in software.
 
 The project now has a [draft pin map, candidate BOM and single-A3 KiCad schematic](kicad/README.md),
-using RP2354B with in-package flash and **8 MiB QSPI PSRAM**. A PCB placement study, firmware and host
+using RP2354B with in-package flash and **8 MiB QSPI PSRAM**, plus an
+[unrouted four-layer placement starter](docs/mechanical.md). It uses provisional
+outward-bent DIP contact lands and an accessible end tab. Firmware and host
 tools have not yet been implemented. The
 [RP2350 engineering specification](requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md)
 is the design baseline and contains the detailed requirements, acceptance
@@ -27,11 +29,14 @@ CPU-speed performance remain development goals requiring validation.
 
 - Aligned female contacts on top and male contacts underneath: 48-pin DIP,
   2.54 mm contact pitch and 15.24 mm row spacing, with verified pin-for-pin
-  correspondence through the board.
+  correspondence in the schematic. The PCB has co-registered outward-facing
+  SMT lands for manually formed tails; physical connector fit is provisional.
 - A central 10 × 10 mm QFN-80 RP2350B/RP2354B, targeting a board close to the DIP
   body footprint. Connector geometry, component clearance and insertion forces
   must be checked before committing to the arrangement.
-- Four-layer PCB preferred; six layers if justified. The electronic-component
+- Four-layer PCB: top signals, GND plane, 3.3 V plane and bottom signals.
+  The placement starter is 70.96 mm long, with a 21 mm-wide CPU section and a
+  27 mm-wide tab for USB/SWD/buttons/mode bridge. The electronic-component
   BOM target is under US$10, excluding PCB, connectors, assembly and freight;
   this is an unverified target.
 - Native USB-C for host communication, BOOTSEL recovery and dedicated SWD for
@@ -83,14 +88,15 @@ The prototype assumes shared target-only power and a TTL-compatible bus; its
 BAT54 forward-voltage margin is accepted, with [nominal SPICE evidence](simulations/bat54/README.md).
 Local supply transitions and input timing still need validation.
 
-The next hardware milestone is **mechanical placement and feasibility**, alongside
-resolving independent output inhibition. The mode
+The next hardware milestone is **physical connector fit and placement review**,
+then routing, alongside resolving independent output inhibition. The mode
 jumper currently provides firmware permission only. No PCB is ready for fabrication.
 
 ## Repository
 
 - [requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md](requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md): current engineering specification and staged implementation prompt.
 - [docs/hardware.md](docs/hardware.md): pin-map rationale, PIO constraints, BOM decisions and open items.
+- [docs/mechanical.md](docs/mechanical.md): provisional contact footprints, board dimensions, layer stack, placement plots and remaining fit/DRC checks.
 - [docs/programming.md](docs/programming.md): SWD wiring, automated firmware uploads and debugging workflow.
 - [kicad/README.md](kicad/README.md): editable schematic, PDF, pin tables, BOM and validation commands.
 - [tools/](tools/): reproducible schematic generation and netlist/BOM checks.
@@ -100,11 +106,11 @@ jumper currently provides firmware permission only. No PCB is ready for fabricat
 ## Version control
 
 Keep the requirements, documentation, tools, circuit definitions, native KiCad
-schematic/project (and PCB when added), project libraries, library tables, pin
+schematic/project/PCB, custom design rules, project libraries, library tables, pin
 maps and component catalog in Git. The saved schematic includes manual layout
 edits and must be preserved even though a generator also exists.
 
-Keep the BOMs, selected schematic PDF and validation summary as review
+Keep the BOMs, selected schematic/placement PDFs, placement SVG and validation summary as review
 deliverables. Keep the BAT54 model, simulation inputs and the documented result
 snapshot under `simulations/bat54/`, including its provenance and log. These
 selected outputs support review without requiring every reader to run the tools.

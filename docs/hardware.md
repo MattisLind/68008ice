@@ -3,7 +3,9 @@
 Revision 0.4, 2026-11-10. This is a schematic starter with reviewed physical pin
 numbering and a **proposed** GPIO allocation. It is not an electrically validated
 board. All circuit sections are kept on one landscape A3 schematic. The current iteration establishes mapping, parts and schematic connections;
-mechanical placement remains required before routing.
+an [unrouted PCB placement study](mechanical.md) now establishes provisional
+formed-tail lands, an outline and the four-layer stack. Physical fit review
+remains required before routing.
 
 ## MCU choice
 
@@ -420,24 +422,32 @@ Value consolidation:
 
 The under-US$10 electronics target remains unquoted. The earlier US$4.09 planning
 subtotal is retired: the selected BOM and circuit have changed, and Extended
-assembly/setup fees are separate from component prices. No PCB/CPL file exists
-yet, so the upload BOM is a component-selection deliverable, not a complete
+assembly/setup fees are separate from component prices. A provisional PCB now
+exists, but no final CPL is supplied, so the upload BOM is a component-selection deliverable, not a complete
 assembly order. The independent output interlock remains an explicit,
 unimplemented, uncosted BOM item.
 
-## Mechanical work still required
+## Mechanical placement starter
 
-No PCB or connector footprint is supplied in this iteration. Do not route until
-an actual placement study checks the co-registered 2.54 mm contact pitch,
-15.24 mm DIP row pitch, 10 mm MCU body plus pads, socket opening, underside
-standoff and extraction loads. Select J1/J2 footprints from supplier drawings.
+The [native PCB and mechanical notes](mechanical.md) now provide all 63
+footprints, a closed **70.96 mm** outline, a **21 mm** CPU section and a **27 mm**
+access tab. The provisional 60.96 × 17.72 mm socket envelope leaves 9.50 mm at
+the access end and 0.50 mm at the opposite end. USB, SWD, both buttons and JP1
+are on the tab. Layer order is top signals / GND / 3.3 V / bottom signals.
 
-The Preci-Dip 801 SMD female family is worth investigating; it is not yet a
-selected 24-contact CPU socket. The 800...30-001101 SMD male family uses a
-**0.76 mm mating pin**, so it must not be assumed to fit a motherboard DIP socket.
-Likewise, a 350-series THT part is not an SMT footprint. Modified THT tails remain
-an experimental alternative requiring fracture and retention tests.
-[Preci-Dip connector catalogue](https://precidip.com/wp-content/uploads/2024/10/CATALOG-PCBCONNECTORS.pdf)
+J1/J2 use custom **outward-bent hand-solder SMT lands**, one set on each face;
+the likely underside construction is a socket plus male-to-male contacts.
+The 15.24 mm mating-row pitch remains distinct from the outward-offset 17.24 mm
+solder-land pitch. All 48 like-numbered lands co-register in X/Y and match the
+schematic nets. This is provisional user-approved geometry, not a supplier SMT
+connector selection. Socket webs, formed tails, male-pin mating dimensions,
+standoff and extraction strength still need checking against actual parts.
+
+The PCB is unrouted, with unfilled plane outlines. DRC reports four USB-C
+locating-hole clearances at about 0.1944 mm versus a 0.20 mm rule, in addition to
+unrouted connections. Correspondence and courtyard checks pass; that does not
+establish 3D fit or a fabrication-ready board. See the
+[placement PDF](../kicad/placement.pdf) and [measurement report](mechanical.md).
 
 ## Open items and next acceptance checks
 
@@ -451,7 +461,7 @@ an experimental alternative requiring fracture and retention tests.
 | Target output compatibility | Check each motherboard input threshold, pull-up/loading and aggregate MCU current; 3.3 V is not universally compatible with every 5 V input. |
 | RESET/HALT | Implement the documented input-enabled, latch-LOW/output-enable sequence; check target pull-up current and external reset/error semantics. |
 | Timing | Write and assemble PIO programs; validate cross-block records, DTACK/VPA/E, resistor/clamp BERR, timeouts and two-wire arbitration. |
-| Mechanical/BOM completion | Select actual top/bottom contacts and pad geometry; report clearance, insertion strength and cost before routing. |
+| Mechanical/BOM completion | Adapt provisional formed-tail lands to actual socket/male contacts; verify housing/web and underside clearance, insertion strength and tab access. Resolve USB locating-hole clearances before fabrication. |
 
 The missing independent output interlock has a visible `TBD_` BOM row. The
 shared-power assumption and accepted clamp margin are recorded on the single
@@ -460,7 +470,8 @@ current circuit remains a review/bench prototype, without a fabrication release.
 
 ## Sources and attribution
 
-Sources were consulted on 2026-11-09. Raspberry Pi's downloaded RP2350B Minimal
+Original circuit sources were consulted on 2026-11-09; subsequent component and
+mechanical updates are dated 2026-11-10 in their selection records. Raspberry Pi's downloaded RP2350B Minimal
 archive is R4-S1, with schematic date 2026-07-03. Its MIT notice is retained in
 [kicad/reference](../kicad/reference/rp2350-minimal.LICENSE.txt). The inductor footprint was extracted from that board; instance-specific board
 data and external 3D model references were removed. Switches now use the standard

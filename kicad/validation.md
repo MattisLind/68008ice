@@ -1,6 +1,7 @@
 # Starter validation — revision 0.4, 2026-11-10
 
-Tools: KiCad CLI 10.0.5, Python 3.14.8. Commands are listed in [README.md](README.md).
+Tools: KiCad CLI 10.0.5, Python 3.14.8 and KiCad's Python 3.9/pcbnew for the PCB.
+Commands are listed in [README.md](README.md) and [mechanical.md](../docs/mechanical.md).
 
 | Check | Result |
 | --- | --- |
@@ -31,7 +32,13 @@ Tools: KiCad CLI 10.0.5, Python 3.14.8. Commands are listed in [README.md](READM
 | Nominal SPICE, forced 0.7727 mA / 25°C | Vf = 0.2003 V with manufacturer BAT54 proxy model |
 | Nominal SPICE, full 5 V / 2.2 kΩ / 3.3 V circuit | If = 0.6834 mA, Vf = 0.1965 V at 25°C |
 | PDF visual inspection | Complete A3 sheet inspected; normal symbol sizes retained |
-| PCB/mechanical/DRC | Not performed: no PCB yet |
+| PCB footprint coverage | All 63 positions have footprints; 17 distinct IDs; 60 purchased SMT + two manual assemblies + PCB bridge |
+| PCB/schematic correspondence | All pad nets, values and UUID links match; KiCad schematic parity reports zero differences |
+| PCB top/bottom DIP geometry | All 48 like-numbered SMT lands share X/Y and nets; 2.54 mm pitch, 17.24 mm outward-land row pitch; no DIP holes or paste |
+| PCB outline and stack | Closed 70.96 mm outline, 21 mm CPU section / 27 mm end tab; four layers top/GND/3V3/bottom, provisional 1.6 mm stack |
+| PCB courtyard/outline checks | No courtyard overlap or invalid-outline violations |
+| PCB DRC | Four USB-C locating-hole clearances (0.1944 mm vs 0.20 mm); 244 unconnected items expected; no exclusions |
+| PCB routing and mechanical fit | No tracks/vias; plane stitching/fill, actual formed leads, housing/web clearance and underside mating not validated |
 | Electrical, PIO timing, physical target behavior | Not performed: no hardware/firmware yet |
 
 The final export resolves the supplied project library with no ERC warnings.
@@ -45,8 +52,8 @@ isolation placeholder was removed following the accepted common target-power
 prototype assumption; local supply ramps remain a bench-validation condition.
 
 The grouped upload BOM lists selected catalog items, without a stock reservation
-or price quotation. Layout, component positions/CPL and fabrication release are
-not supplied yet.
+or price quotation. The provisional placement is supplied; final component
+positions/CPL and fabrication release are not supplied yet.
 
 Run the current-budget calculation separately:
 

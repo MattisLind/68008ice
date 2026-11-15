@@ -15,11 +15,20 @@ signal labels and real power symbols. The
 
 The [hardware review](../docs/hardware.md) explains mapping, component choices,
 PIO constraints, budget and unresolved electrical/mechanical work. Read it before
-using [BOM.csv](BOM.csv) for procurement. J1/J2/JP1 lack footprints deliberately;
-they do not imply a selected mechanical design. No PCB layout is included yet.
+using [BOM.csv](BOM.csv) for procurement. The
+[native PCB](rp2350_68008_ice.kicad_pcb) now contains all 63 footprints and an
+unrouted four-layer placement study. J1/J2 use provisional outward-bent SMT
+contact lands, and JP1 has an open solder-bridge footprint.
 J4 is a purchased JST-SH connector for button-free firmware uploads and debugging
 with the Raspberry Pi Debug Probe. The [programming guide](../docs/programming.md)
 describes probe wiring and automation.
+
+The [mechanical notes](../docs/mechanical.md) describe the **70.96 mm length,
+21 mm CPU section, 27 mm end tab** and the top/GND/3V3/bottom layer stack.
+[placement.pdf](placement.pdf) shows top and bottom views. USB, SWD, BOOTSEL,
+RUN and the mode bridge occupy the accessible end. The contact pads coincide
+in X/Y on opposite faces, with bottom-side numbering checked independently.
+Their bent-lead dimensions and socket/adapter heights need a physical fit check.
 
 ## Mapping and regeneration
 
@@ -28,7 +37,8 @@ describes probe wiring and automation.
 - [rp2350_ice.kicad_sym](rp2350_ice.kicad_sym): project symbols; RP2354B uses the
   documented RP2350B-compatible pinout, and socket symbols have passive pins.
 - [rp2350_ice.pretty](rp2350_ice.pretty): reference-derived
-  footprint for the core inductor, with the original license in `reference/`.
+  core-inductor footprint (license in `reference/`), two provisional DIP48
+  formed-tail footprints and a hand-solder bridge.
 - [BOM.csv](BOM.csv): engineering BOM with C-numbers, Basic/Extended class,
   assembly method and selection evidence.
 - [BOM_JLCPCB.csv](BOM_JLCPCB.csv): grouped JLCPCB upload BOM, including J4 and
@@ -96,7 +106,12 @@ kicad-cli sch export pdf \
 Validation with KiCad **10.0.5**: connectivity/BOM checks pass; ERC reports **zero
 errors and zero warnings**. No ERC exclusions were added. The local inductor,
 two-pad switch and three-pin JST-SH footprints were checked separately.
-See [validation.md](validation.md). PCB DRC and mechanical measurements await an
-actual placement project; shared-power transitions, interlock and PIO timing
-remain open even where ERC is clear. The user accepts the BAT54 forward-voltage
+See [validation.md](validation.md). PCB correspondence and DIP pad alignment
+checks pass; DRC reports four USB locating-hole clearances plus the expected
+unrouted connections. Physical fit, shared-power transitions, interlock and PIO
+timing remain open. The user accepts the BAT54 forward-voltage
 margin, supported by the [nominal SPICE results](../simulations/bat54/README.md).
+
+Run `tools/check_pcb.py` with a Python interpreter containing KiCad's `pcbnew`
+module. The board generator `tools/start_pcb.py` refuses to replace an existing
+board without `--overwrite`; use the saved native PCB for further GUI editing.
