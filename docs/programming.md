@@ -89,44 +89,53 @@ older system OpenOCD installation may lack the target/flash driver.
 The official [RP2350 target configuration](https://github.com/raspberrypi/openocd/blob/rpi-common/tcl/target/rp2350.cfg)
 defaults to the two Cortex-M33 cores used by this project.
 
-Once a firmware CMake target exists, a build-and-upload task can execute:
+The standalone **Waveshare Core2350B** now has a buildable GPIO39 blink target and
+a tested Docker/SWD workflow. See the [bring-up guide](bringup.md) for setup,
+debugger commands, board-specific limits and the 2026-11-15 verification record.
 
 ```sh
-cmake --build build/firmware
-openocd -f interface/cmsis-dap.cfg -f target/rp2350.cfg -c "adapter speed 5000" -c "program build/firmware/ice.elf verify reset exit"
+make setup
+make program
+make debug-check
+make debug
 ```
 
-`ice.elf` is an illustrative output name, not a file currently present in this
-repository. The upload writes flash, verifies it, resets the MCU and starts the
-program. A build task should run the second command only after the build succeeds.
-This can become one `program` target or IDE action, without touching buttons or
-unplugging cables. Use the ELF file for this workflow rather than copying a UF2
-to a mounted drive.
+`make program` builds `build/firmware/blink.elf` inside Docker, uploads through
+OpenOCD/GDB, reads back every loaded section, and resets/runs the board. BOOTSEL
+is not needed. On macOS, the wrapper runs native Raspberry Pi OpenOCD for USB
+access while GDB/compiler/SDK run inside Docker. Linux has a direct USB container
+path; the attached hardware was tested on macOS/arm64.
 
-For source-level debugging, build with debug information and launch OpenOCD as a
-GDB server, or let the Pico VS Code extension handle the session. It can load
-the program, stop at breakpoints, single-step, and inspect variables/registers.
+`make debug` programs the current Debug build and opens interactive GDB at `main`.
+It supports source/instruction stepping, breakpoints, halt/resume and variable
+inspection. `make debug-check` tests those facilities automatically, including a
+live change to the blink interval, then restores normal blinking.
 SWD does not depend on the application's USB command interface being functional,
 so it is also useful while developing or recovering that interface.
 
-No upload has been exercised yet: there is no firmware target or attached
-prototype in this repository, and `openocd`/`picotool` were not found on PATH in
-the current environment. These are the documented integration steps, not a claim
-of a tested build/flash command.
+**Blink is for the standalone Waveshare board only:** GPIO39 is RESET_N on the
+proposed ICE, and the custom adapter has no GPIO39 user LED. A separate ICE
+firmware target with the reviewed pin map and passive defaults remains future work.
 
 ## USB-only option
 
-Button-free uploads over the ICE's own USB connection are also possible when
+For the Core2350B ROM disk, use `make uf2` after entering BOOTSEL. The wrapper
+checks the mounted RP2350 identity and copies `build/firmware/blink.uf2`. SWD was
+the upload path actually verified in this session; ROM-disk copying was not tested.
+
+Button-free uploads over the target's own USB connection are also possible when
 running firmware includes the Pico SDK's compatible USB reset/stdio support:
 
 ```sh
-picotool load -f -v -x build/firmware/ice.uf2
+picotool load -f -v -x build/firmware/blink.uf2
 ```
 
 The force option asks cooperative firmware to enter the ROM USB loader, followed
 by loading, verification and execution. It needs that reset support in the running
 application; a custom USB protocol alone does not automatically provide it.
-SWD remains the normal development/recovery path when the USB firmware is broken.
+On macOS this `picotool` command would need host USB access or explicit USB
+forwarding; installing picotool in Docker alone does not expose the macOS USB
+device. SWD remains the tested development/recovery path.
 [Official picotool documentation](https://github.com/raspberrypi/picotool)
 
 ## ICE-specific debug behavior

@@ -8,8 +8,11 @@ CPU in software.
 The project now has a [draft pin map, candidate BOM and single-A3 KiCad schematic](kicad/README.md),
 using RP2354B with in-package flash and **8 MiB QSPI PSRAM**, plus an
 [unrouted four-layer placement starter](docs/mechanical.md). It uses provisional
-outward-bent DIP contact lands and an accessible end tab. Firmware and host
-tools have not yet been implemented. The
+outward-bent DIP contact lands and an accessible end tab. Firmware bring-up
+now includes a [Docker Pico SDK build and verified SWD debugger workflow](docs/bringup.md)
+for the standalone Waveshare Core2350B: GPIO39 blink, USB logging, flash read-back,
+breakpoints, stepping and halt/resume. Bus firmware and analyzer/emulator host
+tools remain unimplemented. The
 [RP2350 engineering specification](requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md)
 is the design baseline and contains the detailed requirements, acceptance
 criteria and primary references.
@@ -78,9 +81,11 @@ are provisional until verified against original documentation and bench tests.
    interpreter from the hardware bus engine, and test 68008 addressing,
    exceptions and interrupts. Benchmark before making speed claims.
 
-Firmware is planned around the Pico C/C++ SDK, separate bus/analyzer/interpreter
-modules and a documented, versioned USB protocol. Host tooling and reproducible
-builds should work across common operating systems.
+The first firmware target uses Pico C/C++ SDK 2.3.1. Run `make setup`,
+`make program`, and `make debug-check` for standalone Core2350B bring-up;
+`make debug` opens interactive GDB inside Docker. On macOS, native OpenOCD
+bridges the USB probe to container GDB. The future bus/analyzer/interpreter
+modules and versioned USB command protocol remain planned.
 
 The [JLCPCB upload BOM](kicad/BOM_JLCPCB.csv) uses dated C-number selections,
 preferring Basic SMT parts and sharing values. The DIP contacts are fitted manually.
@@ -98,6 +103,9 @@ jumper currently provides firmware permission only. No PCB is ready for fabricat
 - [docs/hardware.md](docs/hardware.md): pin-map rationale, PIO constraints, BOM decisions and open items.
 - [docs/mechanical.md](docs/mechanical.md): provisional contact footprints, board dimensions, layer stack, placement plots and remaining fit/DRC checks.
 - [docs/programming.md](docs/programming.md): SWD wiring, automated firmware uploads and debugging workflow.
+- [docs/bringup.md](docs/bringup.md): Docker setup, Core2350B blink/debug commands and measured bring-up results.
+- [firmware/](firmware/): standalone Core2350B GPIO39 blink and board configuration.
+- [docker/Dockerfile](docker/Dockerfile): Pico SDK, Arm compiler, GDB, picotool and RP2350 OpenOCD.
 - [kicad/README.md](kicad/README.md): editable schematic, PDF, pin tables, BOM and validation commands.
 - [tools/](tools/): reproducible schematic generation and netlist/BOM checks.
 - [AGENTS.md](AGENTS.md): project-specific instructions for contributors and coding agents.

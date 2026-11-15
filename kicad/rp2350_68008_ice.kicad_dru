@@ -1,0 +1,7 @@
+(version 1)
+
+# The two internal copper layers are continuous reference/power planes.
+# Through vias and zone fills remain allowed; route signals on the outer faces.
+(rule "Reserve inner copper for planes"
+    (layer inner)
+    (constraint disallow track))
