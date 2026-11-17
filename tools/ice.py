@@ -447,7 +447,7 @@ def main():
     cpu.add_argument("--source", choices=SOURCES, default="flash")
     cpu.add_argument("--timeout-ms", type=int, default=10000)
     cpu.add_argument("--cycle-timeout-us", type=int, default=10000)
-    cpu.add_argument("--instructions", type=int, choices=range(1, 65537), metavar="1..65536", default=1024)
+    cpu.add_argument("--instructions", type=int, choices=range(1, 2000001), metavar="1..2000000", default=1024)
     cpu.add_argument("--prepare", action="store_true")
     for command in ("bus-generate", "memory", "state-capture", "abc1600-memory"):
         cmd = sub.add_parser(command)

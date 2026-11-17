@@ -35,6 +35,7 @@ unsigned compare_instruction(const uint8_t *initial,cpu68008 *c,uint32_t *expect
     machine_read=0;machine_write=0;
     memcpy(actual,initial,BYTES);memcpy(reference,initial,BYTES);
     m68k_pulse_reset();m68k_execute(0);m68k_set_reg(M68K_REG_SR,c->sr);
+    m68k_set_reg(M68K_REG_USP,c->usp);m68k_set_reg(M68K_REG_ISP,c->ssp);
     for(unsigned i=0;i<8;++i) {m68k_set_reg(M68K_REG_D0+i,c->d[i]);m68k_set_reg(M68K_REG_A0+i,c->a[i]);}
     m68k_set_reg(M68K_REG_PC,c->pc);m68k_execute(1);
     unsigned result=cpu68008_execute(c,read8,write8,0)!=0 || c->state!=CPU_RUNNING;
@@ -67,3 +68,10 @@ unsigned reference_machine_reset(cpu_read8 read,cpu_write8 write,void *ctx,uint3
 unsigned reference_machine_step(uint32_t *out) {
     machine_error=0;m68k_execute(1);machine_registers(out);return machine_error;
 }
+unsigned reference_machine_run(unsigned budget,unsigned stop_pc,uint32_t *out) {
+    machine_error=0;unsigned done=0;
+    while(done<budget && m68k_get_reg(0,M68K_REG_PC)!=stop_pc && !machine_error) {m68k_execute(1);++done;}
+    machine_registers(out);return done;
+}
+unsigned reference_machine_error(void) {return machine_error;}
+unsigned reference_disassemble(char *out,unsigned pc) {return m68k_disassemble(out,pc,M68K_CPU_TYPE_68000);}

@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "validation": "host functional execution; PIO bench verification pending",
+  "instructions_to_keyboard": 552468,
+  "musashi_instructions": 575559,
+  "pc": "0x554",
+  "keyboard_poll_address": "0x7f201 (physical 0x1ff201, DART B RR0)",
+  "keyboard_rx_available": false,
+  "poll_iterations": 100,
+  "watchdog_reads": 100,
+  "rom_sha256": "15bfe1427e0ebd982be73af8d3f82d95f0ac726f9b82b4d2ecfc351bad7319de",
+  "ram_vram_sha256": "0806a1ee619ac2a14abb347034f05a3b2add46eebb9798bc1f385fdca70856b7",
+  "d": [
+    0,
+    0,
+    15,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "a": [
+    262008,
+    262140,
+    13452,
+    32768,
+    524288,
+    16668,
+    261988,
+    261984
+  ],
+  "sr": 9988,
+  "reads": 2116345,
+  "writes": 302448,
+  "video_moves": 51,
+  "unsupported_io": 0
+}

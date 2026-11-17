@@ -1,7 +1,8 @@
-Copyright Curt Coder
+Copyright Curt Coder, Joakim Larsson Edstrom
 
-Applies to the ABC1600 memory-controller port derived from MAME
-src/mame/luxor/abc1600_mmu.cpp (license:BSD-3-Clause).
+Applies to the ABC1600 memory-controller and functional peripheral port
+derived from MAME src/mame/luxor/abc1600{,_mmu,_v}.cpp and
+src/devices/machine/{z8536,z80sio,z80scc}.cpp (license:BSD-3-Clause).
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are

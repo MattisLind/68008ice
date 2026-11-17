@@ -37,7 +37,7 @@ int capture_valid(const capture_config *c,uint32_t app) {
     if(!c->capacity || c->capacity>CAPTURE_MAX ||
        (c->pre_percent!=10 && c->pre_percent!=50 && c->pre_percent!=90) ||
        c->strobe>1 || c->edge>1 || c->address>ADDRESS_MASK || c->mask>ADDRESS_MASK ||
-       c->memory_base>0xffc00u || (c->memory_base&1023) || !c->cycles || c->cycles>65536 ||
+       c->memory_base>0xffc00u || (c->memory_base&1023) || !c->cycles || c->cycles>(app==APP_CPU_EMULATOR ? 2000000u : 65536u) ||
        c->idle_ms>30000 || c->cycle_timeout_us<10 || c->cycle_timeout_us>100000 || c->seed>255)return 0;
     if(app==APP_ANALYZER && (c->sample_hz<1000 || c->sample_hz>1000000))return 0;
     if(app==APP_BUS_MEMORY && c->sample_hz==CAPTURE_FAST_HZ &&
@@ -110,7 +110,7 @@ static int acquire(app_job *j,uint32_t app) {
     if(memory) {
         memset(capture_memory,0,sizeof capture_memory);
         if(boot)boot_memory_prepare(abc ? 4 : capture_settings.seed);
-        if(abc) {abc1600_memory_init(&abc1600_model);memset(ABC1600_RAM,0,ABC1600_RAM_BYTES);}
+        if(abc) {abc1600_memory_init(&abc1600_model);memset(ABC1600_RAM,0,ABC1600_STORAGE_BYTES);}
         gpio_put(31,1);gpio_set_dir(31,GPIO_OUT);
     }
     uint32_t read=0,sequence=0,stride=state ? 3 : 1;

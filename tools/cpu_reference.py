@@ -184,6 +184,49 @@ class Matrix:
                 if mode==0:continue
                 for left in (0,1):
                     self.check("LSR/LSL memory",0xe2c0 | left<<8 | mode<<3 | reg,extension(mode,reg,2))
+        # New boot-path families: all legal EAs and operand sizes.
+        for size, field in ((1,0),(2,1),(4,2)):
+            for mode, reg in modes(size,destination=True,btst=True):
+                ea=extension(mode,reg,size)
+                for base in (0x4400,0x4600,0x4a00):
+                    self.check("NEG/NOT/TST",base|field<<6|mode<<3|reg,ea)
+                for base in (0x0000,0x0400,0x0600,0x0a00,0x0c00):
+                    for value in (0,0x7fffffff,0x80000000,0xffffffff):
+                        self.check("immediate ALU",base|field<<6|mode<<3|reg,
+                                   extension(7,4,size,value)+ea,value=value)
+            for mode, reg in modes(size):
+                for base in (0x9000,0xb000,0xd000):
+                    self.check("ADD/SUB/CMP",base|field<<6|mode<<3|reg,extension(mode,reg,size))
+                if mode!=1:
+                    for base in (0x8000,0xc000):
+                        self.check("OR/AND",base|field<<6|mode<<3|reg,extension(mode,reg,size))
+            for kind in (0,2,3):
+                for left in (0,1):
+                    for count in (0,1,7,8,16,31,32,63):
+                        for flags in (0,16,31):
+                            self.check("AS/ROX/RO",0xe020|1<<9|left<<8|field<<6|kind<<3,
+                                       sr=0x2700|flags,d_override={1:count})
+        for mode, reg in modes(2,btst=True,dynamic=True):
+            for base in (0xc0c0,0xc1c0,0x80c0,0x81c0):
+                self.check("MUL/DIV",base|mode<<3|reg,extension(mode,reg,2,value=7),value=0x1234)
+        for size, field in ((2,0),(4,1)):
+            for mode, reg in modes(size):
+                for base in (0xd0c0,0xb0c0):
+                    self.check("ADDA/CMPA",base|field<<8|mode<<3|reg,extension(mode,reg,size))
+        for reg in range(8):
+            for value in (0,1,0x7f,0x80,0xff):
+                self.check("MOVEQ",0x7000|reg<<9|value)
+            for base in (0x4840,0x4880,0x48c0):self.check("SWAP/EXT",base|reg)
+            if reg!=7:self.check("LINK",0x4e50|reg,bytes.fromhex("fff0"))
+        for mode, reg in [(m,r) for m in (2,5,6) for r in range(8)]+[(7,r) for r in range(4)]:
+            for base in (0x41c0,0x4840,0x4e80):
+                self.check("LEA/PEA/JSR",base|mode<<3|reg,extension(mode,reg,4))
+        for load in (0,1):
+            for size in (2,4):
+                for mode,reg in [(m,r) for m in ((2,3,5,6) if load else (2,4,5,6)) for r in range(8)]+[(7,r) for r in range(4 if load else 2)]:
+                    for registers in (0,1,0x8000,0xffff,0xa55a):
+                        self.check("MOVEM",0x4880|load<<10|(size==4)<<6|mode<<3|reg,
+                                   struct.pack(">H",registers)+extension(mode,reg,size))
         return dict(reference="Musashi 68000 instruction semantics", revision=REVISION,
                     archive_sha256=ARCHIVE_SHA256, cases=self.counts, total=sum(self.counts.values()), passed=True)
 

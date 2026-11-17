@@ -62,8 +62,14 @@ five plus the next 100), including 54 MAC writes; all 354 bus transfers, 106
 CPU snapshots and MAC tables match the host/MAME reference. The expanded
 CPU core passes 81238 independent instruction cases, and the MAC model passes
 17133 comparisons against methods extracted from the local MAME checkout.
-Complete ABC1600 peripherals, exception processing, interrupts, remaining
-opcodes and CPU-speed validation remain future work. The
+The extended interpreter now boots the ROM to its **keyboard input wait**
+(host: 552468 instructions). A two-board run of 600000 instructions matched
+all final registers and 4096 captured bus transfers, with zero bus errors.
+See [keyboard boot validation](docs/validation/abc1600-keyboard-2026-11-17/README.md).
+The instruction matrix passes 87274 Musashi comparisons. Functional CIO,
+DART, SCC, CRTC, VRAM and mover support covers this boot path; complete
+peripherals, exception processing, interrupts, remaining opcodes and
+CPU-speed validation remain future work. The
 [RP2350 engineering specification](requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md)
 is the design baseline and contains the detailed requirements, acceptance
 criteria and primary references.
@@ -138,7 +144,7 @@ The first firmware target uses Pico C/C++ SDK 2.3.1. Run `make setup`,
 bridges the USB probe to container GDB. The dispatcher provides loadable bench
 bus/analyzer modules and a versioned USB command protocol. The motherboard
 adapter and full instruction interpreter remain planned; the bench interpreter
-executes 105 ABC1600 ROM instructions with bus/register/MAC validation.
+executes the ABC1600 ROM through its keyboard input wait on the two-board fixture.
 
 For the configured two-board bench setup, `make multidrop-probe` enumerates both
 chips and `make multidrop-check` tests two concurrent GDB sessions, independent

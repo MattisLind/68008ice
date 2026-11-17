@@ -55,7 +55,7 @@ public:
 u8 abc1600_mmu_device::Access::read_interruptible(offs_t a) {
     if(kind==0)return owner->rom[a&0x3fff];
     if(kind==1)return owner->mac_r(a);
-    if(a<0x100000)return owner->ram[a];
+    if(a<0x180000)return owner->ram[a]; // VRAM starts zero; reset write mask is zero.
     if(a>=0x1fe000)owner->cpu.error=true;
     return 255;
 }
@@ -74,6 +74,8 @@ int mame_abc_access(uint32_t address,uint32_t fc,bool write,u8 *value) {
     else *value=model.value.mmu_read(address&0xfffff,(fc==2 || fc==6) ? TR_FETCH : TR_READ);
     return model.cpu.error ? 4 : 0;
 }
+int mame_abc_read8(void *,uint32_t address,uint32_t fc,u8 *value) {return mame_abc_access(address,fc,false,value);}
+int mame_abc_write8(void *,uint32_t address,uint32_t fc,u8 value) {return mame_abc_access(address,fc,true,&value);}
 const u8 *mame_abc_segments() {return model.m_segment_ram;}
 const u16 *mame_abc_pages() {return model.m_page_ram;}
 void mame_abc_regs(uint32_t *out) {

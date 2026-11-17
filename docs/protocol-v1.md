@@ -415,3 +415,10 @@ address. Read/write/table counters count byte accesses. `cause_reads` records
 watchdog-service events; watchdog timeout timing/reset is not implemented.
 Unsupported physical I/O receives BERR and increments its counter. Model
 details and the 105-instruction validation are in [abc1600.md](abc1600.md).
+
+The keyboard boot extension raises the CPU-emulator instruction budget to
+2000000 and permits CPU/ABC1600-memory RUN timeouts up to 300000 ms. Other
+application limits remain unchanged. The first-128 instruction snapshot
+retention and dropped count remain unchanged. ABC1600 physical RAM storage
+now reserves an additional 512 KiB for VRAM; READ kind 5 still exposes only
+the 1 MiB main RAM.

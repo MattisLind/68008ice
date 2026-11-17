@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "accesses": 17133,
+  "mame_revision": "2ab83c729233ca620533d692a8aa1729693ae87f",
+  "counters": {
+    "version": 1,
+    "task": 8,
+    "boote": 0,
+    "magic": 1,
+    "cause": 21,
+    "reset_button": 0,
+    "partst": 0,
+    "cause_reads": 191,
+    "segment_writes": 716,
+    "page_high_writes": 1193,
+    "page_low_writes": 1198,
+    "task_writes": 1082,
+    "ram_reads": 1482,
+    "ram_writes": 184,
+    "bus_errors": 3466,
+    "unsupported_io": 15,
+    "last_address": 665785,
+    "last_physical": 622777,
+    "last_fc": 2,
+    "last_write": 0,
+    "last_target": 2
+  }
+}

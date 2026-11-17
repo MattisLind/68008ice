@@ -85,7 +85,7 @@ static void command(uint8_t op,uint16_t seq,const uint8_t *p,uint16_t n,uint32_t
         if(busy()) {status=2;break;}
         if(!loader_app) {status=4;break;}
         if(get32(p)>1 || get32(p+4)>44 || get32(p+8)>1 ||
-            get32(p+12)<10 || get32(p+12)>30000 || (get32(p+16)&~15u)) {status=1;break;}
+            get32(p+12)<10 || get32(p+12)>((loader_app==APP_CPU_EMULATOR || loader_app==APP_ABC1600_MEMORY) ? 300000u : 30000u) || (get32(p+16)&~15u)) {status=1;break;}
         if((loader_app==APP_GENERATOR || loader_app==APP_BUS_GENERATOR || loader_app==APP_BUS_MEMORY || loader_app==APP_CPU_EMULATOR || loader_app==APP_ABC1600_MEMORY) &&
            !(get32(p+16)&FLAG_DRIVE)) {status=7;break;}
         if(n==20 && (loader_app>APP_ANALYZER || (get32(p+16)&~3u))) {status=1;break;}

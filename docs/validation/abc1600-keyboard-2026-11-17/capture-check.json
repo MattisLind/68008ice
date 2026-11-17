@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "instructions": 600000,
+  "bus_cycles": 2636082,
+  "matched_capture_samples": 4096,
+  "registers_match": true
+}

@@ -19,8 +19,16 @@ FIELDS="version task boote magic cause reset_button partst cause_reads segment_w
 class Status(C.Structure):
     _fields_=[(n,C.c_uint32) for n in FIELDS]
 
+class Video(C.Structure):
+    _fields_=[(n,C.c_uint16) for n in 'xsize ysize xto xfrom ty fy wrm gmdi'.split()]+[(n,C.c_uint8) for n in 'direction flag clocks_disabled display crtc_address'.split()]+[("crtc",C.c_uint8*32),("ms",C.c_uint8*16),("ds",C.c_uint8*16)]+[(n,C.c_uint32) for n in 'ticks moves busy row column'.split()]
+
 class ModelState(C.Structure):
-    _fields_=[("status",Status),("segment",C.c_uint8*1024),("page",C.c_uint16*1024)]
+    _fields_=[("status",Status),("segment",C.c_uint8*1024),("page",C.c_uint16*1024),
+              ("cio",C.c_uint8*48),("cio_pointer",C.c_uint8),("cio_state0",C.c_uint8),
+              ("cio_output",C.c_uint8*3),("io_reads",C.c_uint32),("io_writes",C.c_uint32),
+              ("dart",(C.c_uint8*8)*2),("dart_pointer",C.c_uint8*2),("dart_rr0",C.c_uint8*2),
+              ("keyboard_polls",C.c_uint32),("keyboard_tx_count",C.c_uint32),("keyboard_tx",C.c_uint8*256),("video",Video),
+              ("scc",(C.c_uint8*16)*2),("scc_pointer",C.c_uint8*2)]
 
 def fingerprint():
     files=[MAME,ROOT/"tools/tests/mame_abc1600_adapter.cpp.in",ROOT/"firmware/dispatcher/abc1600_memory.c",
@@ -60,7 +68,7 @@ def require_current():
 class Model:
     def __init__(self,rom,reference=False):
         require_current();self.reference=reference
-        self.rom=(C.c_uint8*len(rom)).from_buffer_copy(rom);self.ram=(C.c_uint8*1048576)()
+        self.rom=(C.c_uint8*len(rom)).from_buffer_copy(rom);self.ram=(C.c_uint8*1572864)()
         self.lib=C.CDLL(str(REFERENCE if reference else NATIVE));self.state=ModelState()
         if reference:
             self.lib.mame_abc_init.argtypes=[C.c_void_p,C.c_void_p]
