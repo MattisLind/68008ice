@@ -1,0 +1,24 @@
+[
+  {
+    "bank": 0,
+    "gpio_base": 0,
+    "pins": 32,
+    "samples": 1024,
+    "pio_hz": 150000000,
+    "sample_period_ps": 6666.666666666667,
+    "rx_fdebug": 0,
+    "raw_crc32": 236038354,
+    "vcd_crc32": 23825530,
+    "vcd_bytes": 15583,
+    "one_bit_transitions": 1023,
+    "repeated_samples": 0,
+    "multi_bit_transitions": 0,
+    "best_pattern_offset": 14,
+    "pattern_mismatches": 0,
+    "trigger_gpio": 7,
+    "trigger_level": 1,
+    "source": "uploaded",
+    "generator": "F3217B63D8F6A7A5",
+    "receiver": "AC740FAC748891BF"
+  }
+]

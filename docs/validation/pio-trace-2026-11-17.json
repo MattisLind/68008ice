@@ -1,0 +1,40 @@
+[
+  {
+    "bank": 0,
+    "gpio_base": 0,
+    "pins": 32,
+    "samples": 1024,
+    "pio_hz": 150000000,
+    "sample_period_ps": 6666.666666666667,
+    "rx_fdebug": 0,
+    "raw_crc32": 1317012185,
+    "vcd_crc32": 458189260,
+    "vcd_bytes": 15503,
+    "one_bit_transitions": 1023,
+    "repeated_samples": 0,
+    "multi_bit_transitions": 0,
+    "best_pattern_offset": 0,
+    "pattern_mismatches": 0,
+    "survived_swd_reset": true,
+    "sha256": "55921e7f0a5873cc2771c2e1c078fec79838d225dffea4017e56e19313b17e68"
+  },
+  {
+    "bank": 1,
+    "gpio_base": 32,
+    "pins": 13,
+    "samples": 1024,
+    "pio_hz": 150000000,
+    "sample_period_ps": 6666.666666666667,
+    "rx_fdebug": 0,
+    "raw_crc32": 1174756133,
+    "vcd_crc32": 580213323,
+    "vcd_bytes": 14886,
+    "one_bit_transitions": 1023,
+    "repeated_samples": 0,
+    "multi_bit_transitions": 0,
+    "best_pattern_offset": 0,
+    "pattern_mismatches": 0,
+    "survived_swd_reset": true,
+    "sha256": "e09972318a51ad241589a438c8b0c20806b115660210f3d6857ac8a5940fc185"
+  }
+]

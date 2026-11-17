@@ -1,0 +1,21 @@
+$version 68008ice dispatcher 0.4 $end
+$timescale 1ps $end
+$comment 1 samples; trigger index 4294967295; flags 4; nominal clock, sample-relative times; selected DS release edge; state records show selected edges only $end
+$scope module bus $end
+$var wire 20 a A $end
+$var wire 8 d D $end
+$var wire 1 as AS_N $end
+$var wire 1 ds DS_N $end
+$var wire 1 rw RW $end
+$var wire 1 ack DTACK_N $end
+$var wire 1 t TRIGGER $end
+$upscope $end
+$enddefinitions $end
+#0
+0t
+b00000000000000000000 a
+b00000000 d
+1as
+1ds
+1rw
+1ack

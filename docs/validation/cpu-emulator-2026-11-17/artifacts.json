@@ -1,0 +1,22 @@
+{
+  "build/multidrop/1/dispatcher.elf": {
+    "bytes": 812332,
+    "sha256": "a570e675351f180b1051a004b7c46ae2fa92a7171d36e98c415d572738948e5a"
+  },
+  "build/multidrop/2/dispatcher.elf": {
+    "bytes": 812332,
+    "sha256": "d57cbddfe0416f1d9e14760a93d236258b21b68a90b4c089b68d8f6da81861c3"
+  },
+  "build/multidrop/1/dispatcher.uf2": {
+    "bytes": 114688,
+    "sha256": "ef3e796b9b3cb1db315994b1e0d8241dc82e7f9cabe1ef995c3896ec2a920d21"
+  },
+  "build/multidrop/2/dispatcher.uf2": {
+    "bytes": 114688,
+    "sha256": "149247b792f2afd47514805f9f6018ef8c6756fa1fac54f73939cbec10b8faaa"
+  },
+  "build/multidrop/1/app_cpu_emulator.app": {
+    "bytes": 46,
+    "sha256": "352a711c2149ed2210fdd5141c0a2271cc87b40afb24125ee708a50db286aee0"
+  }
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "file": "LOW32.VCD",
+    "bytes": 15583,
+    "crc32": 18494838,
+    "msc_matches_cdc": true,
+    "survived_swd_reset": true,
+    "sha256": "cd9c846c7c65fd29c66378e583035a3ecdfe50f8726df9cb94a483c6ac1b8f69"
+  },
+  {
+    "file": "HIGH13.VCD",
+    "bytes": 14967,
+    "crc32": 2788135731,
+    "msc_matches_cdc": true,
+    "survived_swd_reset": true,
+    "sha256": "74dbd56a9c1ddeecd32953f43e0804408a8eba9720acdf7b1b73f155be5dce83"
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-17",
+  "sdk": "2.3.1",
+  "gcc": "13.2.1 20231009",
+  "cmake": "3.28.3",
+  "ninja": "1.11.1",
+  "picotool": "2.3.1",
+  "sys_hz": 150000000,
+  "continuous_timing_max_hz": 1000000,
+  "generator_nominal_bus_hz": 8000000,
+  "external_timing_instrument": false,
+  "elf_sha256": {
+    "1": "aa17ff7e49ff7189a100b639fe83544dd2d0908ef8b38f41d896f8a32c0cb6ab",
+    "2": "4911e5550410777248ec19f155208806d2b199ba4b45dfe842f642921d7ff58c"
+  },
+  "reset_persistence_verified": true,
+  "reset_persistence_bytes": 262144,
+  "reset_persistence_raw_and_vcd_identical": true,
+  "reset_persistence_elf_sha256": {
+    "1": "aa17ff7e49ff7189a100b639fe83544dd2d0908ef8b38f41d896f8a32c0cb6ab",
+    "2": "4911e5550410777248ec19f155208806d2b199ba4b45dfe842f642921d7ff58c"
+  }
+}

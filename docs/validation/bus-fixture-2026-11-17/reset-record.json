@@ -1,0 +1,18 @@
+{
+  "magic": 1128353842,
+  "version": 1,
+  "committed": 0,
+  "bank": 1,
+  "app": 2,
+  "count": 65536,
+  "stride": 4,
+  "hz": 1000000,
+  "trigger": 58982,
+  "first_sequence": 0,
+  "flags": 1,
+  "bytes": 262144,
+  "crc": 3792628258,
+  "capacity": 65536,
+  "pre_percent": 90,
+  "edge_config": 0
+}

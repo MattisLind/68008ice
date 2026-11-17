@@ -1,0 +1,43 @@
+{
+  "devices": [
+    {
+      "serial": "F3217B63D8F6A7A5",
+      "firmware": "dispatcher-0.1",
+      "protocol": 1,
+      "instance": 1,
+      "core": 0,
+      "worker_core": 1,
+      "psram": 8388608,
+      "app": 0,
+      "source": 0,
+      "image_crc": 0,
+      "disk": 0
+    },
+    {
+      "serial": "AC740FAC748891BF",
+      "firmware": "dispatcher-0.1",
+      "protocol": 1,
+      "instance": 2,
+      "core": 0,
+      "worker_core": 1,
+      "psram": 8388608,
+      "app": 0,
+      "source": 0,
+      "image_crc": 0,
+      "disk": 0
+    }
+  ],
+  "passed": [
+    "core0 CDC and explicit 8 MiB PSRAM on both boards",
+    "generation requires drive opt-in; GPIO45 rejected",
+    "bad CRC ignored while generator stays armed",
+    "duplicate GO replays ACK after completion without rerunning",
+    "CDC responsive while armed; missing level times out",
+    "USB abort wakes worker and releases pins within one second",
+    "already LOW level triggers immediately without an edge",
+    "GPIO44 can trigger GPIO0..31 capture across PIO windows",
+    "device rejects a corrupted uploaded executable",
+    "both independently built applications upload and load from PSRAM"
+  ],
+  "abort_seconds": 0.0005527499888557941
+}

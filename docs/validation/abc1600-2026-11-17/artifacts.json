@@ -1,0 +1,26 @@
+{
+  "roms/abc1600/ABC1600ROM.bin": {
+    "bytes": 16384,
+    "sha256": "15bfe1427e0ebd982be73af8d3f82d95f0ac726f9b82b4d2ecfc351bad7319de"
+  },
+  "build/multidrop/1/dispatcher.elf": {
+    "bytes": 836036,
+    "sha256": "b200915ba618f2d67b77bdf29d689f46740de2a85ff67dc8f768be173b71ec38"
+  },
+  "build/multidrop/2/dispatcher.elf": {
+    "bytes": 836036,
+    "sha256": "61668341735441d409419b6c3b1e775ee84701a28dbfeb27885fe94b75416c55"
+  },
+  "build/multidrop/1/dispatcher.uf2": {
+    "bytes": 121856,
+    "sha256": "2b83ed0973395f0f8e5cfcc54695b69aa85c2825450e3b5ae992cf95382cfe19"
+  },
+  "build/multidrop/2/dispatcher.uf2": {
+    "bytes": 121856,
+    "sha256": "2ec5be67e2a6ac580ea4723e33d700477bbbbbdb104a00b11e1eefcd73ad03a7"
+  },
+  "build/multidrop/1/app_cpu_emulator.app": {
+    "bytes": 46,
+    "sha256": "352a711c2149ed2210fdd5141c0a2271cc87b40afb24125ee708a50db286aee0"
+  }
+}

@@ -1,0 +1,40 @@
+[
+  {
+    "serial": "AC740FAC748891BF",
+    "interfaces": [
+      {
+        "number": 0,
+        "name": "Command CDC",
+        "drivers": [
+          "AppleUSBACMControl"
+        ]
+      },
+      {
+        "number": 1,
+        "name": "IOUSBHostInterface",
+        "drivers": [
+          "AppleUSBACMData"
+        ]
+      }
+    ]
+  },
+  {
+    "serial": "F3217B63D8F6A7A5",
+    "interfaces": [
+      {
+        "number": 0,
+        "name": "Command CDC",
+        "drivers": [
+          "AppleUSBACMControl"
+        ]
+      },
+      {
+        "number": 1,
+        "name": "IOUSBHostInterface",
+        "drivers": [
+          "AppleUSBACMData"
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "reference": "Musashi 68000 instruction semantics",
+  "revision": "313ebf1bd9f4d0d93341eb5ce21fd8a119e9dbdd",
+  "archive_sha256": "8bed9e28e7e5377256d41aff80a99c9e917a24e7392d9219e1c45c40ad4000e5",
+  "cases": {
+    "CLR": 600,
+    "MOVE/MOVEA": 29178,
+    "BTST": 3332,
+    "BRA/BSR/Bcc": 3584,
+    "JMP": 28,
+    "indexed MOVE": 864
+  },
+  "total": 37586,
+  "passed": true
+}

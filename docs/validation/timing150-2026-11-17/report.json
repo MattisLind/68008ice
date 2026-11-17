@@ -1,0 +1,81 @@
+{
+  "date": "2026-11-17",
+  "sdk": "2.3.1",
+  "compiler": "GCC 13.2.1",
+  "cmake": "3.28.3",
+  "ninja": "1.11.1",
+  "picotool": "2.3.1",
+  "host_tests_passed": 39,
+  "dispatcher_hardware_checks_passed": 11,
+  "full_rate_no_trigger_timeout_verified": true,
+  "legacy_mode_handoff_verified": true,
+  "single_bus_cycle_two_boards_verified": true,
+  "installed_current_build": [
+    "F3217B63D8F6A7A5",
+    "AC740FAC748891BF"
+  ],
+  "elf_sha256": {
+    "1": "a2daa53e87565b1bada41c372d23341015d1382550874777ce00df3b238c5cdd",
+    "2": "81b6f2002e44b505932bbff4b12e05e6213f0031e2db33ba06379984257229c3"
+  },
+  "cases": [
+    {
+      "name": "write",
+      "samples": 4096,
+      "sample_hz": 150000000,
+      "pre_percent": 50,
+      "trigger_index": 2048,
+      "wait_states": 1,
+      "fdebug": 0,
+      "raw_crc32": 1104569730
+    },
+    {
+      "name": "read",
+      "samples": 4096,
+      "sample_hz": 150000000,
+      "pre_percent": 50,
+      "trigger_index": 2048,
+      "wait_states": 1,
+      "fdebug": 0,
+      "raw_crc32": 2434128928
+    },
+    {
+      "name": "write-delayed",
+      "samples": 4096,
+      "sample_hz": 150000000,
+      "pre_percent": 50,
+      "trigger_index": 2048,
+      "wait_states": 1,
+      "fdebug": 0,
+      "raw_crc32": 3761254914
+    },
+    {
+      "name": "write-early",
+      "samples": 4096,
+      "sample_hz": 150000000,
+      "pre_percent": 10,
+      "trigger_index": 409,
+      "wait_states": 1,
+      "fdebug": 0,
+      "raw_crc32": 76081278
+    },
+    {
+      "name": "read-late",
+      "samples": 4096,
+      "sample_hz": 150000000,
+      "pre_percent": 90,
+      "trigger_index": 3686,
+      "wait_states": 2,
+      "fdebug": 0,
+      "raw_crc32": 3091438037
+    }
+  ],
+  "full_window_us": 27.30666666666667,
+  "sample_spacing_ns": 6.666666666666667,
+  "cycle_timing_note": "No-wait generator sequence is nominally 500 ns. Captured AS/DS widths indicate 1-2 responder wait states; total 625-750 ns inferred from PIO phases, without external CLK or frequency reference.",
+  "no_trigger_artifact_note": "timeout.{bin,json,vcd} was acquired on board 1 with an earlier build during bring-up (100 ms, 4096 words, FDEBUG zero). The same no-trigger check also passed on receiver board 2 with the final build; only the earlier raw artifact is retained.",
+  "acquisition_limit": "Core0 USB pauses during fast capture until hardware trigger completion or configured timeout. Fast mode ends memory service at capture completion.",
+  "reproduction_doc": "../../single-cycle-timing.md",
+  "build_command": "make dispatcher-build",
+  "host_test_command": "python3 -m unittest discover -s tools/tests -v"
+}

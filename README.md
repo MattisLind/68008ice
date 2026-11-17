@@ -11,8 +11,52 @@ using RP2354B with in-package flash and **8 MiB QSPI PSRAM**, plus an
 outward-bent DIP contact lands and an accessible end tab. Firmware bring-up
 now includes a [Docker Pico SDK build and verified SWD debugger workflow](docs/bringup.md)
 for the standalone Waveshare Core2350B: GPIO39 blink, USB logging, flash read-back,
-breakpoints, stepping and halt/resume. Bus firmware and analyzer/emulator host
-tools remain unimplemented. The
+breakpoints, stepping and halt/resume. Two Core2350B boards have also been
+verified with concurrent, independent debugger sessions through one probe on
+a shared multidrop SWD connection. A GPIO0 link through the user's 470 ohm
+resistor was verified with opposite LED states. The current
+[GPIO0–44 connectivity test](docs/gpio-connectivity.md) scans both directions
+with LOW and HIGH patterns through SWD. **All 45 paths pass in both directions**
+after the user reflowed GPIO6's solder joints on 2026-11-16. The earlier expanded
+scans detected that missing path; the earlier GPIO0–38 test found GPIO2's solder
+fault before repair. No missing paths, cross-wiring or bridges are detected in
+the latest scan. A [PIO bench analyzer and pattern generator](docs/pio-trace.md)
+now capture GPIO0–31 and GPIO32–44 in separate 1024-sample runs at a nominal
+150 MS/s. Both banks matched the one-bit-per-clock pattern with no receiver
+FIFO stalls. The receiver stores `LOW32.VCD` and `HIGH13.VCD` in flash and
+exports a read-only USB drive after acquisition; both files survived an SWD reset.
+The current [core 0 dispatcher](docs/dispatcher.md) loads generator/analyzer
+modules from flash or PSRAM into core 1 execution SRAM. A framed USB CDC
+protocol and Python CLI start both applications without SWD. The analyzer
+supports HIGH/LOW level triggers on any GPIO0–44 for either bank in its original
+finite burst mode.
+The dispatcher now exposes only USB CDC; the `ICECAP` mass-storage interface
+has been removed. Captures remain in flash and download through CDC.
+Dispatcher 0.3 adds an [8 MHz-timed 68008 bench bus generator, a 1 KiB memory
+responder and state analyzer](docs/bus-fixture.md). Continuous timing and state
+captures support 1..65536 records, address or GPIO triggers, early/middle/late
+positions, partial stops and host VCD export. Continuous timing currently accepts
+1 kHz..1 MHz; the original finite 150 MS/s path remains available. These are
+3.3 V fixture applications with GPIO31 as DTACK, separate from the proposed
+motherboard adapter. Dispatcher 0.4 adds a [combined memory/150 MS/s timing
+mode](docs/single-cycle-timing.md) for a 4096-sample single-cycle trace with
+an exact sampled-edge midpoint trigger. The 100 ms no-trigger capture/timeout
+path and single read/write captures are bench verified on both boards, with
+zero sampling stalls. The responder currently adds one or two wait states;
+the nominal 500 ns no-wait cycle remains a sequencing target. Adapter bus
+firmware remains unimplemented. Dispatcher 0.5 adds a
+[CPU reset/STOP application](docs/cpu-emulator.md) using the shared PIO byte
+bus engine and a boot image in the other board's memory/state analyzer. Both
+boards passed reset-vector fetches and `STOP #$2700` (12 captured byte reads),
+NOP/STOP (14 reads), and a separate reset-vector BERR-to-HALT test. This is a
+reset/NOP/STOP milestone. Dispatcher 0.6 now runs the first five instructions
+of the [supplied ABC1600 ROM](docs/abc1600.md), uploaded through the memory
+tool into a separate 1 MiB target map. Both cause-register branch paths match
+the captured bus bytes and per-instruction register snapshots. CLR,
+MOVE/MOVEA, BTST, BRA/BSR/Bcc and JMP passed 37586 independent Musashi
+comparisons in host RAM, including the legal MOVE addressing-mode cross-product.
+Full opcode support, exception processing, interrupts, ABC1600 MMU/peripherals
+and CPU-speed validation remain future work. The
 [RP2350 engineering specification](requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md)
 is the design baseline and contains the detailed requirements, acceptance
 criteria and primary references.
@@ -84,8 +128,30 @@ are provisional until verified against original documentation and bench tests.
 The first firmware target uses Pico C/C++ SDK 2.3.1. Run `make setup`,
 `make program`, and `make debug-check` for standalone Core2350B bring-up;
 `make debug` opens interactive GDB inside Docker. On macOS, native OpenOCD
-bridges the USB probe to container GDB. The future bus/analyzer/interpreter
-modules and versioned USB command protocol remain planned.
+bridges the USB probe to container GDB. The dispatcher provides loadable bench
+bus/analyzer modules and a versioned USB command protocol. The motherboard
+adapter and full instruction interpreter remain planned; the bench interpreter
+executes the first five ABC1600 ROM instructions with bus/register validation.
+
+For the configured two-board bench setup, `make multidrop-probe` enumerates both
+chips and `make multidrop-check` tests two concurrent GDB sessions, independent
+halt/resume, breakpoints, stepping and variable writes. The
+[multidrop instructions](docs/bringup.md#two-boards-on-one-swd-probe-2026-11-15)
+describe firmware IDs, USB recovery and interactive debugging.
+The current boards run the [USB dispatcher](docs/dispatcher.md).
+`make dispatcher-build` builds both images and separate loadable modules.
+`python3 tools/ice.py fixture --generator /dev/cu.usbmodem24401 --receiver /dev/cu.usbmodem24301`
+starts both applications and downloads verified VCD/raw captures. The Python
+CLI also exposes load, upload, capture, generate, status, stop and fetch commands;
+use `FIRMWARE=dispatcher` for interactive debugging.
+The earlier [PIO trace fixture](docs/pio-trace.md) and its
+`make pio-trace-capture` SWD workflow require their matching images to be reloaded.
+The earlier [GPIO connectivity fixture](docs/gpio-connectivity.md) remains available:
+`make gpio-connectivity-build` builds both images; `make gpio-connectivity-check`
+reports opens, wrong pins and other observed faults. Use
+`FIRMWARE=gpio_connectivity` for interactive debugging of these images. All
+test pins are inputs between checks; the earlier GPIO0/LED demo remains a
+separate `gpio_link` target.
 
 The [JLCPCB upload BOM](kicad/BOM_JLCPCB.csv) uses dated C-number selections,
 preferring Basic SMT parts and sharing values. The DIP contacts are fitted manually.
@@ -104,7 +170,11 @@ jumper currently provides firmware permission only. No PCB is ready for fabricat
 - [docs/mechanical.md](docs/mechanical.md): provisional contact footprints, board dimensions, layer stack, placement plots and remaining fit/DRC checks.
 - [docs/programming.md](docs/programming.md): SWD wiring, automated firmware uploads and debugging workflow.
 - [docs/bringup.md](docs/bringup.md): Docker setup, Core2350B blink/debug commands and measured bring-up results.
-- [firmware/](firmware/): standalone Core2350B GPIO39 blink and board configuration.
+- [docs/gpio-connectivity.md](docs/gpio-connectivity.md): GPIO0–44 wiring scan, debugger protocol and measured pin report.
+- [docs/pio-trace.md](docs/pio-trace.md): two-bank PIO generator/analyzer, flash-backed USB VCD retrieval and measured results.
+- [docs/dispatcher.md](docs/dispatcher.md): core 0 USB dispatcher, core 1 application loading, Python command interface and hardware acceptance results.
+- [docs/protocol-v1.md](docs/protocol-v1.md): versioned CDC framing, CRC/replay rules, command table and status records.
+- [firmware/](firmware/): standalone Core2350B fixtures, dispatcher, loadable applications and board configuration.
 - [docker/Dockerfile](docker/Dockerfile): Pico SDK, Arm compiler, GDB, picotool and RP2350 OpenOCD.
 - [kicad/README.md](kicad/README.md): editable schematic, PDF, pin tables, BOM and validation commands.
 - [tools/](tools/): reproducible schematic generation and netlist/BOM checks.

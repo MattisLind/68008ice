@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
+import errno
 import glob
 import hashlib
+import json
 import os
 from pathlib import Path
 import platform
@@ -14,6 +17,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.request
 import zipfile
@@ -79,35 +83,40 @@ def host_tools():
     binary.chmod(0o755)
 
 
-def ocd_args(*, oneshot=False):
+def ocd_args(*, oneshot=False, multidrop=False):
+    config = "multidrop.cfg" if multidrop else "openocd.cfg"
     if MAC:
         binary = Path(os.environ.get("OPENOCD", ROOT / "build/tools/openocd"))
         if not binary.is_file():
             raise RuntimeError("Host OpenOCD missing; run make setup first")
         args = [str(binary), "-s", str(binary.parent / "scripts"),
-                "-f", str(ROOT / "tools/debug/openocd.cfg")]
+                "-f", str(ROOT / "tools/debug" / config)]
     elif LINUX:
         args = [DOCKER, "run", "--rm", "--init", "--network", "host",
                 "--mount", "type=bind,source=/dev/bus/usb,target=/dev/bus/usb",
                 "--device-cgroup-rule", "c 189:* rmw",
                 "--mount", f"type=bind,source={ROOT},target=/work",
                 "-e", f"DEBUG_PROBE_SERIAL={os.environ.get('DEBUG_PROBE_SERIAL', '')}",
-                IMAGE, "openocd", "-f", "/work/tools/debug/openocd.cfg"]
+                IMAGE, "openocd", "-f", f"/work/tools/debug/{config}"]
     else:
         raise RuntimeError("Use macOS or Linux; Windows can use WSL2 with USB forwarding")
     if oneshot:
-        args += ["-c", "gdb port disabled", "-c", "init", "-c", "targets", "-c", "shutdown"]
+        args += ["-c", "gdb port disabled"]
+        if multidrop:
+            for instance in (1, 2):
+                args += ["-c", f"board{instance}.cm0 configure -gdb-port disabled"]
+        args += ["-c", "init", "-c", "targets", "-c", "shutdown"]
     return args
 
 
 @contextmanager
-def debug_server():
+def debug_server(*, multidrop=False):
     if os.environ.get("OPENOCD_EXTERNAL") == "1":
         yield
         return
     DEBUG.mkdir(parents=True, exist_ok=True)
-    log = DEBUG / "openocd.log"
-    args = ocd_args()
+    log = DEBUG / ("multidrop-openocd.log" if multidrop else "openocd.log")
+    args = ocd_args(multidrop=multidrop)
     print("+ " + shlex.join(args) + f" (log: {log.relative_to(ROOT)})", flush=True)
     with open(log, "w") as stream:
         proc = subprocess.Popen(args, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT)
@@ -132,22 +141,35 @@ def debug_server():
                     proc.wait()
 
 
-def gdb(command):
-    if not (ROOT / "build/firmware/blink.elf").exists():
+def gdb(command, *, instance=None, firmware="blink"):
+    elf = ELF if instance is None else f"/work/build/multidrop/{instance}/{firmware}.elf"
+    if not (ROOT / elf.removeprefix("/work/")).exists():
         raise RuntimeError("Firmware missing; run make blink first")
     host = "host.docker.internal" if MAC else "127.0.0.1"
-    endpoint = os.environ.get("GDB_ENDPOINT", f"{host}:3333")
-    args = ["gdb-multiarch", "-q", "-nx", ELF,
+    endpoint = os.environ.get("GDB_ENDPOINT", f"{host}:{3333 if instance is None else 3332 + instance}")
+    args = ["gdb-multiarch", "-q", "-nx", elf,
             "-ex", "set pagination off", "-ex", "set remotetimeout 15",
             "-ex", f"target extended-remote {endpoint}"]
     if command == "debug":
-        args += ["-ex", "monitor reset halt", "-ex", "tbreak main", "-ex", "continue",
-                 "-ex", "info registers pc sp",
-                 "-ex", "display blink_count", "-ex", "display led_state"]
+        if instance is None:
+            args += ["-ex", "monitor reset halt", "-ex", "tbreak main", "-ex", "continue"]
+        else:
+            # Attach to the running application; boot ROM uses instance zero.
+            args += ["-ex", "monitor halt", "-ex", "print board_id",
+                     "-ex", "print/x *(unsigned int *)0x401000ac"]
+        args += ["-ex", "info registers pc sp"]
+        if firmware == "dispatcher":
+            args += ["-ex", "display dispatcher_job"]
+        elif firmware == "pio_trace":
+            args += ["-ex", "display trace_control"]
+        elif firmware == "gpio_connectivity":
+            args += ["-ex", "display connectivity"]
+        else:
+            args += ["-ex", "display blink_count", "-ex", "display led_state"]
     else:
         script = "flash.gdb" if command == "flash" else "check.gdb"
         args += ["-batch", "-x", f"/work/tools/debug/{script}"]
-    with debug_server():
+    with debug_server(multidrop=instance is not None):
         run(container(args, interactive=command == "debug", debug=True),
             log=None if command == "debug" else DEBUG / f"{command}.log")
 
@@ -185,10 +207,69 @@ def usb_monitor(port, seconds):
         os.close(fd)
 
 
+def multidrop_check():
+    # Two live GDB clients share one OpenOCD/probe. The GDB scripts coordinate
+    # through a fresh artifact directory; no prior test can satisfy a barrier.
+    DEBUG.mkdir(parents=True, exist_ok=True)
+    artifacts = Path(tempfile.mkdtemp(prefix="multidrop-check-", dir=DEBUG))
+    mounted = "/work/" + str(artifacts.relative_to(ROOT))
+    host = "host.docker.internal" if MAC else "127.0.0.1"
+
+    def check(instance):
+        elf = f"/work/build/multidrop/{instance}/blink.elf"
+        args = container(["env", f"ICE_MULTIDROP_INSTANCE={instance}",
+                          f"ICE_MULTIDROP_TEST_DIR={mounted}", "gdb-multiarch", "-q", "-nx",
+                          "-batch", elf, "-ex", f"target extended-remote {host}:{3332 + instance}",
+                          "-x", "/work/tools/debug/multidrop-check.gdb"], debug=True)
+        with (artifacts / f"board{instance}.log").open("w") as log:
+            result = subprocess.run(args, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT, timeout=50)
+        return result.returncode
+
+    with debug_server(multidrop=True), ThreadPoolExecutor(max_workers=2) as pool:
+        futures = [pool.submit(check, instance) for instance in (1, 2)]
+        results = [future.result() for future in futures]
+    for instance in (1, 2):
+        print((artifacts / f"board{instance}.log").read_text(), flush=True)
+    if any(results):
+        raise RuntimeError(f"Multidrop debug check failed; see {artifacts}")
+    identities = [json.loads((artifacts / f"board{instance}.json").read_text())["board_id"]
+                  for instance in (1, 2)]
+    if len(set(identities)) != 2:
+        raise RuntimeError("Both debug connections reached the same physical board")
+    print(f"MULTIDROP DEBUG CHECK PASSED: {identities}; logs: {artifacts}")
+
+
+def usb_boot(port):
+    # Pico SDK USB stdio's documented 1200-baud reset, not a power cycle.
+    # The caller identifies the target CDC port; never use the probe UART.
+    import termios
+    if port is None:
+        raise RuntimeError("usb-boot requires --port for the target's USB CDC device")
+    fd = os.open(port, os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
+    try:
+        config = termios.tcgetattr(fd)
+        config[4] = config[5] = termios.B1200
+        try:
+            termios.tcsetattr(fd, termios.TCSANOW, config)
+        except termios.error as exc:
+            # macOS can report ENXIO/EIO when the board obeys the request and
+            # disconnects before the USB line-coding transaction returns.
+            if exc.args[0] not in (errno.ENXIO, errno.EIO):
+                raise
+    finally:
+        os.close(fd)
+    print(f"Requested USB BOOTSEL on {port}; wait for the RP2350 ROM disk")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=["setup", "build", "probe", "flash", "check",
-                                            "debug", "server", "shell", "versions", "uf2", "monitor"])
+                                            "debug", "server", "shell", "versions", "uf2", "monitor",
+                                            "multidrop-build", "multidrop-probe", "multidrop-server",
+                                            "multidrop-debug", "multidrop-check", "usb-boot",
+                                            "gpio-link-check", "gpio-connectivity-check", "pio-trace-capture"])
+    parser.add_argument("--instance", type=int, choices=[1, 2], default=1)
+    parser.add_argument("--firmware", choices=["blink", "gpio_link", "gpio_connectivity", "pio_trace", "dispatcher"], default="blink")
     parser.add_argument("--port", default=os.environ.get("PORT"))
     parser.add_argument("--seconds", type=float, default=0)
     args = parser.parse_args()
@@ -201,6 +282,35 @@ def main():
         run(container(["cmake", "--build", "build/firmware", "--parallel", "4"]))
     elif args.command == "probe":
         run(ocd_args(oneshot=True), log=DEBUG / "probe.log")
+    elif args.command == "multidrop-build":
+        for instance in (1, 2):
+            dest = f"build/multidrop/{instance}"
+            run(container(["cmake", "-S", "firmware", "-B", dest, "-G", "Ninja",
+                           "-DCMAKE_BUILD_TYPE=Debug", f"-DICE_SWD_INSTANCE_ID={instance}"]))
+            run(container(["cmake", "--build", dest, "--parallel", "4"]))
+    elif args.command == "multidrop-probe":
+        run(ocd_args(oneshot=True, multidrop=True), log=DEBUG / "multidrop-probe.log")
+    elif args.command == "multidrop-server":
+        run(ocd_args(multidrop=True))
+    elif args.command == "multidrop-debug":
+        gdb("debug", instance=args.instance, firmware=args.firmware)
+    elif args.command == "multidrop-check":
+        multidrop_check()
+    elif args.command == "gpio-link-check":
+        commands = ocd_args(multidrop=True)
+        for instance in (1, 2):
+            commands += ["-c", f"board{instance}.cm0 configure -gdb-port disabled"]
+        script = str(ROOT / "tools/debug/gpio-link-check.tcl") if MAC else "/work/tools/debug/gpio-link-check.tcl"
+        commands += ["-c", "init", "-f", script, "-c", "shutdown"]
+        run(commands, log=DEBUG / "gpio-link-check.log")
+    elif args.command == "usb-boot":
+        usb_boot(args.port)
+    elif args.command == "gpio-connectivity-check":
+        from gpio_connectivity import check
+        check(root=ROOT, container=container, ocd_args=ocd_args, run=run, mac=MAC)
+    elif args.command == "pio-trace-capture":
+        from pio_trace import capture
+        capture(root=ROOT, container=container, ocd_args=ocd_args, run=run, mac=MAC)
     elif args.command in ("flash", "check", "debug"):
         gdb(args.command)
     elif args.command == "server":

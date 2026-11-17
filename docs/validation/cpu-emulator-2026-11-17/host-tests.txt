@@ -1,0 +1,53 @@
+test_wait_states_are_reported (test_bus_timing.BusTiming.test_wait_states_are_reported) ... ok
+test_wrong_data_or_trigger_rejected (test_bus_timing.BusTiming.test_wrong_data_or_trigger_rejected) ... ok
+test_zero_wait_cycle (test_bus_timing.BusTiming.test_zero_wait_cycle) ... ok
+test_bounds (test_capture.CaptureWindow.test_bounds) ... ok
+test_hardware_trigger_refuses_missing_ambiguous_or_incomplete_windows (test_capture.CaptureWindow.test_hardware_trigger_refuses_missing_ambiguous_or_incomplete_windows) ... ok
+test_hardware_trigger_window_is_exact_across_ring_wrap (test_capture.CaptureWindow.test_hardware_trigger_window_is_exact_across_ring_wrap) ... ok
+test_partial_discards_history_beyond_selected_pretrigger (test_capture.CaptureWindow.test_partial_discards_history_beyond_selected_pretrigger) ... ok
+test_stop_retains_partial_before_and_after_trigger (test_capture.CaptureWindow.test_stop_retains_partial_before_and_after_trigger) ... ok
+test_waits_for_history_when_match_already_present (test_capture.CaptureWindow.test_waits_for_history_when_match_already_present) ... ok
+test_wrapped_history_and_exact_trigger_positions (test_capture.CaptureWindow.test_wrapped_history_and_exact_trigger_positions) ... ok
+test_corruption_bounds_and_nonmonotonic_time (test_capture.VCD.test_corruption_bounds_and_nonmonotonic_time) ... ok
+test_empty_partial (test_capture.VCD.test_empty_partial) ... ok
+test_memory_timing_is_uniform_with_bus_names (test_capture.VCD.test_memory_timing_is_uniform_with_bus_names) ... ok
+test_state_timestamps_include_long_idle_gap_and_trigger (test_capture.VCD.test_state_timestamps_include_long_idle_gap_and_trigger) ... ok
+test_timing_upper_bank_and_single_sample (test_capture.VCD.test_timing_upper_bank_and_single_sample) ... ok
+test_nop_before_stop_and_new_reset (test_cpu68008.Interpreter.test_nop_before_stop_and_new_reset) ... ok
+test_odd_pc_and_unsupported_opcode_fail_without_false_stop (test_cpu68008.Interpreter.test_odd_pc_and_unsupported_opcode_fail_without_false_stop) ... ok
+test_program_bus_error_is_not_mislabeled_as_double_fault (test_cpu68008.Interpreter.test_program_bus_error_is_not_mislabeled_as_double_fault) ... ok
+test_registers_preserved_and_external_address_wraps_at_20_bits (test_cpu68008.Interpreter.test_registers_preserved_and_external_address_wraps_at_20_bits) ... ok
+test_reset_then_stop_fetches_only_external_bytes (test_cpu68008.Interpreter.test_reset_then_stop_fetches_only_external_bytes) ... ok
+test_reset_vector_bus_error_asserts_halt (test_cpu68008.Interpreter.test_reset_vector_bus_error_asserts_halt) ... ok
+test_stop_sr_and_extension_failure (test_cpu68008.Interpreter.test_stop_sr_and_extension_failure) ... ok
+test_timeout_abort_reset_and_external_halt_are_distinct (test_cpu68008.Interpreter.test_timeout_abort_reset_and_external_halt_are_distinct) ... ok
+test_reset_program_trace_and_faults (test_cpu68008.PhysicalTrace.test_reset_program_trace_and_faults) ... ok
+test_all_bytes_and_fragmentation (test_dispatcher.WireProtocol.test_all_bytes_and_fragmentation) ... ok
+test_bad_version_status_and_length_rejected (test_dispatcher.WireProtocol.test_bad_version_status_and_length_rejected) ... ok
+test_c_response_matches_python (test_dispatcher.WireProtocol.test_c_response_matches_python) ... ok
+test_corruption_overflow_and_resynchronization (test_dispatcher.WireProtocol.test_corruption_overflow_and_resynchronization) ... ok
+test_module_header_and_crc (test_dispatcher.WireProtocol.test_module_header_and_crc) ... ok
+test_partial_abort_and_new_start (test_dispatcher.WireProtocol.test_partial_abort_and_new_start) ... ok
+test_all_same_number_including_high_bank (test_gpio_connectivity.WiringReportTests.test_all_same_number_including_high_bank) ... ok
+test_bridge_reports_every_observed_pin (test_gpio_connectivity.WiringReportTests.test_bridge_reports_every_observed_pin) ... ok
+test_held_low_is_not_called_an_open_wire (test_gpio_connectivity.WiringReportTests.test_held_low_is_not_called_an_open_wire) ... ok
+test_incomplete_scan_is_rejected (test_gpio_connectivity.WiringReportTests.test_incomplete_scan_is_rejected) ... ok
+test_led_bias_load_does_not_invent_an_open (test_gpio_connectivity.WiringReportTests.test_led_bias_load_does_not_invent_an_open) ... ok
+test_led_load_does_not_hide_real_open (test_gpio_connectivity.WiringReportTests.test_led_load_does_not_hide_real_open) ... ok
+test_led_pin_cross_wiring (test_gpio_connectivity.WiringReportTests.test_led_pin_cross_wiring) ... ok
+test_old_range_is_rejected (test_gpio_connectivity.WiringReportTests.test_old_range_is_rejected) ... ok
+test_open_gpio44 (test_gpio_connectivity.WiringReportTests.test_open_gpio44) ... ok
+test_swap_across_banks (test_gpio_connectivity.WiringReportTests.test_swap_across_banks) ... ok
+test_unloaded_led_pin_also_requires_low_response (test_gpio_connectivity.WiringReportTests.test_unloaded_led_pin_also_requires_low_response) ... ok
+test_unstable_observation_is_not_reported_as_good (test_gpio_connectivity.WiringReportTests.test_unstable_observation_is_not_reported_as_good) ... ok
+test_both_banks_preserve_observations (test_pio_trace.TraceIntegrity.test_both_banks_preserve_observations) ... ok
+test_corrupt_payload_rejected (test_pio_trace.TraceIntegrity.test_corrupt_payload_rejected) ... ok
+test_incomplete_and_stalled_transfers_rejected (test_pio_trace.TraceIntegrity.test_incomplete_and_stalled_transfers_rejected) ... ok
+test_raw_disagreement_rejected (test_pio_trace.TraceIntegrity.test_raw_disagreement_rejected) ... ok
+test_wrong_bank_rejected (test_pio_trace.TraceIntegrity.test_wrong_bank_rejected) ... ok
+test_wrong_timebase_rejected (test_pio_trace.TraceIntegrity.test_wrong_timebase_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 48 tests in 1.087s
+
+OK
