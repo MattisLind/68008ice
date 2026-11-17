@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "state": 6,
+  "ssp": 262144,
+  "pc": 126,
+  "sr": 9984,
+  "opcode": 13312,
+  "instructions": 105,
+  "reads": 300,
+  "resets": 1,
+  "fault": 0,
+  "address": 125,
+  "fc": 6,
+  "reset_seen": 1,
+  "halt_asserted": 0,
+  "reset_level": 1,
+  "halt_level": 1,
+  "d": [
+    242,
+    16626,
+    242,
+    0,
+    0,
+    0,
+    0,
+    2
+  ],
+  "a": [
+    1019908,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    262144
+  ],
+  "usp": 0,
+  "writes": 54,
+  "instruction_pc": 124
+}

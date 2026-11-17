@@ -1,0 +1,5 @@
+{
+  "firmware/dispatcher/cpu68008.c": "7c8ac350c197375d2359097c6fefcaf0b72644d896d18050c64bae00996e55e3",
+  "firmware/dispatcher/cpu68008.h": "6342f0fe8c183245c1ee25b689f98683ee2f5f2f34445b3410c609cd75ab97a6",
+  "tools/tests/musashi_adapter.c": "8922f355ddd0c12e46125c2420205f22a2e60f04db4ad306b90c6c9f15a2e85c"
+}

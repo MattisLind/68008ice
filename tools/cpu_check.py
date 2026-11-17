@@ -91,7 +91,7 @@ def main():
     with Device(args.cpu) as cpu, Device(args.memory) as memory:
         if cpu.info["serial"] == memory.info["serial"]:
             raise ValueError("Select two distinct boards")
-        if any(d.info["firmware"] not in ("dispatcher-0.5", "dispatcher-0.6") for d in (cpu, memory)):
+        if any(d.info["firmware"] not in ("dispatcher-0.5", "dispatcher-0.6", "dispatcher-0.7") for d in (cpu, memory)):
             raise ValueError("Both boards need dispatcher-0.5 or later")
         results = [run_case(cpu, memory, args.output, p) for p in
                    (("stop", "nop-stop", "reset-fault") if args.halt_test else ("stop", "nop-stop"))]

@@ -357,3 +357,61 @@ memory-side checks. Its generic RAM byte at `$80007` is set to `$02` by the
 ABC1600 helper to stand in for the reset cause register. This is a minimal
 fixture, not a complete ABC1600 peripheral/MMU implementation. See
 [ABC1600 execution and validation](abc1600.md).
+
+## Dispatcher 0.7: distinct generic and ABC1600 memory apps
+
+HELLO reports `dispatcher-0.7`. App 4 is generic memory, with the host names
+`generic-memory` and compatibility alias `bus-memory`. App **7** is
+`abc1600-memory`. LIST returns seven 28-byte headers (196 bytes); image
+validation accepts IDs 1..7. App ABI 2, job records, wire framing and CPU
+register record version 2 remain unchanged. CPU_TRACE now retains the first
+**128 snapshots**, with its existing explicit dropped count.
+
+App 7 accepts extended RUN only, bank zero and exactly flag 1 (drive). It
+requires a committed 16384-byte ABC1600 ROM with CRC32 `9372f6f2`, base zero,
+seed zero and a state capture rate (150 MS/s memory/timing mode is refused).
+Other state capture bounds still apply. RUN cold-initializes the MAC and its
+physical RAM, starts the PIO state analyzer, and issues the shared RESET/HALT
+pulse automatically; no GO is required on the memory board. CPU GO remains
+separate. CPU writes still require CPU RUN flag 4 in addition to drive flag 1.
+Missing drive permission, generic-only boot flags, nonzero base/seed and fast
+timing settings are rejected before scheduling. Unavailable/wrong ROM returns
+status 4. STOP accepts app 7 and saves the partial state window.
+
+The generic backend retains its prior flat map and image write protection.
+It does not implement ABC1600 mirrors/registers. App 7 supplies the MAME-style
+MAC/boot overlay instead of that map; writes through the boot-ROM window can
+translate to physical RAM rather than modifying the uploaded ROM.
+
+App 7 shares MEMORY_BEGIN/WRITE/COMMIT, MEMORY_INFO and READ kind 4 with app 4.
+The uploaded image remains at PSRAM `0x11200000`; its ABC1600 physical RAM is
+separate at `0x11300000`. MEMORY_POKE remains exclusive to app 4. Additional
+READ kinds require a stopped app 7 job with initialized model state, bank zero:
+
+| Kind | Data | Size |
+| --- | --- | --- |
+| 5 | ABC1600 physical RAM | 1048576 bytes |
+| 6 | Segment table bytes | 1024 bytes |
+| 7 | Page table words, little-endian uint16 | 2048 bytes |
+
+The existing offset/count <=256 and bounds checks apply. CAPTURE uses app 7,
+stride 12 and the existing GPIO0–31/timestamp state record format. Persistent
+capture validation and host VCD conversion recognize app 7. BOOT_STATUS (20)
+also accepts app 7; its profile is **4**, with supervisor/user program/data
+FCs accepted. Those FC diagnostics are software observations.
+
+Command **28 ABC1600_STATUS** takes an empty request and returns 21 uint32s:
+
+`version`, `task`, `boote`, `magic`, `cause`, `reset_button`, `partst`,
+`cause_reads`, `segment_writes`, `page_high_writes`, `page_low_writes`,
+`task_writes`, `ram_reads`, `ram_writes`, `bus_errors`, `unsupported_io`,
+`last_address`, `last_physical`, `last_fc`, `last_write`, `last_target`.
+
+Version is 1. It requires stopped app 7 with initialized model state, returning
+busy 2/unavailable 4 otherwise. The last target is 0 ROM, 1 MAC, 2 translated
+RAM, 3 ordinary unmapped space, 4 unsupported physical I/O. `last_physical` is
+`0xffffffff` for un-translated ROM/MAC cycles, otherwise a 21-bit physical
+address. Read/write/table counters count byte accesses. `cause_reads` records
+watchdog-service events; watchdog timeout timing/reset is not implemented.
+Unsupported physical I/O receives BERR and increments its counter. Model
+details and the 105-instruction validation are in [abc1600.md](abc1600.md).

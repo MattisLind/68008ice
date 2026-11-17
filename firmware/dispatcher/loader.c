@@ -14,6 +14,7 @@
 #include "app_bus_memory.h"
 #include "app_state_analyzer.h"
 #include "app_cpu_emulator.h"
+#include "app_abc1600_memory.h"
 #define PSRAM_IMAGE ((uint8_t *)0x11000000u)
 uint32_t loader_app,loader_source,loader_crc,loader_bytes,loader_psram;
 static uint32_t upload_bytes,upload_used;
@@ -25,11 +26,12 @@ const app_header *loader_builtin(uint32_t app) {
     if(app==APP_BUS_MEMORY)return (const app_header *)app_image_4;
     if(app==APP_STATE_ANALYZER)return (const app_header *)app_image_5;
     if(app==APP_CPU_EMULATOR)return (const app_header *)app_image_6;
+    if(app==APP_ABC1600_MEMORY)return (const app_header *)app_image_7;
     return NULL;
 }
 static bool valid(const app_header *h,uint32_t total) {
     return total>=sizeof *h && h->magic==APP_MAGIC && h->abi==APP_ABI &&
-        (h->app>=APP_GENERATOR && h->app<=APP_CPU_EMULATOR) && h->address==APP_ADDRESS &&
+        (h->app>=APP_GENERATOR && h->app<=APP_ABC1600_MEMORY) && h->address==APP_ADDRESS &&
         h->bytes && h->bytes<=APP_CAPACITY && h->bytes==total-sizeof *h &&
         (h->entry&1) && h->entry<h->bytes && h->entry==1 &&
         h->crc==protocol_crc(h+1,h->bytes);

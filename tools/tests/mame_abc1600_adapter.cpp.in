@@ -1,0 +1,83 @@
+// SPDX-License-Identifier: BSD-3-Clause
+// Test-only shell for unmodified mapping/register methods from MAME.
+// Extracted method copyright: Curt Coder; see LICENSES/BSD-3-Clause-MAME.txt.
+#include <cstdint>
+#include <cstring>
+using u8=uint8_t;using u16=uint16_t;using offs_t=uint32_t;
+template<class T> static unsigned BIT(T v,unsigned n) {return (v>>n)&1;}
+enum {TR_FETCH,TR_READ,TR_WRITE};
+#define PAGE_WP BIT(page_data,14)
+#define PAGE_NONX BIT(page_data,15)
+#define LOGMASKED(...) ((void)0)
+class abc1600_mmu_device {
+public:
+    static constexpr int DMAOK=4;
+    struct CPU {bool error=false;void trigger_bus_error() {error=true;}} cpu;
+    struct Watchdog {uint32_t reads=0;void watchdog_reset() {++reads;}} watchdog;
+    struct Machine {bool side_effects_disabled() {return false;}} machine_value;
+    Machine &machine() {return machine_value;}
+    struct Access {
+        abc1600_mmu_device *owner=nullptr;int kind=0;
+        u8 read_interruptible(offs_t);
+        void write_interruptible(offs_t,u8);
+    };
+    class mmu {
+    public:
+        enum class bus_target {OTHER,RAM,IO};
+        void bus_cycle(bus_target,bool) {} // Timing is outside this functional reference.
+        bus_target physical_target(offs_t) {return bus_target::OTHER;}
+        bool m_super=true,m_boote=false,m_magic=false;
+        int m_task=0;u8 m_cause=0;
+        CPU *m_maincpu=nullptr;u8 *m_segment_ram=nullptr;u16 *m_page_ram=nullptr;
+        Access m_boot,m_s_program,m_program;
+        bool ifc2(int) const;
+        bool force_task0(offs_t,int) const;
+        int get_task(offs_t,int) const;
+        offs_t get_segment_address(offs_t,int) const;
+        offs_t get_physical_address(offs_t,int,bool &,bool &);
+        u8 mmu_read(offs_t,int);void mmu_write(offs_t,u8);
+    } value;
+    mmu *m_mmu=&value;
+    Watchdog *m_watchdog=&watchdog;
+    bool m_rstbut=false,m_partst=false;
+    u8 m_segment_ram[1024];u16 m_page_ram[1024];
+    const u8 *rom=nullptr;u8 *ram=nullptr;
+    u8 mac_r(offs_t);void mac_w(offs_t,u8);
+    u8 cause_r();void task_w(offs_t,u8);u8 segment_r(offs_t);void segment_w(offs_t,u8);
+    u8 page_hi_r(offs_t);u8 page_lo_r(offs_t);void page_hi_w(offs_t,u8);void page_lo_w(offs_t,u8);
+    void init(const u8 *r,u8 *memory) {
+        *this=abc1600_mmu_device();m_mmu=&value;m_watchdog=&watchdog;
+        rom=r;ram=memory;memset(m_segment_ram,255,sizeof m_segment_ram);memset(m_page_ram,255,sizeof m_page_ram);
+        value.m_maincpu=&cpu;value.m_segment_ram=m_segment_ram;value.m_page_ram=m_page_ram;
+        value.m_boot={this,0};value.m_s_program={this,1};value.m_program={this,2};
+    }
+};
+u8 abc1600_mmu_device::Access::read_interruptible(offs_t a) {
+    if(kind==0)return owner->rom[a&0x3fff];
+    if(kind==1)return owner->mac_r(a);
+    if(a<0x100000)return owner->ram[a];
+    if(a>=0x1fe000)owner->cpu.error=true;
+    return 255;
+}
+void abc1600_mmu_device::Access::write_interruptible(offs_t a,u8 data) {
+    if(kind==1)owner->mac_w(a,data);
+    else if(a<0x100000)owner->ram[a]=data;
+    else if(a>=0x1fe000)owner->cpu.error=true;
+}
+@METHODS@
+static abc1600_mmu_device model;
+extern "C" {
+void mame_abc_init(const u8 *rom,u8 *ram) {model.init(rom,ram);}
+int mame_abc_access(uint32_t address,uint32_t fc,bool write,u8 *value) {
+    model.cpu.error=false;model.value.m_super=(fc&4)!=0;
+    if(write)model.value.mmu_write(address&0xfffff,*value);
+    else *value=model.value.mmu_read(address&0xfffff,(fc==2 || fc==6) ? TR_FETCH : TR_READ);
+    return model.cpu.error ? 4 : 0;
+}
+const u8 *mame_abc_segments() {return model.m_segment_ram;}
+const u16 *mame_abc_pages() {return model.m_page_ram;}
+void mame_abc_regs(uint32_t *out) {
+    out[0]=model.value.m_task;out[1]=model.value.m_boote;out[2]=model.value.m_magic;
+    out[3]=model.value.m_cause;out[4]=model.watchdog.reads;
+}
+}

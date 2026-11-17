@@ -120,3 +120,32 @@ class Instructions(unittest.TestCase):
         self.assertEqual(self.ram[0x3ffc:0x4000], struct.pack(">I", 0x204))
         self.assertEqual(self.events[:4], [("r", a, 2) for a in range(0x200, 0x204)])
         self.assertEqual(self.events[4:], [("w", a, 1) for a in (0x3ffe, 0x3fff, 0x3ffc, 0x3ffd)])
+
+    def test_quick_arithmetic_flags_and_address_register_width(self):
+        self.cpu.d[0]=0xffffffff;self.execute("5280")
+        self.assertEqual((self.cpu.d[0],self.cpu.sr),(0,0x2715))
+        self.execute("5380")
+        self.assertEqual((self.cpu.d[0],self.cpu.sr),(0xffffffff,0x2719))
+        self.cpu.a[7]=0x1234fff8;self.execute("504f") # ADDQ.W #8,A7 affects all 32 bits.
+        self.assertEqual((self.cpu.a[7],self.cpu.ssp,self.cpu.sr),(0x12350000,0x12350000,0x2719))
+        self.execute("9efcffff") # SUBA.W #-1,A7 sign extends, no flags.
+        self.assertEqual((self.cpu.a[7],self.cpu.sr),(0x12350001,0x2719))
+
+    def test_andi_dbcc_and_shift_flags(self):
+        self.cpu.d[6]=0xffffffff;self.execute("0286fffc0000")
+        self.assertEqual((self.cpu.d[6],self.cpu.sr),(0xfffc0000,0x2718))
+        self.cpu.d[0]=0x12340001;self.cpu.pc=0x200;self.execute("51c8fffc")
+        self.assertEqual((self.cpu.d[0],self.cpu.pc,self.cpu.sr),(0x12340000,0x1fe,0x2718))
+        self.cpu.pc=0x200;self.execute("51c8fffc")
+        self.assertEqual((self.cpu.d[0],self.cpu.pc),(0x1234ffff,0x204))
+        self.cpu.d[2]=0xffff8001;self.execute("e84a")
+        self.assertEqual((self.cpu.d[2],self.cpu.sr),(0xffff0800,0x2700))
+        self.cpu.d[1]=0;self.cpu.d[2]=0xff;self.cpu.sr=0x271f;self.execute("e22a")
+        self.assertEqual((self.cpu.d[2],self.cpu.sr),(0xff,0x2718))
+
+    def test_new_instruction_illegal_modes_and_sr_privilege(self):
+        for code in ("5208","02081234","e2c0"):
+            self.cpu.state=2;self.cpu.pc=0x200;self.execute(code)
+            self.assertEqual((self.cpu.state,self.cpu.fault),(5,3),code)
+        self.cpu.state=2;self.cpu.pc=0x200;self.cpu.sr=0x0700;self.execute("027cffff")
+        self.assertEqual((self.cpu.state,self.cpu.fault),(5,4))

@@ -7,10 +7,11 @@ import sys
 import tempfile
 import unittest
 import zlib
+from types import SimpleNamespace
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
-from ice import CAPTURE_FIELDS, capture_vcd, validate_capture
+from ice import CAPTURE_FIELDS, capture_vcd, validate_capture, capture_config
 
 
 class Window(ctypes.Structure):
@@ -140,6 +141,13 @@ def record(raw, count, state=True, **updates):
 
 
 class VCD(unittest.TestCase):
+    def test_abc1600_cli_configuration_uses_zero_reserved_seed(self):
+        args=SimpleNamespace(command="abc1600-memory",samples=4096,position="middle")
+        config=capture_config(args)
+        self.assertEqual(config[0],4096)
+        self.assertEqual(config[7],0)
+        self.assertEqual(config[11],0)
+
     def test_memory_timing_is_uniform_with_bus_names(self):
         raw = struct.pack("<2I", 0xf0000000, 0xd0000000)
         r = record(raw, 2, state=False, app=4, flags=17, trigger=1)

@@ -14,7 +14,7 @@ import time
 import zlib
 
 MAX_PAYLOAD = 256
-APPS = {"generator": 1, "analyzer": 2, "bus-generator": 3, "bus-memory": 4, "state-analyzer": 5, "cpu-emulator": 6}
+APPS = {"generator": 1, "analyzer": 2, "bus-generator": 3, "bus-memory": 4, "state-analyzer": 5, "cpu-emulator": 6, "generic-memory": 4, "abc1600-memory": 7}
 SOURCES = {"flash": 0, "psram": 1, "uploaded": 2}
 JOB_FIELDS = "bank trigger_gpio trigger_level timeout_ms flags state error start abort hz samples fdebug remaining raw_crc vcd_bytes vcd_crc".split()
 POSITIONS = {"early": 10, "middle": 50, "late": 90}
@@ -195,7 +195,7 @@ class Device:
 
     def cpu_trace(self):
         version, count, total, dropped = struct.unpack("<4I", self.request(26, struct.pack("<I", 0xffffffff)))
-        if version != 1 or count > 64 or total != count + dropped:
+        if version != 1 or count > 128 or total != count + dropped:
             raise ValueError("Invalid CPU trace metadata")
         return dict(version=version, count=count, total=total, dropped=dropped,
                     snapshots=[decode_cpu_registers(self.request(26, struct.pack("<I", i))) for i in range(count)])
@@ -215,6 +215,10 @@ class Device:
         if not result["ready"] or result["crc"] != crc or self.read_data(4, 0, len(image)) != image:
             raise ValueError("ROM upload readback mismatch")
         return result
+
+    def abc1600_status(self):
+        fields = "version task boote magic cause reset_button partst cause_reads segment_writes page_high_writes page_low_writes task_writes ram_reads ram_writes bus_errors unsupported_io last_address last_physical last_fc last_write last_target".split()
+        return dict(zip(fields, struct.unpack("<21I", self.request(28))))
 
     def boot_status(self):
         fields = "version profile reset_asserted reset_released halt_seen cycles reads writes first_address last_address first_fc last_fc fc_errors reset_low_us reset_high_us halt_low_us".split()
@@ -277,7 +281,7 @@ def validate_image(image):
     if len(image) < 30:
         raise ValueError("Truncated application image")
     magic, abi, app, address, entry, length, crc = struct.unpack_from("<7I", image)
-    if (magic != 0x41505031 or abi != 2 or app not in range(1, 7) or address != 0x20030000
+    if (magic != 0x41505031 or abi != 2 or app not in range(1, 8) or address != 0x20030000
             or entry != 1 or length != len(image)-28 or not 2 <= length <= 16384
             or zlib.crc32(image[28:]) != crc):
         raise ValueError("Invalid application image header or CRC")
@@ -286,10 +290,10 @@ def validate_image(image):
 
 def validate_capture(r):
     fast = bool(r["flags"] & 16)
-    state = r["app"] in (4, 5) and not fast
+    state = r["app"] in (4, 5, 7) and not fast
     if (r["magic"] != 0x43415032 or r["version"] != 1 or r["committed"] != 0
-            or r["bank"] not in (0, 1) or r["app"] not in (2, 4, 5)
-            or (r["app"] in (4, 5) and r["bank"] != 0) or not 1 <= r["capacity"] <= 65536
+            or r["bank"] not in (0, 1) or r["app"] not in (2, 4, 5, 7)
+            or (r["app"] in (4, 5, 7) and r["bank"] != 0) or not 1 <= r["capacity"] <= 65536
             or (fast and (r["app"] != 4 or r["capacity"] > 4096 or r["hz"] != 150000000))
             or not 0 <= r["count"] <= r["capacity"] or r["stride"] != (12 if state else 4)
             or r["bytes"] != r["count"] * r["stride"] or not r["hz"]
@@ -305,12 +309,12 @@ def capture_vcd(r, raw):
     validate_capture(r)
     if len(raw) != r["bytes"] or zlib.crc32(raw) != r["crc"]:
         raise ValueError("Capture raw length/CRC mismatch")
-    state = r["app"] in (4, 5) and not r["flags"] & 16
+    state = r["app"] in (4, 5, 7) and not r["flags"] & 16
     signals = ([("a", 20, "A", 0), ("d", 8, "D", 20), ("as", 1, "AS_N", 28),
                 ("ds", 1, "DS_N", 29), ("rw", 1, "RW", 30), ("ack", 1, "DTACK_N", 31)]
-               if r["app"] in (4, 5) else [(f"g{i}", 1, f"GPIO{i}", i-(32 if r["bank"] else 0))
+               if r["app"] in (4, 5, 7) else [(f"g{i}", 1, f"GPIO{i}", i-(32 if r["bank"] else 0))
                               for i in range(32 if r["bank"] else 0, 45 if r["bank"] else 32)])
-    lines = ["$version 68008ice dispatcher 0.4 $end", "$timescale 1ps $end",
+    lines = ["$version 68008ice dispatcher 0.7 $end", "$timescale 1ps $end",
              f'$comment {r["count"]} samples; trigger index {r["trigger"]}; flags {r["flags"]}; '
              f'nominal clock, sample-relative times; selected {"AS" if r["edge_config"] & 1 else "DS"} '
              f'{"release" if r["edge_config"] & 2 else "assert"} edge; '
@@ -352,7 +356,8 @@ def capture_config(args):
             int(getattr(args, "strobe", "ds") == "as"), int(getattr(args, "edge", "assert") == "release"),
             getattr(args, "address", 0), getattr(args, "mask", 0), getattr(args, "base", 0),
             getattr(args, "cycles", 2048), getattr(args, "idle_ms", 100),
-            getattr(args, "cycle_timeout_us", 10000), getattr(args, "seed", 0x5a))
+            getattr(args, "cycle_timeout_us", 10000),
+            getattr(args, "seed", 0 if getattr(args,"command",None)=="abc1600-memory" else 0x5a))
 
 
 def save_capture(device, bank, path):
@@ -410,7 +415,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--port", help="Target USB CDC port (not the probe UART)")
     sub = parser.add_subparsers(dest="command", required=True)
-    for command in ("info", "list", "status", "go", "bootsel", "ports", "timing-debug", "cpu-status", "boot-status", "cpu-registers", "cpu-trace", "memory-info"):
+    for command in ("info", "list", "status", "go", "bootsel", "ports", "timing-debug", "cpu-status", "boot-status", "cpu-registers", "cpu-trace", "memory-info", "abc1600-status"):
         sub.add_parser(command)
     stop = sub.add_parser("stop")
     stop.add_argument("--discard", action="store_true", help="Abort instead of retaining partial capture")
@@ -444,11 +449,11 @@ def main():
     cpu.add_argument("--cycle-timeout-us", type=int, default=10000)
     cpu.add_argument("--instructions", type=int, choices=range(1, 65537), metavar="1..65536", default=1024)
     cpu.add_argument("--prepare", action="store_true")
-    for command in ("bus-generate", "memory", "state-capture"):
+    for command in ("bus-generate", "memory", "state-capture", "abc1600-memory"):
         cmd = sub.add_parser(command)
         cmd.add_argument("--source", choices=SOURCES, default="flash")
         cmd.add_argument("--timeout-ms", type=int, default=30000)
-        cmd.add_argument("--samples", type=int, choices=range(1, 65537), metavar="1..65536", default=None if command == "memory" else 1024)
+        cmd.add_argument("--samples", type=int, choices=range(1, 65537), metavar="1..65536", default=None if command == "memory" else 4096 if command == "abc1600-memory" else 1024)
         cmd.add_argument("--position", choices=POSITIONS, default="middle")
         cmd.add_argument("--base", type=lambda n: int(n, 0), default=0, help="Aligned base address of 1 KiB memory")
         cmd.add_argument("--cycle-timeout-us", type=int, default=10000)
@@ -480,6 +485,7 @@ def main():
     mem.add_argument("--bytes", type=int, default=1024)
     memload = sub.add_parser("memory-load", help="Upload and read back a ROM into the 1 MiB target map")
     memload.add_argument("image", type=Path)
+    memload.add_argument("--machine", choices=("generic", "abc1600"), default="generic")
     poke = sub.add_parser("memory-poke", help="Set a non-ROM byte in the uploaded image's RAM")
     poke.add_argument("address", type=lambda n: int(n, 0))
     poke.add_argument("value", type=lambda n: int(n, 0))
@@ -521,8 +527,9 @@ def main():
         elif args.command == "cpu-registers": result = device.cpu_registers()
         elif args.command == "cpu-trace": result = device.cpu_trace()
         elif args.command == "memory-info": result = device.memory_info()
+        elif args.command == "abc1600-status": result = device.abc1600_status()
         elif args.command == "memory-load":
-            device.load("bus-memory", "flash")
+            device.load("abc1600-memory" if args.machine == "abc1600" else "generic-memory", "flash")
             result = device.memory_load(args.image.read_bytes())
         elif args.command == "memory-poke":
             device.request(27, struct.pack("<2I", args.address, args.value))
@@ -548,10 +555,10 @@ def main():
                 args.output.write_bytes(device.fetch(args.bank)); result = {"saved": str(args.output)}
         elif args.command == "memory-dump":
             args.output.write_bytes(device.read_data(4 if args.image else 3, 0, args.bytes, args.address)); result = {"saved": str(args.output)}
-        elif args.command in ("bus-generate", "memory", "state-capture"):
-            app = {"bus-generate": "bus-generator", "memory": "bus-memory", "state-capture": "state-analyzer"}[args.command]
+        elif args.command in ("bus-generate", "memory", "state-capture", "abc1600-memory"):
+            app = {"bus-generate": "bus-generator", "memory": "bus-memory", "state-capture": "state-analyzer", "abc1600-memory": "abc1600-memory"}[args.command]
             device.load(app, args.source)
-            flags = (1 | (4 if args.allow_writes else 0)) if args.command == "bus-generate" else int(args.command == "memory")
+            flags = (1 | (4 if args.allow_writes else 0)) if args.command == "bus-generate" else int(args.command in ("memory", "abc1600-memory"))
             config = capture_config(args)
             if args.command == "memory" and args.boot:
                 flags |= 8

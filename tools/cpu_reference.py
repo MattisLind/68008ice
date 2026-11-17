@@ -55,7 +55,7 @@ def prepare():
     # Preserve and inspect the upstream MIT notices in m68k.h/source files.
     subprocess.run(["cc", "-O2", "m68kmake.c", "-o", "m68kmake"], cwd=SOURCE, check=True)
     subprocess.run([str(SOURCE / "m68kmake")], cwd=SOURCE, check=True)
-    subprocess.run(["cc", "-shared", "-fPIC", "-O2", "-I", str(SOURCE), "-I", str(ROOT / "firmware/dispatcher"),
+    subprocess.run(["cc", "-shared", "-fPIC", "-O2", "-DM68K_EMULATE_FC=1", "-I", str(SOURCE), "-I", str(ROOT / "firmware/dispatcher"),
                     str(SOURCE / "m68kcpu.c"), str(SOURCE / "m68kops.c"), str(SOURCE / "m68kdasm.c"),
                     str(SOURCE / "softfloat/softfloat.c"), str(ROOT / "tools/tests/musashi_adapter.c"),
                     str(ROOT / "firmware/dispatcher/cpu68008.c"), "-lm", "-o", str(LIBRARY)], check=True)
@@ -91,10 +91,11 @@ class Matrix:
         self.difference = C.c_uint32()
         self.counts = {}
 
-    def check(self, family, opcode, extra=b"", value=0x89abcdef, sr=0x271f, pc=0x200):
+    def check(self, family, opcode, extra=b"", value=0x89abcdef, sr=0x271f, pc=0x200, d_override=None):
         c = CPU(version=2, state=2, pc=pc, sr=sr, ssp=0x2e00)
         for i in range(8): c.d[i] = value; c.a[i] = 0x2000 + i * 0x200
         c.d[7] = 0xfffffff0  # Aligned, negative word/long index; preserved in expected state.
+        for reg, data in (d_override or {}).items(): c.d[reg] = data
         code = struct.pack(">H", opcode) + extra
         original = self.ram[pc:pc+len(code)]
         self.ram[pc:pc+len(code)] = code
@@ -144,6 +145,45 @@ class Matrix:
                         for size, field in ((1, 1), (2, 3), (4, 2)):
                             self.check("indexed MOVE", field << 12 | base_mode << 3 | base_reg,
                                        extension(base_mode, base_reg, size, index=index), value=0x80008000)
+        for size, field in ((1, 0), (2, 1), (4, 2)):
+            sign = 1 << (size*8-1)
+            for mode, reg in modes(size, destination=True):
+                for sub in (0, 1):
+                    for amount in range(1, 9):
+                        for value in (0, 1, sign-1, sign, (sign<<1)-1):
+                            self.check("ADDQ/SUBQ", 0x5000 | (amount&7)<<9 | sub<<8 | field<<6 | mode<<3 | reg,
+                                       extension(mode, reg, size), value=value)
+            for mode, reg in modes(size, destination=True, btst=True):
+                for immediate in (0, sign-1, sign, (sign<<1)-1):
+                    self.check("ANDI", 0x0200 | field<<6 | mode<<3 | reg,
+                               extension(7,4,size,immediate)+extension(mode,reg,size))
+        for flags in range(32):
+            for immediate in range(256):
+                self.check("ANDI CCR",0x023c,struct.pack(">H",immediate),sr=0x2700|flags)
+            for immediate in (0xffff,0x2700,0x071f,0xffef):
+                self.check("ANDI SR",0x027c,struct.pack(">H",immediate),sr=0x2700|flags)
+        for size, field in ((2,0), (4,1)):
+            for mode, reg in modes(size):
+                for dst in range(8):
+                    self.check("SUBA",0x90c0 | dst<<9 | field<<8 | mode<<3 | reg,extension(mode,reg,size))
+        for cc in range(16):
+            for flags in range(32):
+                for reg in range(8):
+                    for counter in (0,1,0xffff,0xabcd0001):
+                        self.check("DBcc",0x50c8 | cc<<8 | reg,bytes.fromhex("fff0"),sr=0x2700|flags,
+                                   d_override={reg:counter})
+        for size, field in ((1,0),(2,1),(4,2)):
+            for left in (0,1):
+                for dst in range(8):
+                    for source in range(8):
+                        self.check("LSR/LSL immediate",0xe008 | source<<9 | left<<8 | field<<6 | dst)
+                        for count in (0,1,8,16,32,33,63,64,0xffffffff):
+                            self.check("LSR/LSL register",0xe028 | source<<9 | left<<8 | field<<6 | dst,
+                                       d_override={source:count})
+            for mode, reg in modes(2,destination=True,btst=True):
+                if mode==0:continue
+                for left in (0,1):
+                    self.check("LSR/LSL memory",0xe2c0 | left<<8 | mode<<3 | reg,extension(mode,reg,2))
         return dict(reference="Musashi 68000 instruction semantics", revision=REVISION,
                     archive_sha256=ARCHIVE_SHA256, cases=self.counts, total=sum(self.counts.values()), passed=True)
 

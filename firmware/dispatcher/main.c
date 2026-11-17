@@ -6,6 +6,7 @@
 #include "capture.h"
 #include "cpu_fixture.h"
 #include "memory_image.h"
+#include "abc1600_memory.h"
 #include "loader.h"
 #include "protocol.h"
 #include "hardware/clocks.h"
@@ -31,6 +32,7 @@ static bool have_last;
 static uint8_t pending_action;
 static protocol_rx rx;
 static uint32_t get32(const uint8_t *p) {uint32_t n;memcpy(&n,p,4);return n;}
+static bool memory_app(void) {return loader_app==APP_BUS_MEMORY || loader_app==APP_ABC1600_MEMORY;}
 static bool busy(void) {
     uint32_t s=dispatcher_job.state;
     return worker_request || (s!=JOB_IDLE && s!=JOB_DONE && s!=JOB_ERROR);
@@ -44,7 +46,7 @@ static void worker(void) {
         ((app_entry)(APP_ADDRESS|1u))(&dispatcher_job,&engine_api);
         engine_api.release();
         uint32_t state=dispatcher_job.error ? JOB_ERROR :
-            ((loader_app==APP_ANALYZER || loader_app==APP_BUS_MEMORY || loader_app==APP_STATE_ANALYZER) ? JOB_RAW_DONE : JOB_DONE);
+            ((loader_app==APP_ANALYZER || loader_app==APP_BUS_MEMORY || loader_app==APP_STATE_ANALYZER || loader_app==APP_ABC1600_MEMORY) ? JOB_RAW_DONE : JOB_DONE);
         worker_request=false;__dmb();dispatcher_job.state=state;__sev();
     }
 }
@@ -59,7 +61,7 @@ static void command(uint8_t op,uint16_t seq,const uint8_t *p,uint16_t n,uint32_t
     case 1: // HELLO
         if(n) {status=1;break;}
         length=snprintf((char *)out,sizeof out,
-            "{\"serial\":\"%s\",\"firmware\":\"dispatcher-0.6\",\"protocol\":1,"
+            "{\"serial\":\"%s\",\"firmware\":\"dispatcher-0.7\",\"protocol\":1,"
             "\"instance\":%u,\"core\":%u,\"worker_core\":%lu,\"psram\":%lu,"
             "\"app\":%lu,\"source\":%lu,\"image_crc\":%lu}",
             board_id,ICE_SWD_INSTANCE_ID,get_core_num(),(unsigned long)worker_core,(unsigned long)loader_psram,
@@ -67,7 +69,7 @@ static void command(uint8_t op,uint16_t seq,const uint8_t *p,uint16_t n,uint32_t
         break;
     case 2: // LIST built-in images
         if(n) {status=1;break;}
-        for(uint32_t app=1;app<=APP_CPU_EMULATOR;++app) {
+        for(uint32_t app=1;app<=APP_ABC1600_MEMORY;++app) {
             const app_header *h=loader_builtin(app);
             memcpy(out+length,h,sizeof *h);length+=sizeof *h;
         }
@@ -84,7 +86,7 @@ static void command(uint8_t op,uint16_t seq,const uint8_t *p,uint16_t n,uint32_t
         if(!loader_app) {status=4;break;}
         if(get32(p)>1 || get32(p+4)>44 || get32(p+8)>1 ||
             get32(p+12)<10 || get32(p+12)>30000 || (get32(p+16)&~15u)) {status=1;break;}
-        if((loader_app==APP_GENERATOR || loader_app==APP_BUS_GENERATOR || loader_app==APP_BUS_MEMORY || loader_app==APP_CPU_EMULATOR) &&
+        if((loader_app==APP_GENERATOR || loader_app==APP_BUS_GENERATOR || loader_app==APP_BUS_MEMORY || loader_app==APP_CPU_EMULATOR || loader_app==APP_ABC1600_MEMORY) &&
            !(get32(p+16)&FLAG_DRIVE)) {status=7;break;}
         if(n==20 && (loader_app>APP_ANALYZER || (get32(p+16)&~3u))) {status=1;break;}
         if(n>20) {
@@ -100,6 +102,7 @@ static void command(uint8_t op,uint16_t seq,const uint8_t *p,uint16_t n,uint32_t
                (loader_app==APP_ANALYZER && (get32(p+4)<(get32(p) ? 32u : 0u) ||
                    get32(p+4)>(get32(p) ? 44u : 31u)))) {status=1;break;}
             if((get32(p+16)&FLAG_BOOT_MEMORY) && c.seed==3 && !target_image.ready) {status=4;break;}
+            if(loader_app==APP_ABC1600_MEMORY && (!target_image.ready || target_image.bytes!=ABC1600_ROM_BYTES || target_image.crc!=0x9372f6f2u)) {status=4;break;}
             capture_settings=c;
         } else {
             if(loader_app==APP_ANALYZER && !loader_psram) {status=4;break;}
@@ -131,7 +134,7 @@ static void command(uint8_t op,uint16_t seq,const uint8_t *p,uint16_t n,uint32_t
         memcpy(out,r,sizeof *r);length=sizeof *r;break;
     }
     case 9: { // READ kind (0 VCD, 1 raw SRAM), bank, offset, bytes
-        if(n!=16 || get32(p)>4 || get32(p+4)>1 || get32(p+12)>256) {status=1;break;}
+        if(n!=16 || get32(p)>7 || get32(p+4)>1 || get32(p+12)>256) {status=1;break;}
         if(busy()) {status=2;break;}
         const void *data;uint32_t bytes;
         if(get32(p)==0) {
@@ -146,8 +149,13 @@ static void command(uint8_t op,uint16_t seq,const uint8_t *p,uint16_t n,uint32_t
             const capture_record *r=capture_saved(get32(p+4));
             if(!r) {status=4;break;}
             data=capture_saved_data(get32(p+4));bytes=r->bytes;
+        } else if(get32(p)>=5) {
+            if(loader_app!=APP_ABC1600_MEMORY || !abc1600_model.status.version || get32(p+4)) {status=4;break;}
+            if(get32(p)==5) {data=ABC1600_RAM;bytes=ABC1600_RAM_BYTES;}
+            else if(get32(p)==6) {data=abc1600_model.segment;bytes=sizeof abc1600_model.segment;}
+            else {data=abc1600_model.page;bytes=sizeof abc1600_model.page;}
         } else if(get32(p)==4) {
-            if(loader_app!=APP_BUS_MEMORY || !target_image.ready || get32(p+4)) {status=4;break;}
+            if(!memory_app() || !target_image.ready || get32(p+4)) {status=4;break;}
             data=TARGET_MEMORY;bytes=TARGET_MEMORY_BYTES;
         } else {
             if(loader_app!=APP_BUS_MEMORY || dispatcher_job.state!=JOB_DONE || get32(p+4)) {status=4;break;}
@@ -184,7 +192,7 @@ static void command(uint8_t op,uint16_t seq,const uint8_t *p,uint16_t n,uint32_t
     case 17: // graceful stop: retain partial continuous/state capture
         if(n) {status=1;break;}
         if(!capture_settings.capacity || (loader_app!=APP_ANALYZER && loader_app!=APP_BUS_MEMORY &&
-           loader_app!=APP_STATE_ANALYZER && loader_app!=APP_CPU_EMULATOR)) {status=2;break;}
+           loader_app!=APP_STATE_ANALYZER && loader_app!=APP_CPU_EMULATOR && loader_app!=APP_ABC1600_MEMORY)) {status=2;break;}
         capture_stop=1;__sev();break;
     case 18: // stopped fast-capture diagnostic snapshot; no live bus access
         if(n) {status=1;break;}
@@ -199,22 +207,22 @@ static void command(uint8_t op,uint16_t seq,const uint8_t *p,uint16_t n,uint32_t
     case 20: // memory-side reset / HALT / FC observations, stopped job only
         if(n) {status=1;break;}
         if(busy()) {status=2;break;}
-        if(loader_app!=APP_BUS_MEMORY || !(dispatcher_job.flags&FLAG_BOOT_MEMORY) || !boot_memory_result.version) {status=4;break;}
+        if(!memory_app() || (loader_app==APP_BUS_MEMORY && !(dispatcher_job.flags&FLAG_BOOT_MEMORY)) || !boot_memory_result.version) {status=4;break;}
         memcpy(out,&boot_memory_result,sizeof boot_memory_result);length=sizeof boot_memory_result;break;
     case 21: // Begin a volatile ROM upload into the separate 1 MiB target map.
         if(n!=8) {status=1;break;}
         if(busy()) {status=2;break;}
-        if(loader_app!=APP_BUS_MEMORY || !loader_psram) {status=4;break;}
+        if(!memory_app() || !loader_psram) {status=4;break;}
         status=memory_image_begin(&target_image,TARGET_MEMORY,get32(p),get32(p+4));break;
     case 22:
         if(n<5) {status=1;break;}
         if(busy()) {status=2;break;}
-        if(loader_app!=APP_BUS_MEMORY || !loader_psram) {status=4;break;}
+        if(!memory_app() || !loader_psram) {status=4;break;}
         status=memory_image_write(&target_image,TARGET_MEMORY,get32(p),p+4,n-4);break;
     case 23:
         if(n) {status=1;break;}
         if(busy()) {status=2;break;}
-        if(loader_app!=APP_BUS_MEMORY || !loader_psram) {status=4;break;}
+        if(!memory_app() || !loader_psram) {status=4;break;}
         status=memory_image_commit(&target_image,TARGET_MEMORY);break;
     case 24:
         if(n) {status=1;break;}
@@ -241,6 +249,11 @@ static void command(uint8_t op,uint16_t seq,const uint8_t *p,uint16_t n,uint32_t
         if(loader_app!=APP_BUS_MEMORY || !target_image.ready) {status=4;break;}
         if(get32(p)<target_image.bytes) {status=1;break;}
         TARGET_MEMORY[get32(p)]=get32(p+4);break;
+    case 28: // ABC1600 MAC/register/counter snapshot, stopped memory job only.
+        if(n) {status=1;break;}
+        if(busy()) {status=2;break;}
+        if(loader_app!=APP_ABC1600_MEMORY || !abc1600_model.status.version) {status=4;break;}
+        memcpy(out,&abc1600_model.status,sizeof abc1600_model.status);length=sizeof abc1600_model.status;break;
     default:status=5;break;
     }
     if(length>sizeof out) {status=6;length=0;}

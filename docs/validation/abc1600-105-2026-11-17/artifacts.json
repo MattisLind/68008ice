@@ -1,0 +1,26 @@
+{
+  "roms/abc1600/ABC1600ROM.bin": {
+    "bytes": 16384,
+    "sha256": "15bfe1427e0ebd982be73af8d3f82d95f0ac726f9b82b4d2ecfc351bad7319de"
+  },
+  "build/multidrop/1/dispatcher.elf": {
+    "bytes": 855724,
+    "sha256": "9356a13b0aaf04949c865e93d1cc77f907512690bba8226e78cf904ad62a8784"
+  },
+  "build/multidrop/2/dispatcher.elf": {
+    "bytes": 855724,
+    "sha256": "d9f24c6e058085d2646a8beaf97055e9fb145b64e1c3205078bc0967d922d8b1"
+  },
+  "build/multidrop/1/dispatcher.uf2": {
+    "bytes": 127488,
+    "sha256": "52cdfeb4ec24e1ee9469be36d8c2b9d626c45d658777f4b4d1a202548d2206d3"
+  },
+  "build/multidrop/2/dispatcher.uf2": {
+    "bytes": 127488,
+    "sha256": "0fd86b3d792ae9184fb3de9c39617ea532060fe1b8a31e9bd725af3c33a1bc06"
+  },
+  "build/multidrop/1/app_abc1600_memory.app": {
+    "bytes": 46,
+    "sha256": "40e34101387fc8f95e79c9b4b4cb42ab020c5080f1c4a5eb9d9484a24536656e"
+  }
+}

@@ -67,7 +67,7 @@ if(ICE_SWD_INSTANCE_ID STREQUAL "1" OR ICE_SWD_INSTANCE_ID STREQUAL "2")
 
     # Freestanding, fixed-address application images. Only the small versioned
     # HAL table binds a module to the resident dispatcher; no SDK relinking.
-    foreach(APP IN ITEMS generator analyzer bus_generator bus_memory state_analyzer cpu_emulator)
+    foreach(APP IN ITEMS generator analyzer bus_generator bus_memory state_analyzer cpu_emulator abc1600_memory)
         if(APP STREQUAL "generator")
             set(APP_ID 1)
         elseif(APP STREQUAL "analyzer")
@@ -78,8 +78,10 @@ if(ICE_SWD_INSTANCE_ID STREQUAL "1" OR ICE_SWD_INSTANCE_ID STREQUAL "2")
             set(APP_ID 4)
         elseif(APP STREQUAL "state_analyzer")
             set(APP_ID 5)
-        else()
+        elseif(APP STREQUAL "cpu_emulator")
             set(APP_ID 6)
+        else()
+            set(APP_ID 7)
         endif()
         set(APP_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/app_${APP})
         add_custom_command(OUTPUT ${APP_PREFIX}.h ${APP_PREFIX}.app
@@ -97,10 +99,11 @@ if(ICE_SWD_INSTANCE_ID STREQUAL "1" OR ICE_SWD_INSTANCE_ID STREQUAL "2")
     add_executable(dispatcher dispatcher/main.c dispatcher/protocol.c
         dispatcher/engine.c dispatcher/loader.c dispatcher/capture.c
         dispatcher/capture_window.c dispatcher/capture_store.c dispatcher/capture_fast.c
-        dispatcher/bus_cycle.c dispatcher/cpu68008.c dispatcher/cpu_fixture.c dispatcher/memory_image.c trace_store.c trace_usb.c
+        dispatcher/bus_cycle.c dispatcher/cpu68008.c dispatcher/cpu_fixture.c dispatcher/memory_image.c
+        dispatcher/generic_memory.c dispatcher/abc1600_memory.c trace_store.c trace_usb.c
         ${CMAKE_CURRENT_BINARY_DIR}/app_generator.h ${CMAKE_CURRENT_BINARY_DIR}/app_analyzer.h
         ${CMAKE_CURRENT_BINARY_DIR}/app_bus_generator.h ${CMAKE_CURRENT_BINARY_DIR}/app_bus_memory.h
-        ${CMAKE_CURRENT_BINARY_DIR}/app_state_analyzer.h ${CMAKE_CURRENT_BINARY_DIR}/app_cpu_emulator.h)
+        ${CMAKE_CURRENT_BINARY_DIR}/app_state_analyzer.h ${CMAKE_CURRENT_BINARY_DIR}/app_cpu_emulator.h ${CMAKE_CURRENT_BINARY_DIR}/app_abc1600_memory.h)
     target_include_directories(dispatcher PRIVATE ${CMAKE_CURRENT_LIST_DIR}
         ${CMAKE_CURRENT_LIST_DIR}/dispatcher ${CMAKE_CURRENT_LIST_DIR}/trace_usb
         ${CMAKE_CURRENT_BINARY_DIR})
@@ -125,6 +128,6 @@ if(ICE_SWD_INSTANCE_ID STREQUAL "1" OR ICE_SWD_INSTANCE_ID STREQUAL "2")
     pico_set_linker_script_var(dispatcher RAM_LENGTH 192k)
     pico_set_linker_script_var(dispatcher SCRATCH_X_ORIGIN 0x2003f000)
     pico_set_program_name(dispatcher "68008ice core0 dispatcher")
-    pico_set_program_version(dispatcher "0.6.0")
+    pico_set_program_version(dispatcher "0.7.0")
     pico_add_extra_outputs(dispatcher)
 endif()

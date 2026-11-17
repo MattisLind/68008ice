@@ -1,0 +1,29 @@
+{
+  "mame_revision": "2ab83c729233ca620533d692a8aa1729693ae87f",
+  "methods": [
+    "mac_r",
+    "mac_w",
+    "mmu::ifc2",
+    "mmu::force_task0",
+    "mmu::get_task",
+    "mmu::get_segment_address",
+    "mmu::get_physical_address",
+    "mmu::mmu_read",
+    "mmu::mmu_write",
+    "cause_r",
+    "task_w",
+    "segment_r",
+    "segment_w",
+    "page_hi_r",
+    "page_lo_r",
+    "page_hi_w",
+    "page_lo_w"
+  ],
+  "sha256": {
+    "mame/src/mame/luxor/abc1600_mmu.cpp": "38aa170ec22a9857f3aae0790e4e9d28658c83e7432a59e7b1bd75cd7028a4b5",
+    "tools/tests/mame_abc1600_adapter.cpp.in": "fc0cae085129f5bfa1258ee591675acf084e79440b1edc85e72c8c8754d3c1d0",
+    "firmware/dispatcher/abc1600_memory.c": "68178f4e0f08825a3ef92fe9e602d473794fcab73fdcb72969822998de64fc8e",
+    "firmware/dispatcher/abc1600_memory.h": "cb8373ca9345327ed36f5ccf19bf8b478fdc044e88c84f3aecb91c00be6b76fc",
+    "firmware/dispatcher/cpu68008.h": "6342f0fe8c183245c1ee25b689f98683ee2f5f2f34445b3410c609cd75ab97a6"
+  }
+}

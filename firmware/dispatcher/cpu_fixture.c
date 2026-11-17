@@ -88,7 +88,7 @@ finish:
 void boot_memory_prepare(uint32_t profile) {
     sideband_inputs();
     boot_memory_result=(boot_memory_record){.version=1,.profile=profile};
-    if(profile==3)return; // Host committed a ROM image; preserve its RAM too.
+    if(profile>=3)return; // Uploaded generic/ABC1600 image; preserve ROM.
     // Big endian SSP=$00000400, PC=$00000100. Profile 1 adds a NOP.
     const uint8_t vectors[]={0,0,4,0,0,0,1,0};
     const uint8_t program[]={0x4e,0x72,0x27,0};
@@ -120,6 +120,6 @@ bool boot_memory_cycle(uint32_t address,bool reading) {
     ++boot_memory_result.cycles;
     if(reading)++boot_memory_result.reads;else ++boot_memory_result.writes;
     boot_memory_result.last_address=address;boot_memory_result.last_fc=fc;
-    if(fc!=6 && (boot_memory_result.profile!=3 || fc!=5))++boot_memory_result.fc_errors;
+    if(fc!=6 && (boot_memory_result.profile<3 || (fc!=5 && fc!=1 && fc!=2)))++boot_memory_result.fc_errors;
     return boot_memory_result.profile==2 && address==0;
 }

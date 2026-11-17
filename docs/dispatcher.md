@@ -5,7 +5,7 @@ USB CDC, frame validation, application loading and flash capture storage.
 **Core 1** executes a loaded generator or analyzer module, using the shared
 PIO/DMA hardware layer. No debugger is needed to start either application.
 SWD instance IDs 1 and 2 and USB BOOTSEL recovery remain available.
-Dispatcher **0.6.0 exposes CDC only**. The `ICECAP` mass-storage interface and
+Dispatcher **0.7.0 exposes CDC only**. The `ICECAP` mass-storage interface and
 its `disk` command have been removed; captures still persist in flash and are
 downloaded with `fetch`.
 
@@ -176,7 +176,7 @@ applications.
 
 The 28-byte image header is seven little-endian uint32 values: magic
 `0x41505031`, ABI 2, app ID (1 generator / 2 analyzer / 3 bus generator /
-4 memory and state / 5 passive state / 6 CPU emulator), load address `0x20030000`, Thumb entry
+4 generic memory and state / 5 passive state / 6 CPU emulator / 7 ABC1600 memory), load address `0x20030000`, Thumb entry
 offset 1, code length (2..16384), and code CRC32. Rebuild ABI 1 uploads.
 The host and device validate the header, exact length and CRC before loading;
 the SRAM copy is checked again. Uploads are bounded and strictly sequential;
@@ -391,3 +391,15 @@ of reset and instruction snapshots. Both reset-cause branch paths are bench
 verified against bus samples and host/Musashi state. CPU memory writes need
 additional opt-in. The old STOP/HALT and full bus fixture regressions passed.
 See [dated evidence](validation/abc1600-2026-11-17/README.md).
+
+## Separate memory applications, dispatcher 0.7
+
+App 4 is the generic memory backend (`generic-memory`, with `bus-memory` kept
+as a compatibility name); app 7 is the new `abc1600-memory` backend. Both
+share the state analyzer and physical responder. The ABC1600 backend implements
+boot ROM mirrors, task/segment/page registers, translated RAM, cause state and
+protection faults from the local MAME MAC model. Command 28 and READ kinds
+5/6/7 expose MAC diagnostics, physical RAM and its mapping tables. CPU snapshot
+capacity is now 128. The 105-instruction ROM run, generic five-instruction run,
+and prior fixture regressions are documented in the
+[ABC1600 guide](abc1600.md).

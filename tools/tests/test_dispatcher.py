@@ -81,7 +81,9 @@ class WireProtocol(unittest.TestCase):
         self.assertEqual(validate_image(image),2)
         cpu=struct.pack('<7I',0x41505031,2,6,0x20030000,1,2,zlib.crc32(code))+code
         self.assertEqual(validate_image(cpu),6)
-        unknown=struct.pack('<7I',0x41505031,2,7,0x20030000,1,2,zlib.crc32(code))+code
+        abc=struct.pack('<7I',0x41505031,2,7,0x20030000,1,2,zlib.crc32(code))+code
+        self.assertEqual(validate_image(abc),7)
+        unknown=struct.pack('<7I',0x41505031,2,8,0x20030000,1,2,zlib.crc32(code))+code
         with self.assertRaises(ValueError):validate_image(unknown)
         for corrupt in (image[:-1],image[:-1]+b'\x00',b'\x00'+image[1:]):
             with self.assertRaises(ValueError):validate_image(corrupt)

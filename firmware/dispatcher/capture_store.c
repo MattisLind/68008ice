@@ -25,7 +25,7 @@ const capture_record *capture_saved(uint32_t bank) {
     if(checked[bank])return valid[bank] ? r : NULL;
     checked[bank]=true;valid[bank]=false;
     if(r->magic!=CAPTURE_MAGIC || r->version!=1 || r->committed || r->bank!=bank ||
-       (r->app!=APP_ANALYZER && r->app!=APP_BUS_MEMORY && r->app!=APP_STATE_ANALYZER) ||
+       (r->app!=APP_ANALYZER && r->app!=APP_BUS_MEMORY && r->app!=APP_STATE_ANALYZER && r->app!=APP_ABC1600_MEMORY) ||
        ((r->flags&CAPTURE_MEMORY_TIMING) && (r->app!=APP_BUS_MEMORY || r->bank ||
           r->capacity>CAPTURE_FAST_MAX || r->hz!=CAPTURE_FAST_HZ)) ||
        r->stride!=((r->app==APP_ANALYZER || (r->flags&CAPTURE_MEMORY_TIMING)) ? 4u : 12u) ||

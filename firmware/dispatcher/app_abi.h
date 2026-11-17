@@ -12,6 +12,7 @@
 #define APP_BUS_MEMORY 4u
 #define APP_STATE_ANALYZER 5u
 #define APP_CPU_EMULATOR 6u
+#define APP_ABC1600_MEMORY 7u
 #define FLAG_BOOT_MEMORY 8u
 #define JOB_IDLE 0u
 #define JOB_PREPARING 1u

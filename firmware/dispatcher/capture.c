@@ -6,6 +6,8 @@
 #include "bus_cycle.h"
 #include "cpu_fixture.h"
 #include "memory_image.h"
+#include "generic_memory.h"
+#include "abc1600_memory.h"
 #include "hardware/clocks.h"
 #include "hardware/dma.h"
 #include "hardware/pio.h"
@@ -40,6 +42,7 @@ int capture_valid(const capture_config *c,uint32_t app) {
     if(app==APP_ANALYZER && (c->sample_hz<1000 || c->sample_hz>1000000))return 0;
     if(app==APP_BUS_MEMORY && c->sample_hz==CAPTURE_FAST_HZ &&
        (c->capacity>CAPTURE_FAST_MAX || c->mask || c->address))return 0;
+    if(app==APP_ABC1600_MEMORY && (c->memory_base || c->sample_hz==CAPTURE_FAST_HZ || c->seed))return 0;
     return 1;
 }
 
@@ -94,18 +97,20 @@ static int sampler(app_job *j,bool state) {
 }
 
 static int acquire(app_job *j,uint32_t app) {
-    bool state=app!=APP_ANALYZER, memory=app==APP_BUS_MEMORY;
-    bool boot=memory && (j->flags&FLAG_BOOT_MEMORY);
-    bool image=boot && capture_settings.seed==3;
+    bool abc=app==APP_ABC1600_MEMORY;
+    bool state=app!=APP_ANALYZER, memory=app==APP_BUS_MEMORY || abc;
+    bool boot=abc || (memory && (j->flags&FLAG_BOOT_MEMORY));
+    bool image=!abc && boot && capture_settings.seed==3;
     uint8_t *ram=image ? TARGET_MEMORY : capture_memory;
-    uint32_t ram_bytes=image ? TARGET_MEMORY_BYTES : sizeof capture_memory;
+    uint32_t ram_bytes=image || abc ? TARGET_MEMORY_BYTES : sizeof capture_memory;
     capture_window w;
     if(!capture_window_init(&w,capture_settings.capacity,capture_settings.pre_percent) || !sampler(j,state)) {
         j->error=1;return 1;
     }
     if(memory) {
         memset(capture_memory,0,sizeof capture_memory);
-        if(boot)boot_memory_prepare(capture_settings.seed);
+        if(boot)boot_memory_prepare(abc ? 4 : capture_settings.seed);
+        if(abc) {abc1600_memory_init(&abc1600_model);memset(ABC1600_RAM,0,ABC1600_RAM_BYTES);}
         gpio_put(31,1);gpio_set_dir(31,GPIO_OUT);
     }
     uint32_t read=0,sequence=0,stride=state ? 3 : 1;
@@ -126,12 +131,17 @@ static int acquire(app_job *j,uint32_t app) {
                 uint32_t offset=address-capture_settings.memory_base;
                 reading=(pins&RW)!=0;
                 berr=boot && boot_memory_cycle(address,reading);
-                if(image && !reading && offset<target_image.bytes)berr=true;
+                uint8_t value=(pins>>20)&255;
+                uint32_t fc=(gpio_get_all64()>>32)&7;
+                if(!berr && abc)berr=abc1600_memory_access(&abc1600_model,TARGET_MEMORY,ABC1600_RAM,address,fc,!reading,&value)!=CPU_BUS_OK;
+                else if(!berr && image)berr=generic_memory_access(&target_image,ram,offset,fc,!reading,&value)!=CPU_BUS_OK;
+                else if(!berr && reading)value=ram[offset];
+                else if(!berr)ram[offset]=value;
                 if(berr)gpio_set_dir(BENCH_BERR,GPIO_OUT);
                 else if(reading) {
-                    gpio_put_masked(DATA_MASK,(uint32_t)ram[offset]<<20);
+                    gpio_put_masked(DATA_MASK,(uint32_t)value<<20);
                     gpio_set_dir_out_masked(DATA_MASK);
-                } else ram[offset]=(pins>>20)&255;
+                }
                 __dmb();if(!berr)gpio_put(31,0);responding=true;cycle_start=now;release_at=0;
                 last_activity=now;
             }
@@ -233,11 +243,12 @@ int capture_run(app_job *j,uint32_t app) {
     engine_set_bus_mode(app>=APP_BUS_GENERATOR);
     if(app==APP_ANALYZER && !capture_settings.capacity)return 0; // legacy finite 150 MS/s
     if(!capture_valid(&capture_settings,app) ||
-       ((app==APP_BUS_GENERATOR || app==APP_BUS_MEMORY || app==APP_CPU_EMULATOR) && !(j->flags&FLAG_DRIVE))) {j->error=1;return 1;}
+       ((app==APP_BUS_GENERATOR || app==APP_BUS_MEMORY || app==APP_CPU_EMULATOR || app==APP_ABC1600_MEMORY) && !(j->flags&FLAG_DRIVE))) {j->error=1;return 1;}
     if(app>=APP_BUS_GENERATOR)for(uint pin=28;pin<=31;++pin)gpio_pull_up(pin);
     if((j->flags&FLAG_BOOT_MEMORY) && (app!=APP_BUS_MEMORY || capture_settings.memory_base ||
        capture_settings.seed>3 || (capture_settings.seed==3 && !target_image.ready) ||
        capture_settings.sample_hz==CAPTURE_FAST_HZ)) {j->error=1;return 1;}
+    if(app==APP_ABC1600_MEMORY && (!target_image.ready || target_image.bytes!=ABC1600_ROM_BYTES || target_image.crc!=0x9372f6f2u)) {j->error=1;return 1;}
     if(app==APP_CPU_EMULATOR)return cpu_fixture_run(j,sample_dma);
     if(app==APP_BUS_MEMORY && capture_settings.sample_hz==CAPTURE_FAST_HZ)return capture_fast_run(j);
     return app==APP_BUS_GENERATOR ? generate(j) : acquire(j,app);

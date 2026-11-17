@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "task": 0,
+  "boote": 0,
+  "magic": 1,
+  "cause": 0,
+  "reset_button": 0,
+  "partst": 0,
+  "cause_reads": 2,
+  "segment_writes": 13,
+  "page_high_writes": 13,
+  "page_low_writes": 13,
+  "task_writes": 1,
+  "ram_reads": 0,
+  "ram_writes": 0,
+  "bus_errors": 0,
+  "unsupported_io": 0,
+  "last_address": 125,
+  "last_physical": 4294967295,
+  "last_fc": 6,
+  "last_write": 0,
+  "last_target": 0
+}

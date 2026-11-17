@@ -8,7 +8,7 @@ typedef struct {
 } boot_memory_record;
 extern cpu68008 cpu_result;
 extern boot_memory_record boot_memory_result;
-#define CPU_TRACE_CAPACITY 64u
+#define CPU_TRACE_CAPACITY 128u
 extern cpu68008 cpu_trace[CPU_TRACE_CAPACITY];
 extern uint32_t cpu_trace_count,cpu_trace_total;
 int cpu_fixture_run(app_job *,int dma);

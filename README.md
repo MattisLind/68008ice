@@ -55,8 +55,15 @@ tool into a separate 1 MiB target map. Both cause-register branch paths match
 the captured bus bytes and per-instruction register snapshots. CLR,
 MOVE/MOVEA, BTST, BRA/BSR/Bcc and JMP passed 37586 independent Musashi
 comparisons in host RAM, including the legal MOVE addressing-mode cross-product.
-Full opcode support, exception processing, interrupts, ABC1600 MMU/peripherals
-and CPU-speed validation remain future work. The
+Dispatcher 0.7 now separates generic uploaded-code memory from an ABC1600
+memory application with boot-ROM mirrors, task/segment/page registers, MMU
+translation and protection. The ROM executes **105 instructions** (the first
+five plus the next 100), including 54 MAC writes; all 354 bus transfers, 106
+CPU snapshots and MAC tables match the host/MAME reference. The expanded
+CPU core passes 81238 independent instruction cases, and the MAC model passes
+17133 comparisons against methods extracted from the local MAME checkout.
+Complete ABC1600 peripherals, exception processing, interrupts, remaining
+opcodes and CPU-speed validation remain future work. The
 [RP2350 engineering specification](requirements/RP2350_68008_ICE_Specification_and_Codex_Prompt.md)
 is the design baseline and contains the detailed requirements, acceptance
 criteria and primary references.
@@ -131,7 +138,7 @@ The first firmware target uses Pico C/C++ SDK 2.3.1. Run `make setup`,
 bridges the USB probe to container GDB. The dispatcher provides loadable bench
 bus/analyzer modules and a versioned USB command protocol. The motherboard
 adapter and full instruction interpreter remain planned; the bench interpreter
-executes the first five ABC1600 ROM instructions with bus/register validation.
+executes 105 ABC1600 ROM instructions with bus/register/MAC validation.
 
 For the configured two-board bench setup, `make multidrop-probe` enumerates both
 chips and `make multidrop-check` tests two concurrent GDB sessions, independent
@@ -207,3 +214,6 @@ fields deliberately when they change, keeping part identity, footprint, source,
 verification date and selection reasons consistent across purchasing outputs
 and schematic fields. A checkout or build should not automatically replace
 these reviewed selections with whatever the supplier currently lists.
+
+The ABC1600 memory-controller port retains MAME's per-file BSD-3-Clause/Curt
+Coder attribution; see [its license](LICENSES/BSD-3-Clause-MAME.txt).

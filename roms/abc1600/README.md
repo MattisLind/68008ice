@@ -15,5 +15,5 @@ target data, not firmware source; no additional license is asserted for it.
 CRC32/SHA-1 match the `boot 6490356-04.1f` entry in the
 [MAME ABC1600 MMU reference](https://github.com/mamedev/mame/blob/master/src/mame/luxor/abc1600_mmu.cpp).
 The [ABC1600 bring-up guide](../../docs/abc1600.md) describes loading this image,
-the five-instruction trace, the minimal cause-register fixture and the
+the 105-instruction trace, the separate generic and ABC1600 memory models, and the
 remaining machine behavior to implement.
